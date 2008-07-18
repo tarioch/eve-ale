@@ -1,9 +1,4 @@
 TODO list for 0.22
-- Caching is broken now that I use cachedUntil. Find the bug and unbreak it
-  - One bug found w/ regards to checking against the wrong time
-  - Still get api "wallet exhausted, try again with an hour hence" - yet the caching only specifies 15min. We may not be able to rely on cachedUntil universally.
-    eve-dev lists this as "long" caching, yet cacheduntil is only 15minutes. bummer.
-	Yup, it's a known issue - see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053.
 - Test caching well before release
 - Got an XML parse exception once on the accountBalance - find out what that might have been about.
 - Updated documentation

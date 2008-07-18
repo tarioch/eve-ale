@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib, v0.22, 2008-07-16
+	PHP Api Lib, v0.22, 2008-07-18
 	Copyright (C) 2007  Kw4h
 	Changes according to Rynlam, (c) 2008
 	Further changes by Yorick Downe, (c) his player 2008
@@ -27,7 +27,6 @@ class Api
 	private $charid = null;
 	private $apisite = "api.eve-online.com";
 	private $cachedir = './xmlcache';
-//	private $timeformat = "Y-n-d H:i:s";
 	public $debug = false;
 	private $msg = array();
 	private $usecache = true;
@@ -135,6 +134,10 @@ class Api
 			}
 			return 0;
 		}
+	}
+	
+	public function setTimeTolerance($tolerance)
+	{
 	}
 	
 	// add error message - both params are strings and are formatted as: "$type: $message"
