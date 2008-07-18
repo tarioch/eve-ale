@@ -8,7 +8,11 @@ class.api.php changes:
 - Changed the default caching behavior. Things will be kept in cache for the period of time that CCP specifies, unless this is overridden with the optional "timeout" parameter on the get* functions.
   Note that this library does not save you from shooting yourself in the foot - if you set timeout to a lower time than the caching value specified by CCP, the API may return errors on subsequent
   attempts to fetch data.
+- With the exception of wallet data, which has a cachedUntil of 15 minutes, but returns API errors because it really only wants to be called every 60. Setting it to 65 to be safe.
+  See also http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053.
+- And adding an extra 5 minutes leeway into the cachedUntil logic, to give the CCP server and your server a chance to be "off" a little on time.
 - Fixed a bug where $params would not be reset correctly if it was not an array
+
 
 version 0.21b13, 2008-07-05 (release candidate)
 

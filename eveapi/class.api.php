@@ -27,7 +27,7 @@ class Api
 	private $charid = null;
 	private $apisite = "api.eve-online.com";
 	private $cachedir = './xmlcache';
-	private $timeformat = "Y-n-d H:i:s";
+//	private $timeformat = "Y-n-d H:i:s";
 	public $debug = false;
 	private $msg = array();
 	private $usecache = true;
@@ -406,10 +406,16 @@ class Api
 				// get GMT time
 				$timenow = time();
 				$now = $timenow - date('Z', $timenow);
-				
-				if (!$timeout) // no explicit timeout given, use the cacheUntil time CCP gave us
+
+// Uncomment in case we need some deep-dive debug. There's a TODO here - have levels of debug				
+//				if ($this->debug) {
+//				   $this->addMsg("Info","Got this at ".$time.", keep it until ".$until.", it is now ".$now);
+//				   $this->addMsg("Info","Formatted: Got this at ".strftime("%b %d %Y %X",$time).", keep it until ".strftime("%b %d %Y %X",$until).", it is now ".strftime("%b %d %Y %X",$now));
+//				}
+
+				if (!$timeout) // no explicit timeout given, use the cachedUntil time CCP gave us
 				{
-					if ($until < $time) // time to fetch again
+					if (($until + 5*60) < $now) // time to fetch again, with an extra 5 minutes leeway
 						return false;
 				} else {
 					// if now is $timeout minutes ahead of the cached time, pretend this file is not cached
@@ -652,7 +658,8 @@ class Api
 		}
 	}
 	
-	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = null)
+	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = 65)
+	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -660,7 +667,7 @@ class Api
 			{
 				$this->addMsg("Error","getWalletTransactions: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = null;
+			$timeout = 65;
 		}
 
 		if (!is_bool($corp))
@@ -719,7 +726,8 @@ class Api
 		return $contents;
 	}
 	
-	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = null)
+	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = 65)
+	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -727,7 +735,7 @@ class Api
 			{
 				$this->addMsg("Error","getWalletJournal: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = null;
+			$timeout = 65;
 		}
 
 		if (!is_bool($corp))
