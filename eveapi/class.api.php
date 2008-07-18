@@ -208,12 +208,18 @@ class Api
 			// continue when not cached
 			if (!$this->usecache || !$this->isCached($path, $params, $cachePath, $timeout))
 			{
+				// Presumably, if it's not set to '&', they might have had a reason for that - be a good citizen
+				$sep = ini_get('arg_separator.output');
+				// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers
+				ini_set('arg_separator.output','&');
 				// poststring
 				if (count($params) > 0)
 					$poststring = http_build_query($params); // which has been forced to use '&' by ini_set, at the end of this file
 				else
 					$poststring = "";
-				
+				// And set it back to whatever sensical or non-sensical value it was in the 1st place
+				ini_set('arg_separator.output','&');
+
 				// open connection to the api
 				// Note some free PHP5 servers block fsockopen() - in that case, find a different hosting provider, please
 				$fp = fsockopen($this->apisite, 80, $errno, $errstr, 30);
@@ -846,7 +852,4 @@ class Api
  		return $contents;
 	}
 }
-
-// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers
-ini_set('arg_separator.output','&');
 ?>

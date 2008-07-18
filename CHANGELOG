@@ -1,9 +1,8 @@
 version 0.22, 2008-07-17
 
 class.api.php changes:
-- Several users have run into issues with http_build_query using '&amp;' as a separator instead of '&' in their environment. Added a line to the Api class that will be executed when the file is
-  included and will force it to be '&'. This could've gone into the constructor, but it's really only necessary once. The alternative to use the 5.2 syntax of http_build_query was considered
-  and rejected on the discovery that 5.1 and even 5.0 are still very common "out there"
+- Several users have run into issues with http_build_query using '&amp;' as a separator instead of '&' in their environment. Added some code to retrieveXML that will force it to be '&', and then
+  reset it back to what it was. The alternative to use the 5.2 syntax of http_build_query was considered and rejected on the discovery that 5.1 and even 5.0 are still very common "out there"
 - Removed the $cachethis parameters again, across the board - Lumy is right, that was a bad idea. Please use the api->cache() function to control caching behavior
 - Changed the default caching behavior. Things will be kept in cache for the period of time that CCP specifies, unless this is overridden with the optional "timeout" parameter on the get* functions.
   Note that this library does not save you from shooting yourself in the foot - if you set timeout to a lower time than the caching value specified by CCP, the API may return errors on subsequent
