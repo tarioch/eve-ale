@@ -111,6 +111,12 @@ do
 	$walletxml = $api->getWalletJournal($beforeRefID,true);
 	$wallet = WalletJournal::getWalletJournal($walletxml);
 
+	if(!$wallet)
+	{
+		print("Received empty wallet data\n");
+		break;
+	}
+
 	// $reftypeid is a player donation, found above. Could be anything eles, of course. Find relevant entries and output.
 	foreach($wallet as $index => $line)
 	{
@@ -185,7 +191,6 @@ print ("\n\nRaw character sheet output\n\n");
 $charsheetxml = $api->getCharacterSheet();
 $charsheet = CharacterSheet::getCharacterSheet($charsheetxml);
 print_r($charsheet);
-print($charsheetxml);
 
 print ("\n\nRaw char transactions output\n\n");
 $transxml = $api->getWalletTransactions();

@@ -1,23 +1,15 @@
-TODO list for 0.21
-- Nothing left to do right now
+TODO list for 0.22
+- Caching is broken now that I use cachedUntil. Find the bug and unbreak it
+- Test caching well before release
 
 TODO list for 0.30
+- Redo the core to follow OOP principles. This will change calling conventions.
 - Implement the rest of the API functions
-- Add simple get methods that fetch xml and parse in one go? Could be done without changing the basic structure, which would leave existing code functioning
 
 TODO list for 0.31
 - Add non-EvE EvE APIs, such as the one that eve-central is offering for market transactions
 
 TODO list for 0.32
-- Utility functions, such as the below.
-  setcharid(charname, timeout, cachethis)
-  getWalletTransactionsByType(reftype as string, char or corp, walletid, timeout, cachethis)
-  getWalletJournalByType(reftype as string, char or corp, walletid, timeout, cachethis)
-  getCorpMemberDetails(charname)
-  market utility functions?
-
-TODO list for 0.40
 - Add a view into static data export
 
-TODO list for 0.41
-- Add utility functions for static data export?
+Beyond? Don't know yet. Extending classes by utility functions and "cooked" data, maybe

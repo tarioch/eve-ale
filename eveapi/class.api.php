@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib
+	PHP Api Lib, v0.22, 2008-07-16
 	Copyright (C) 2007  Kw4h
 	Changes according to Rynlam, (c) 2008
 	Further changes by Yorick Downe, (c) his player 2008
@@ -164,21 +164,11 @@ class Api
 		$timeout	amount of time to keep the cached data before re-requesting it from the API, in minutes
 		$cachePath	optional array of string values . These can be indizes into $params, or arbitrary strings, 
 				and will be used to build the relative path to the cache file
-		$cachethis	optional bool - overrride the global usecache variable. If null, the global is used
 		$params	optional array of paramaters (exclude apikey and userid, and charid)
 				$params['characterID'] = 123456789;
 	***********************/
-	public function retrieveXml($path, $timeout, $cachePath = null, $cachethis=null, $params = null)
+	public function retrieveXml($path, $timeout = null, $cachePath = null, $params = null)
 	{
-		if ($cachethis != null && !is_bool($cachethis))
-		{			
-			if ($this->debug)
-			{
-				$this->addMsg("Error","retrieveXml: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
-		}
-		
 		if ($cachePath != null && !is_array($cachePath))
 		{			
 			if ($this->debug)
@@ -194,14 +184,11 @@ class Api
 			{
 				$this->addMsg("Error","retrieveXml: Non-array value of params param, reverting to default value");
 			}
-			$cachethis = null;
+			$params = null;
 		}
 
-		if (!empty($path) && !empty($timeout))
+		if (!empty($path))
 		{
-			if($cachethis==null)
-				$cachethis = $this->usecache;
-
 			if (!is_array($params))
 			{
 				$params = array();
@@ -219,16 +206,16 @@ class Api
 			}
 			
 			// continue when not cached
-			if (!$cachethis || !$this->isCached($path, $params, $cachePath, $timeout))
+			if (!$this->usecache || !$this->isCached($path, $params, $cachePath, $timeout))
 			{
 				// poststring
 				if (count($params) > 0)
-					$poststring = http_build_query($params);
+					$poststring = http_build_query($params); // which has been forced to use '&' by ini_set, at the end of this file
 				else
 					$poststring = "";
 				
 				// open connection to the api
-				// Note some free PHP5 servers block fsockopen() - in that case, find a different host
+				// Note some free PHP5 servers block fsockopen() - in that case, find a different hosting provider, please
 				$fp = fsockopen($this->apisite, 80, $errno, $errstr, 30);
 
 				if (!$fp)
@@ -305,7 +292,7 @@ class Api
 		}
 		elseif ($this->debug)
 		{
-			$this->addMsg("Error", "retrieveXml: path or timeout is empty");
+			$this->addMsg("Error", "retrieveXml: path is empty");
 		}
 		
 		return null;
@@ -394,7 +381,6 @@ class Api
 	}
 	
 	// checking if the cache expired or not based on TQ time
-	// doing this so its easily faked manually and helps me developing without cache probs :P
 	private function isCached($path, $params, $cachePath, $timeout)
 		{
 		$file = $this->getCacheFile($path, $params, $cachePath);
@@ -414,18 +400,25 @@ class Api
 				$cachetime = (string) $xml->currentTime;
 				$time = strtotime($cachetime);
 				
+				$expirytime = (string) $xml->cachedUntil;
+				$until = strtotime($expirytime);
+				
 				// get GMT time
 				$timenow = time();
 				$now = $timenow - date('Z', $timenow);
 				
-				// if now is $timeout minutes ahead of the cached time, pretend this file is not cached
-				$minutes = $timeout * 60;
-				if ($now >= $time + $minutes)
+				if (!$timeout) // no explicit timeout given, use the cacheUntil time CCP gave us
 				{
-					return false;
+					if ($until < $time) // time to fetch again
+						return false;
+				} else {
+					// if now is $timeout minutes ahead of the cached time, pretend this file is not cached
+					$minutes = $timeout * 60;
+					if ($now >= $time + $minutes)
+						return false;
 				}
-				
-				return true;
+
+				return true; // default fall-through - cache is still valid
 			}
 			else
 			{
@@ -433,6 +426,7 @@ class Api
 				{
 					$this->addMsg("Error", "isCached: Could not open cache file for reading: " . $file);
 				}
+				return false;
 			}
 		}
 		else
@@ -441,6 +435,7 @@ class Api
 			{
 				$this->addMsg("Info", "isCached: Cache file does not (yet?) exist: " . $file);
 			}
+			return false;
 		}
 	}
 	
@@ -455,26 +450,17 @@ class Api
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Functions to retrieve data
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public function getAccountBalance($corp = false, $timeout = 60, $cachethis = null)
+	public function getAccountBalance($corp = false, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getAccountBalance: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 60;
+			$timeout = null;
 		}
 
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAccountBalance: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
-		}
-		
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
@@ -490,230 +476,156 @@ class Api
 
 		if ($corp == true)
 		{
-			$contents = $this->retrieveXml("/corp/AccountBalance.xml.aspx", $timeout, $cachePath, $cachethis);
+			$contents = $this->retrieveXml("/corp/AccountBalance.xml.aspx", $timeout, $cachePath);
 		}
 		else
 		{
-			$contents = $this->retrieveXml("/char/AccountBalance.xml.aspx", $timeout, $cachePath, $cachethis);
+			$contents = $this->retrieveXml("/char/AccountBalance.xml.aspx", $timeout, $cachePath);
 		}
 		
 		return $contents;
 	}
 	
-	public function getSkillInTraining($timeout = 60, $cachethis = null)
+	public function getSkillInTraining($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getSkillInTraining: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 60;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillInTraining: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 
-		$contents = $this->retrieveXml("/char/SkillInTraining.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/char/SkillInTraining.xml.aspx", $timeout, $cachePath);
 		
 		return $contents;
 	}
 	
-	public function getCharacterSheet($timeout = 60, $cachethis = null)
+	public function getCharacterSheet($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getCharacterSheet: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 60;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterSheet: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 	
-		$contents = $this->retrieveXml("/char/CharacterSheet.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/char/CharacterSheet.xml.aspx", $timeout, $cachePath);
 		
 		return $contents;
 	}
 	
-	public function getCharacters($timeout = 60, $cachethis = null)
+	public function getCharacters($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getCharacters: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 60;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacters: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
 	
-		$contents = $this->retrieveXml("/account/Characters.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/account/Characters.xml.aspx", $timeout, $cachePath);
 		
 		return $contents;
 	}
 	
-	public function getSkillTree($timeout = 1500, $cachethis = null)
+	public function getSkillTree($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getSkillTree: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillTree: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
-		}
-
-		$contents = $this->retrieveXml("/eve/SkillTree.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/eve/SkillTree.xml.aspx", $timeout);
 		
 		return $contents;
 	}
 	
-	public function getRefTypes($timeout = 1500, $cachethis = null)
+	public function getRefTypes($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getRefTypes: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getRefTypes: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
-		}
-
-		$contents = $this->retrieveXml("/eve/RefTypes.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/eve/RefTypes.xml.aspx", $timeout);
 		
 		return $contents;
 	}
 	
-	public function getMemberTracking($timeout = 720, $cachethis = null)
+	public function getMemberTracking($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getMemberTracking: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 720;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getMemberTracking: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 
-		$contents = $this->retrieveXml("/corp/MemberTracking.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/MemberTracking.xml.aspx", $timeout, $cachePath);
 
 		return $contents;
 	}
 	
-	public function getStarbaseList($timeout = 720, $cachethis = null)
-	// BUGBUG: There's no corresponding parser for this
+	public function getStarbaseList($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getStarbaseList: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 720;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseList: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 
-		$contents = $this->retrieveXml("/corp/StarbaseList.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/StarbaseList.xml.aspx", $timeout, $cachePath);
 		
 		return $contents;
 	}
 	
-	public function getStarbaseDetail($id, $timeout = 720, $cachethis = null)
-	// BUGBUG: There's no corresponding parser for this
+	public function getStarbaseDetail($id, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 720;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseDetail: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		if (is_numeric($id))
@@ -726,7 +638,7 @@ class Api
 			$cachePath[1] = 'characterID';
 			$cachePath[2] = 'itemID';
 			
-			$contents = $this->retrieveXml("/corp/StarbaseDetail.xml.aspx", $timeout, $cachePath, $cachethis, $params);
+			$contents = $this->retrieveXml("/corp/StarbaseDetail.xml.aspx", $timeout, $cachePath, $params);
 			
 			return $contents;
 		}
@@ -740,24 +652,15 @@ class Api
 		}
 	}
 	
-	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = 720, $cachethis = null)
+	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getWalletTransactions: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 720;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		if (!is_bool($corp))
@@ -806,34 +709,25 @@ class Api
 
 		if ($corp == true)
 		{
-			$contents = $this->retrieveXml("/corp/WalletTransactions.xml.aspx", $timeout, $cachePath, $cachethis, $params);
+			$contents = $this->retrieveXml("/corp/WalletTransactions.xml.aspx", $timeout, $cachePath, $params);
 		}
 		else
 		{
-			$contents = $this->retrieveXml("/char/WalletTransactions.xml.aspx", $timeout, $cachePath, $cachethis, $params);
+			$contents = $this->retrieveXml("/char/WalletTransactions.xml.aspx", $timeout, $cachePath, $params);
 		}
 		
 		return $contents;
 	}
 	
-	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = 720, $cachethis = null)
+	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getWalletJournal: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 720;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 
 		if (!is_bool($corp))
@@ -882,34 +776,25 @@ class Api
 
 		if ($corp == true)
 		{
-			$contents = $this->retrieveXml("/corp/WalletJournal.xml.aspx", $timeout, $cachePath, $cachethis, $params);
+			$contents = $this->retrieveXml("/corp/WalletJournal.xml.aspx", $timeout, $cachePath, $params);
 		}
 		else
 		{
-			$contents = $this->retrieveXml("/char/WalletJournal.xml.aspx", $timeout, $cachePath, $cachethis, $params);
+			$contents = $this->retrieveXml("/char/WalletJournal.xml.aspx", $timeout, $cachePath, $params);
 		}
 		
 		return $contents;
 	}
 
-	public function getCorporationSheet($corpid = null, $timeout = 720, $cachethis = null) 
+	public function getCorporationSheet($corpid = null, $timeout = null) 
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getCorporationSheet: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 720;
-		}
-
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCorporationSheet: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
+			$timeout = null;
 		}
 		
 		if ($corpid != null && !is_numeric($corpid))
@@ -932,34 +817,28 @@ class Api
 			$cachePath[2] = 'corporationID';
 		}
 		
- 		$contents = $this->retrieveXml("/corp/CorporationSheet.xml.aspx", $timeout, $cachePath, $cachethis, $params);
+ 		$contents = $this->retrieveXml("/corp/CorporationSheet.xml.aspx", $timeout, $cachePath, $params);
 
  		return $contents;
 	}
 
-	public function getAllianceList($timeout = 720, $cachethis = null)
+	public function getAllianceList($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
 				$this->addMsg("Error","getAllianceList: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 720;
+			$timeout = null;
 		}
 
-		if ($cachethis != null && !is_bool($cachethis))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getAllianceList: Non-bool value of cachethis param, reverting to default value");
-			}
-			$cachethis = null;
-		}
-
-		$contents = $this->retrieveXml("/eve/AllianceList.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/eve/AllianceList.xml.aspx", $timeout);
 
  		return $contents;
 	}
 }
+
+// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers
+ini_set('arg_separator.output','&');
 ?>
