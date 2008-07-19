@@ -63,6 +63,7 @@ class Corporationsheet
 					}
 				}
 			}
+			unset ($xml); // manual garbage collection
 			return $output;
 		}
 		else

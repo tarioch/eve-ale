@@ -1,4 +1,4 @@
-version 0.22, 2008-07-17
+version 0.22, 2008-07-18
 
 class.api.php changes:
 - Several users have run into issues with http_build_query using '&amp;' as a separator instead of '&' in their environment. Added some code to retrieveXML that will force it to be '&', and then
@@ -9,9 +9,11 @@ class.api.php changes:
   attempts to fetch data.
 - With the exception of wallet data, which has a cachedUntil of 15 minutes, but returns API errors because it really only wants to be called every 60. Setting it to 65 to be safe.
   See also http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053.
-- And adding an extra 5 minutes leeway into the cachedUntil logic, to give the CCP server and your server a chance to be "off" a little on time.
+- And adding an extra 5 minutes leeway (default) into the cachedUntil logic, to give the CCP server and your server a chance to be "off" a little on time.
+- api->setTimeTolerance() can be used to adjust the above leeway.
 - Fixed a bug where $params would not be reset correctly if it was not an array
-
+- Added manual garbage collection to isCached and retrieveXml so that PHP won't run out of memory so quickly
+- And for good measure, added the same thing to all the parsing functions, as well
 
 version 0.21b13, 2008-07-05 (release candidate)
 

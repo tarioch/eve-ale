@@ -1,7 +1,14 @@
 TODO list for 0.22
 - Test caching well before release
+  - In progress
 - Got an XML parse exception once on the accountBalance - find out what that might have been about.
+  - it happens in isCached
+  - it has to do with the closing tag being "cut off" - </e or </eveap instead of </eveapi>
+  - it does not happen all the time, and the cached data is good - this has to be a race condition of sorts
+  - Added an unset($contents) to isCached - it may be I am running into a PHP garbage collection issue. Also unsetting $xml in isCached and retrieveXml.
+  - And added more unsets to all the parsing functions
 - Updated documentation
+  - I think that's done
 
 TODO list for 0.30
 - Redo the core to follow OOP principles. This will change calling conventions.

@@ -30,7 +30,7 @@ class CharacterSheet
 			{
 				$output[(string) $name] = (string) $value;
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $output;
 		}
 		else
@@ -92,7 +92,7 @@ class CharacterSheet
 					$output['skills'][$index][(string) $name] = (int) $value;
 				}
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $output;
 		}
 		else

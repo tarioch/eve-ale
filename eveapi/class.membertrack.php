@@ -33,7 +33,7 @@ class MemberTrack
 					$output[$index][(string) $key] = (string) $val;
 				}
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $output;
 		}
 		else

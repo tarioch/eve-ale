@@ -34,7 +34,7 @@ class AccountBalance
 					$output[$index][(string) $name] = (string) $value;
 				}
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $output;
 		}
 		else
@@ -56,6 +56,7 @@ class Balance extends Api
 	{
 			$xmldata = $this->getAccountBalance($corp);
 			$data = AccountBalance::getAccountBalance($xmldata);
+			unset ($xmldata); // manual garbage collection
 			return $data;
 	}
 }

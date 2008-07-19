@@ -289,6 +289,8 @@ class Api
 							return null;
 						}
 						
+						unset ($xml); // reduce memory footprint
+
 						if (!$this->isCached($path, $params, $cachePath, $timeout))
 						{
 							$this->store($contents, $path, $params, $cachePath);
@@ -423,6 +425,9 @@ class Api
 				$expirytime = (string) $xml->cachedUntil;
 				$until = strtotime($expirytime);
 				
+				unset($contents); // Free us some memory
+				unset($xml); // and free memory for this one, too
+
 				// get GMT time
 				$timenow = time();
 				$now = $timenow - date('Z', $timenow);

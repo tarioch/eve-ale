@@ -34,7 +34,7 @@ class CharSelect
 				$characters[$index]['corpname'] = (string) $row['corporationName'];
 				$characters[$index]['corpid'] = (int) $row['corporationID'];
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $characters;
 		}
 		else

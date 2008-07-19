@@ -74,7 +74,7 @@ class Generic
 				}
 				
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return ($output);
 		}
 		else
@@ -94,7 +94,7 @@ class Generic
 			{
 				$output[(int) $row['refTypeID']] = (string) $row['refTypeName'];
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $output;
 		}
 		else

@@ -33,20 +33,17 @@ require_once('./config.php');
 
 $api = new Api();
 $api->debug(true);
-$api->cache(true);
+$api->cache(true); // that's the default, done for testing purposes
+$api->setTimeTolerance(5); // also the default value
 $api->setCredentials($apiuser,$apipass);
 $apicharsxml = $api->getCharacters();
 $apichars = CharSelect::getCharacters($apicharsxml);
 
 $apicharsnew = Characters::getCharacters($apicharsxml);
 if ($apichars == $apicharsnew)
-{
 	print ("\n\nNew character selection function matches legacy character selection function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: New character selection function output broken!\n\n");
-}
 
 // Find the character I'm interested in
 
@@ -69,14 +66,9 @@ print_r($members);
 
 $membersnew = MemberTracking::getMemberTracking($membersxml);
 if ($members == $membersnew)
-{
 	print ("\n\nNew member tracking function matches legacy member tracking function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: New member tracking function output broken!\n\n");
-}
-
 
 $refid = 0; // In case I don't find the right one, at least I'll have a sane value
 
@@ -85,21 +77,13 @@ $reftypesxml = $api->getRefTypes();
 $reftypes = Generic::getRefTypes($reftypesxml);
 $reftypesnew = RefTypes::getRefTypes($reftypesxml);
 if ($reftypes == $reftypesnew)
-{
 	print ("\n\nNew refTypes function matches legacy refTypes function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: New refTypes function output broken!\n\n");
-}
 
 foreach($reftypes as $id => $name)
-{
 	if($name == 'Player Donation')
-	{
 		$reftypeid = $id;
-	}
-}
 
 // Now grab player donations to my corp. We'll grab the data, and if there's 1000, there'll likely be more, and we'll go again
 
@@ -118,6 +102,9 @@ do
 	}
 
 	// $reftypeid is a player donation, found above. Could be anything eles, of course. Find relevant entries and output.
+    // The below is a simple foreach loop. On my PHP 5.2 host, it is plenty fast - but if you have issues, try the alternative further below
+	
+//	$begin = microtime(true);
 	foreach($wallet as $index => $line)
 	{
 		if($line['refTypeID']==$reftypeid)
@@ -126,11 +113,29 @@ do
 			print("$line[ownerName1] donated $formatted ISKies on $line[date] and gave this reason: $line[reason]\n");
 		}
 	}
-
+//	$end = microtime(true) - $begin;
+//	print("The foreach took ".$end." seconds\n");
+	
+	// And here's another implementation, that avoids the array copy on every iteration
+/*
+//	$begin = microtime(true);
+	foreach(array_keys($wallet) as $key)
+	{
+		if($wallet[$key]['refTypeID']==$reftypeid)
+			print($wallet[$key]['ownerName1']." donated ".number_format((float)$wallet[$key][amount],2)." ISKies on ".$wallet[$key]['date']." and gave this reason: ".$wallet[$key]['reason']."\n");
+	}
+//	$end = microtime(true) - $begin;
+//	print("The foreach took ".$end." seconds\n");
+*/
 	// Set the last refID in the array to be the one we're grabbing from
 	$beforeRefID=$wallet[count($wallet)-1]['refID'];
 //	print("The last refID in there was determined to be $beforeRefID\n");
 } while(count($wallet) == 1000);
+
+print("\n\nRaw char wallet journal output\n\n");
+$walletxml = $api->getWalletJournal();
+$wallet = WalletJournal::getWalletJournal($walletxml);
+print_r($wallet);
 
 print ("\n\nRaw char balance output\n\n");
 $balancexml = $api->getAccountBalance();
@@ -140,13 +145,9 @@ print_r($balance);
 $blnc = new Balance($apiuser,$apipass,$apichar);
 $balanceold = $blnc->getBalance();
 if ($balance == $balanceold)
-{
 	print ("\n\nLegacy char balance function matches new balance function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: Legacy char balance function output broken!\n\n");
-}
 
 print ("\n\nRaw corp balance output\n\n");
 $balancexml = $api->getAccountBalance(true);
@@ -155,13 +156,9 @@ print_r($balance);
 
 $balanceold = $blnc->getBalance(true);
 if ($balance == $balanceold)
-{
 	print ("\n\nLegacy corp balance function matches new balance function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: Legacy corp balance function output broken!\n\n");
-}
 
 print ("\n\nRaw corp sheet output\n\n");
 $corpxml = $api->getCorporationSheet();
@@ -199,13 +196,9 @@ print_r($trans);
 
 $transold = Transaction::getTransaction($transxml);
 if ($trans == $transold)
-{
 	print ("\n\nLegacy char transaction function matches new transaction function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: Legacy char transaction function output broken!\n\n");
-}
 
 print ("\n\nRaw corp transactions output\n\n");
 $transxml = $api->getWalletTransactions(null, true);
@@ -214,13 +207,9 @@ print_r($trans);
 
 $transold = Transaction::getTransaction($transxml);
 if ($trans == $transold)
-{
 	print ("\n\nLegacy corp transaction function matches new transaction function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: Legacy corp transaction function output broken!\n\n");
-}
 
 print ("\n\nRaw alliance list output\n\n");
 $alliancexml = $api->getAllianceList();
@@ -234,13 +223,9 @@ print_r($skilltree);
 
 $skilltreenew = SkillTree::getSkillTree($skilltreexml);
 if ($skilltree == $skilltreenew)
-{
 	print ("\n\nNew skill tree function matches legacy skill tree function output.\n\n");
-}
 else
-{
 	print ("\n\nERROR: New skill tree function output broken!\n\n");
-}
 
 $api->printErrors();
 ?>

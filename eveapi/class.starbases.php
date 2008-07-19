@@ -33,7 +33,7 @@ class StarbaseList
 					$output[$index][(string) $key] = (string) $val;
 				}
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $output;
 		}
 		else
@@ -80,7 +80,7 @@ class StarbaseDetail
 					$output['fuel'][$index][(string) $key] = (string) $val;
 				}
 			}
-			
+			unset ($xml); // manual garbage collection			
 			return $output;
 		}
 		else
