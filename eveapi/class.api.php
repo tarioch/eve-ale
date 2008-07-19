@@ -23,20 +23,6 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**************************************************************************/
-
 class Api
 {
 	private $apikey = null;
@@ -457,11 +443,11 @@ class Api
 
 				if (!$timeout) // no explicit timeout given, use the cachedUntil time CCP gave us
 				{
-					if (($until + $this->timetolerance*60) < $now) // time to fetch again, with some minutes leeway
+					if (($until + $this->timetolerance * 60) < $now) // time to fetch again, with some minutes leeway
 						return false;
 				} else {
 					// if now is $timeout minutes ahead of the cached time, pretend this file is not cached
-					$minutes = $timeout * 60;
+					$minutes = ($timeout + $this->timetolerance) * 60;
 					if ($now >= $time + $minutes)
 						return false;
 				}

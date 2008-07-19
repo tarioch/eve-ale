@@ -9,11 +9,13 @@ class.api.php changes:
   attempts to fetch data.
 - With the exception of wallet data, which has a cachedUntil of 15 minutes, but returns API errors because it really only wants to be called every 60. Setting it to 65 to be safe.
   See also http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053.
-- And adding an extra 5 minutes leeway (default) into the cachedUntil logic, to give the CCP server and your server a chance to be "off" a little on time.
+- And added an extra 5 minutes leeway (default) into the cachedUntil and $timeout logic, to give the CCP server and your server a chance to be "off" a little on time.
 - api->setTimeTolerance() can be used to adjust the above leeway.
 - Fixed a bug where $params would not be reset correctly if it was not an array
 - Added manual garbage collection to isCached and retrieveXml so that PHP won't run out of memory so quickly
-- And for good measure, added the same thing to all the parsing functions, as well
+
+General changes:
+- And for good measure, added the same manual garbage collection to all the parsing functions, as well
 - The library has moved to the LGPLv3 instead of the GPLv3. This means you are now free to use the library, and you do not have to GPLv3 the code that uses the library. If you make
   changes to the library, you do have to release those changes back to the public, even if you do not distribute your copy of the library but only use it to offer services through
   a web host. I feel that LGPLv3 gives much greater freedom all around to everyone - I get your changes to the library back, which I want; and you are free to use the library
