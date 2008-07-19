@@ -30,6 +30,7 @@ class Api
 	public $debug = false;
 	private $msg = array();
 	private $usecache = true;
+	private $timetolerance = 5; // minutes to wait after cachedUntil, to allow for the server's time being fast
 
 	public function setCredentials($userid, $apikey, $charid = null)
 	{
@@ -39,7 +40,7 @@ class Api
 			{
 				$this->addMsg("Error","setCredentials: userid and apikey must not be empty");
 			}
-			return 0;
+			return false;
 		}
 
 		if (!is_numeric($userid))
@@ -48,7 +49,7 @@ class Api
 			{
 				$this->addMsg("Error","setCredentials: userid must be a numeric value");
 			}
-			return 0;
+			return true;
 		}
 		
 		if (!is_string($apikey))
@@ -57,7 +58,7 @@ class Api
 			{
 				$this->addMsg("Error","setCredentials: apikey must be a string value");
 			}
-			return 0;
+			return false;
 		}
 		
 		if ($charid != null && !is_numeric($charid))
@@ -66,7 +67,7 @@ class Api
 			{
 				$this->addMsg("Error","setCredentials: charid must be a numeric value");
 			}
-			return 0;
+			return false;
 		}
 	
 		if (!empty($userid) && !empty($apikey) && is_numeric($userid) && is_string($apikey))
@@ -82,7 +83,7 @@ class Api
 			$this->charid = null;
 		}
 		
-		return 1;
+		return true;
 	}
 	
 	public function debug($bool)
@@ -90,7 +91,7 @@ class Api
 		if (is_bool($bool))
 		{
 			$this->debug = $bool;
-			return 1;
+			return true;
 		}
 		else
 		{
@@ -98,7 +99,7 @@ class Api
 			{
 				$this->addMsg("Error","debug: parameter must be present and boolean");
 			}
-			return 0;
+			return false;
 		}
 	}
 	
@@ -107,7 +108,7 @@ class Api
 		if (is_bool($bool))
 		{
 			$this->usecache = $bool;
-			return 1;
+			return true;
 		}
 		else
 		{
@@ -115,7 +116,7 @@ class Api
 			{
 				$this->addMsg("Error","cache: parameter must be present and boolean");
 			}
-			return 0;
+			return false;
 		}
 	}
 
@@ -124,7 +125,7 @@ class Api
 		if (is_string($dir))
 		{
 			$this->cachedir = $dir;
-			return 1;
+			return true;
 		}
 		else
 		{
@@ -132,12 +133,22 @@ class Api
 			{
 				$this->addMsg("Error","setCacheDir: parameter must be present and a string");
 			}
-			return 0;
+			return false;
 		}
 	}
 	
 	public function setTimeTolerance($tolerance)
 	{
+		if (is_int($tolerance))
+		{
+			$this->timetolerance = $tolerance;
+			return true;
+		} else {
+			if ($this->debug)
+				$this->addMsg("Error","setTimeTolerance: parameter must be present and an integer");
+			return false;
+		}
+
 	}
 	
 	// add error message - both params are strings and are formatted as: "$type: $message"
@@ -424,7 +435,7 @@ class Api
 
 				if (!$timeout) // no explicit timeout given, use the cachedUntil time CCP gave us
 				{
-					if (($until + 5*60) < $now) // time to fetch again, with an extra 5 minutes leeway
+					if (($until + $this->timetolerance*60) < $now) // time to fetch again, with some minutes leeway
 						return false;
 				} else {
 					// if now is $timeout minutes ahead of the cached time, pretend this file is not cached
