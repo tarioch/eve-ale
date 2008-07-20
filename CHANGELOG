@@ -14,6 +14,9 @@ class.api.php changes:
 - Fixed a bug where $params would not be reset correctly if it was not an array
 - Added manual garbage collection to isCached and retrieveXml so that PHP won't run out of memory so quickly
 
+class.starbases.php changes:
+- I am using getName() in getStarbaseDetails, and that's a PHP >= 5.1.3 function only. The function now checks for that, and returns null if the PHP version is too low
+
 General changes:
 - And for good measure, added the same manual garbage collection to all the parsing functions, as well
 - The library has moved to the LGPLv3 instead of the GPLv3. This means you are now free to use the library, and you do not have to GPLv3 the code that uses the library. If you make

@@ -50,8 +50,18 @@ class StarbaseDetail
 {
 	static function getStarbaseDetail($contents)
 	{
+		$needver = "5.1.3";
+
 		if (!empty($contents) && is_string($contents))
 		{
+			$isver = phpversion();
+			if (!version_compare($needver,$isver,"<="))
+			{
+				//BUGBUG - once we have sane error reporting, an error should be reported here
+				//Also, if I can figure out how to do something like getName on xml without getName, that'd solve it
+				return null;
+			}
+
 			$xml = new SimpleXMLElement($contents);
 			
 			$output = array();
