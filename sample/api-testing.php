@@ -30,6 +30,8 @@ require_once('./classes/eveapi/class.membertrack.php');
 require_once('./classes/eveapi/class.transactions.php');
 require_once('./classes/eveapi/class.walletjournal.php');
 require_once('./classes/eveapi/class.starbases.php');
+require_once('./classes/eveapi/class.assetlist.php');
+require_once('./classes/eveapi/class.industryjobs.php');
 
 require_once('./config.php');
 
@@ -186,11 +188,6 @@ $skillxml = $api->getSkillInTraining();
 $skill = CharacterSheet::getSkillInTraining($skillxml);
 print_r($skill);
 
-print ("\n\nRaw character sheet output\n\n");
-$charsheetxml = $api->getCharacterSheet();
-$charsheet = CharacterSheet::getCharacterSheet($charsheetxml);
-print_r($charsheet);
-
 print ("\n\nRaw char transactions output\n\n");
 $transxml = $api->getWalletTransactions();
 $trans = WalletTransactions::getWalletTransactions($transxml);
@@ -212,6 +209,31 @@ if ($trans == $transold)
 	print ("\n\nLegacy corp transaction function matches new transaction function output.\n\n");
 else
 	print ("\n\nERROR: Legacy corp transaction function output broken!\n\n");
+
+print("\n\nRaw char industry jobs output\n\n");
+$industryxml = $api->getIndustryJobs();
+$industry = IndustryJobs::getIndustryJobs($assetxml);
+print_r($industry);
+
+print("\n\nRaw corp industry jobs output\n\n");
+$industryxml = $api->getIndustryJobs(true);
+$industry = IndustryJobs::getIndustryJobs($assetxml);
+print_r($industry);
+
+print("\n\nRaw char asset list output\n\n");
+$assetxml = $api->getAssetList();
+$asset = AssetList::getAssetList($assetxml);
+print_r($asset);
+
+print("\n\nRaw corp asset list output\n\n");
+$assetxml = $api->getAssetList(true);
+$asset = AssetList::getAssetList($assetxml);
+print_r($asset);
+
+print ("\n\nRaw character sheet output\n\n");
+$charsheetxml = $api->getCharacterSheet();
+$charsheet = CharacterSheet::getCharacterSheet($charsheetxml);
+print_r($charsheet);
 
 print ("\n\nRaw alliance list output\n\n");
 $alliancexml = $api->getAllianceList();

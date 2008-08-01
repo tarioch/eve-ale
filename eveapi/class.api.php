@@ -6,6 +6,7 @@
 	Portions Copyright (C) 2008 Pavol Kovalik
 	Portions Copyright (C) 2008 Gordon Pettey
 	Portions Copyright (C) 2008 Thorsten Behrens
+	Portions Copyright (C) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
 
@@ -873,5 +874,76 @@ class Api
 
  		return $contents;
 	}
+	
+	public function getAssetList($corp = false, $timeout = null)
+	{
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getAssetList: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+
+		if (!is_bool($corp))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getAssetList: Non-bool value of corp param, reverting to default value");
+			}
+			$corp = false;
+		}
+	   
+		$cachePath = array();
+		$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+
+		if ($corp == true)
+		{
+			$contents = $this->retrieveXml("/corp/AssetList.xml.aspx", $timeout, $cachePath);
+		}
+		else
+		{
+			$contents = $this->retrieveXml("/char/AssetList.xml.aspx", $timeout, $cachePath);
+		}
+		return $contents;
+	}
+	
+	public function getIndustryJobs($corp = false, $timeout = null)
+	{
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getIndustryJobs: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+
+		if (!is_bool($corp))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getIndustryJobs: Non-bool value of corp param, reverting to default value");
+			}
+			$corp = false;
+		}
+		
+		$cachePath = array();
+		$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+
+		if ($corp == true)
+		{
+			$contents = $this->retrieveXml("/corp/IndustryJobs.xml.aspx", $timeout, $cachePath, $cachethis);
+		}
+		else
+		{
+			$contents = $this->retrieveXml("/char/IndustryJobs.xml.aspx", $timeout, $cachePath, $cachethis);
+		}
+		return $contents;
+	}
+
 }
 ?>
