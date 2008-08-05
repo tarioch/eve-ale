@@ -1,6 +1,11 @@
 TODO list for 0.22
-- The submitted code calls a function inside AssetList, which fails because we're not actually instantiating classes (ugly, I know) - figure out how to solve that
 - There's an mkdir error in starbasedetails which puzzles me. May be my local way of doing things, I'm using links'n'shit.
+- On a "fresh" system without any cache, the PHP script can run out of time because it takes so long to fetch everything from CCP and then parse it. May have to look into the api resetting the timer
+  and giving itself say 2 minutes every time it is called.
+- assetList's parser can get confused, and spit out this 
+  <b>Warning</b>:  Invalid argument supplied for foreach() in <b>C:\xampp\htdocs\eve\classes\eveapi\class.assetlist.php</b> on line <b>26</b><br />
+  This happens because @attributes is in the iterative of children(), which is not visible on foreach, but visible otherwise. Need to find a way around that, maybe with count
+
 
 TODO list for 0.30
 - Redo the core to follow OOP principles. This will change calling conventions.

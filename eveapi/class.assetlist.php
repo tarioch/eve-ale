@@ -21,47 +21,51 @@
 
 class AssetList
 {
-	static function getContents($child)
+	function getContents($child)
 	{
+		print ("Getting dar contents\n");
+		print_r($child);
 		foreach ($child->rowset->row as $row)
-			{
+		{
 			$index = count($C1);
 			foreach ($row->attributes() as $name => $value)
-				{
+			{
 				$C1[$index][(string) $name] = (string) $value;
-				}
-			if($row->children())
-				{
-				$C1[$index]["contents"] = getContents($row->children());
-				}
 			}
-			return $C1;
+			if($row->children())
+			{
+				print("We has the children\n");
+				print_r($row->children());
+				$C1[$index]["contents"] = AssetList::getContents($row->children());
+			}
+		}
+		return $C1;
 	}
 
-	static function getAssetList($contents)
+	function getAssetList($contents)
 	{
-	if (!empty($contents) && is_string($contents))
+		if (!empty($contents) && is_string($contents))
 		{
-	        	$output = array();
+	        $output = array();
 	 		$xml = new SimpleXMLElement($contents);
 
-	        	// add all accounts in an array
+	        // add all accounts in an array
 			foreach ($xml->result->rowset->row as $row)
 			{
 				$index = count($output);
 				foreach ($row->attributes() as $name => $value)
 				{
-				$output[$index][(string) $name] = (string) $value;
+				  $output[$index][(string) $name] = (string) $value;
 				}
-			if($row->children())
+			    if($row->children())
 				{
-				$output[$index]["contents"] = AssetList::getContents($row->children());
+				  $output[$index]["contents"] = AssetList::getContents($row->children());
 				}
 			}
 			unset ($xml); // manual garbage collection
 			return $output;
 		}
-	else
+		else
 		{
 			return null;
 		}
