@@ -17,9 +17,13 @@ class.api.php changes:
 class.starbases.php changes:
 - I am using getName() in getStarbaseDetails, and that's a PHP >= 5.1.3 function only. The function now checks for that, and returns null if the PHP version is too low
 
+class.assetlist.php changes:
+- Calls to getContent prefixed with AssetList:: so that the class does not need to be instantiated for the call to work
+- Changed the way getContent decides to iterate - children() contains @attributes, which led to recursion where there should have been none.
+
 General changes:
 - And for good measure, added the same manual garbage collection to all the parsing functions, as well
-- Added assetList and industryJobs functions, donated by XXX
+- Added getAssetList and getIndustryJobs functions, donated by XXX
 - The library has moved to the LGPLv3 instead of the GPLv3. This means you are now free to use the library, and you do not have to GPLv3 the code that uses the library. If you make
   changes to the library, you do have to release those changes back to the public, even if you do not distribute your copy of the library but only use it to offer services through
   a web host. I feel that LGPLv3 gives much greater freedom all around to everyone - I get your changes to the library back, which I want; and you are free to use the library

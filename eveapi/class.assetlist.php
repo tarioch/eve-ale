@@ -23,8 +23,6 @@ class AssetList
 {
 	function getContents($child)
 	{
-		print ("Getting dar contents\n");
-		print_r($child);
 		foreach ($child->rowset->row as $row)
 		{
 			$index = count($C1);
@@ -32,10 +30,8 @@ class AssetList
 			{
 				$C1[$index][(string) $name] = (string) $value;
 			}
-			if($row->children())
+			if(count((array)$row->children()) > 1) // children contains @attributes, which we don't care about
 			{
-				print("We has the children\n");
-				print_r($row->children());
 				$C1[$index]["contents"] = AssetList::getContents($row->children());
 			}
 		}
@@ -57,7 +53,7 @@ class AssetList
 				{
 				  $output[$index][(string) $name] = (string) $value;
 				}
-			    if($row->children())
+			    if(count((array)$row->children()) > 1) // children contains @attributes, which we don't care about
 				{
 				  $output[$index]["contents"] = AssetList::getContents($row->children());
 				}
