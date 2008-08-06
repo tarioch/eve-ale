@@ -5,32 +5,10 @@ TODO list for 0.22
   and giving itself say 2 minutes every time it is called.
 - assetList's parser needs to be tested with recursion; create assets that have containers in containers
 - assetList's parser assumes there's always @attributes and discounts that by a simple count(); may have to check that assumption - or decide it's a good assumption
+- Write documentation for industryJobs
+- Test industryJobs
+- I get PHP warnings when the api server can't be resolved - that's not nice. See what can be done about that.
 
 
 TODO list for 0.30
-- Redo the core to follow OOP principles. This will change calling conventions.
-  - Better error reporting. Throw exceptions where that is warranted, use PHP error function otherwise
-  - api class is abstract; eveapi extends it eve-specific, and evecentralapi for evecentral. tqeveapi is specific to tq, and sisieveapi to the (announced)test server api
-    What should be in the abstract class as far as functions and vars go is TBD
-  - All api functions move into their own distinct class files. There'll be an abstract class, and extensions. in the abstract, we need get, getxml, and parse, possibly others. get calls getxml and
-    parse in sequence. getxml grabs the xml in cache / via api call; whereas parse parses and returns an array. The class should "know" about the data structure, so it is reasonable to have
-	properties that hold the data. Been looking into read-only variables in php through the use of private and overloading some magic functions, that may be a way to go. To be discussed. No
-	"cooked" data in these classes. They can then be extended again to get cooked data, in a later release or by developers as contributions, if so desired - this would be useful for market data,
-	pos data, and asset data to name a few. The idea is to not have to touch the "core" to get additional functionality, and to be able to extend to new eve api calls easily, again without 
-	touching the existing core. Oh, these classes get passed an instance of api (eveapi or evecentralapi, etc), which they use to do the "dirty work". That way, one class can work on tq, sisi,
-	chinese, and whatever else may come along.
-  - Allow the useragent to be specified, so applications can be unique that way
-  - Look into the use of __autoload, possibly in a registered way so as to not clash with a web framework's __autoload. Would get rid of the need for all these require_once statements
-  - Test against PHP 5.0, 5.1 and 5.2. That means that 5.2-only niceties such as the extended http_build_query and the ability to do generic type hinting through E_RECOVERABLE are out
-  - Look at curl instead of fopen - not sure what it gains me?
-  - Look at xpath - Lumy suggests it is a better alternative to simplexml
-- Implement the rest of the API functions
-
-TODO list for 0.31
-- Add non-EvE EvE APIs, such as the one that eve-central is offering for market transactions
-
-TODO list for 0.32
-- Add a view into static data export, possibly using sqlite so it can be self-contained. Look at tying that into the asset data, though that'd be in an extended class. Currently quite shaky on
-  how the "view into data export" would work, even.
-
-Beyond? Don't know yet. Extending classes by utility functions and "cooked" data, maybe
+- Captured in branch; not duplicating it here
