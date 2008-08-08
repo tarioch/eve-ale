@@ -5,7 +5,6 @@ TODO list for 0.22
   and giving itself say 2 minutes every time it is called.
 - assetList's parser needs to be tested with recursion; create assets that have containers in containers
 - assetList's parser assumes there's always @attributes and discounts that by a simple count(); may have to check that assumption - or decide it's a good assumption
-- Write documentation for industryJobs
 - Test industryJobs
 - I get PHP warnings when the api server can't be resolved - that's not nice. See what can be done about that.
 
