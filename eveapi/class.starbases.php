@@ -59,7 +59,6 @@ class StarbaseDetail
 			{
 				//BUGBUG - once we have sane error reporting, an error should be reported here
 				//Also, if I can figure out how to do something like getName on xml without getName, that'd solve it
-				print("Yeah, we don't like your kind in this town.\n");
 				return null;
 			}
 

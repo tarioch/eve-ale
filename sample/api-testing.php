@@ -212,12 +212,12 @@ else
 
 print("\n\nRaw char industry jobs output\n\n");
 $industryxml = $api->getIndustryJobs();
-$industry = IndustryJobs::getIndustryJobs($assetxml);
+$industry = IndustryJobs::getIndustryJobs($industryxml);
 print_r($industry);
 
 print("\n\nRaw corp industry jobs output\n\n");
 $industryxml = $api->getIndustryJobs(true);
-$industry = IndustryJobs::getIndustryJobs($assetxml);
+$industry = IndustryJobs::getIndustryJobs($industryxml);
 print_r($industry);
 
 print("\n\nRaw char asset list output\n\n");

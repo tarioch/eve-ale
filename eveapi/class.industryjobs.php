@@ -25,10 +25,10 @@ class IndustryJobs
 	{
 	if (!empty($contents) && is_string($contents))
 		{
-	        	$output = array();
+	        $output = array();
 	 		$xml = new SimpleXMLElement($contents);
 
-	        	// add all accounts in an array
+	        // add all jobs in an array
 			foreach ($xml->result->rowset->row as $row)
 			{
 				$index = count($output);

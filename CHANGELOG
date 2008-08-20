@@ -1,4 +1,4 @@
-version 0.22, 2008-07-19
+version 0.22, 2008-08-19
 
 class.api.php changes:
 - Several users have run into issues with http_build_query using '&amp;' as a separator instead of '&' in their environment. Added some code to retrieveXML that will force it to be '&', and then
@@ -23,7 +23,7 @@ class.assetlist.php changes:
 
 General changes:
 - And for good measure, added the same manual garbage collection to all the parsing functions, as well
-- Added getAssetList and getIndustryJobs functions, donated by XXX
+- Added getAssetList and getIndustryJobs functions, donated by Dustin Tinklin
 - The library has moved to the LGPLv3 instead of the GPLv3. This means you are now free to use the library, and you do not have to GPLv3 the code that uses the library. If you make
   changes to the library, you do have to release those changes back to the public, even if you do not distribute your copy of the library but only use it to offer services through
   a web host. I feel that LGPLv3 gives much greater freedom all around to everyone - I get your changes to the library back, which I want; and you are free to use the library

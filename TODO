@@ -1,13 +1,8 @@
 TODO list for 0.22
-- There's an mkdir error in starbasedetails which puzzles me. May be my local way of doing things, I'm using links'n'shit. No wait, it's 5.1-only, and I tested this on 5.0. This should
-  not happen - have to look into what's going on here.
-- On a "fresh" system without any cache, the PHP script can run out of time because it takes so long to fetch everything from CCP and then parse it. May have to look into the api resetting the timer
-  and giving itself say 2 minutes every time it is called.
-- assetList's parser needs to be tested with recursion; create assets that have containers in containers
-- assetList's parser assumes there's always @attributes and discounts that by a simple count(); may have to check that assumption - or decide it's a good assumption
-- Test industryJobs
-- I get PHP warnings when the api server can't be resolved - that's not nice. See what can be done about that.
+- Nothing to be done
 
+TODO list for further 0.2x point releases
+- Malformed XML throws an exception - might want to catch that and attempt fetching XML once more
 
 TODO list for 0.30
 - Captured in branch; not duplicating it here
