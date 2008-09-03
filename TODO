@@ -1,0 +1,8 @@
+TODO list for 0.22
+- Nothing to be done
+
+TODO list for further 0.2x point releases
+- Malformed XML throws an exception - might want to catch that and attempt fetching XML once more
+
+TODO list for 0.30
+- Captured in branch; not duplicating it here
