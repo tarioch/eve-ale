@@ -23,21 +23,22 @@ class FactionalStats
 {
 	function getFactionalStats($contents)
 	{
-	if (!empty($contents) && is_string($contents))
+		if (!empty($contents) && is_string($contents))
 		{
-	        	$output = array();
+	       	$output = array();
 	 		$xml = new SimpleXMLElement($contents);
 			foreach ($xml->result->row as $row)
 			{
 				$index = count($output);
 				foreach ($row->attributes() as $name => $value)
 				{
-				$output[$index][(string) $name] = (string) $value;
+					$output[$index][(string) $name] = (string) $value;
 				}
 			}
+			unset ($xml); // manual garbage collection
 			return $output;
 		}
-	else
+		else
 		{
 			return null;
 		}

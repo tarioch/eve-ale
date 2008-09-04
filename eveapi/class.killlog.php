@@ -23,40 +23,42 @@ class KillLog
 {
 	function getKillLog($contents)
 	{
-	if (!empty($contents) && is_string($contents))
+		if (!empty($contents) && is_string($contents))
 		{
-	        	$output = array();
+	       	$output = array();
 	 		$xml = new SimpleXMLElement($contents);
 			foreach ($xml->result->rowset->row as $row)
 			{
 				$index = count($output);
 				foreach ($row->attributes() as $name => $value)
 				{
-				$output[$index][(string) $name] = (string) $value;
-				foreach  ($row->victim->attributes() as $name => $value)
+					$output[$index][(string) $name] = (string) $value;
+					foreach  ($row->victim->attributes() as $name => $value)
 					{
-					$output[$index]['victim'][(string) $name] = (string) $value;
+						$output[$index]['victim'][(string) $name] = (string) $value;
 					}
-				foreach ($row->rowset as $srow)
-				{
-				$rowatts = $srow->attributes();
-				$rowname = $rowatts['name'];
-				foreach ($srow->row as $arow)
+					foreach ($row->rowset as $srow)
 					{
-					$aindex = count($output[$index][(string)$rowname]);
-					foreach ($arow->attributes() as $aname => $avalue)
+						$rowatts = $srow->attributes();
+						$rowname = $rowatts['name'];
+						foreach ($srow->row as $arow)
 						{
-					$output[$index][(string) $rowname][$aindex][(string) $aname] = (string) $avalue;
-						}
-					}	
+							$aindex = count($output[$index][(string)$rowname]);
+							foreach ($arow->attributes() as $aname => $avalue)
+							{
+								$output[$index][(string) $rowname][$aindex][(string) $aname] = (string) $avalue;
+							}
+						}	
 					}
 				}
 			}
+			unset ($xml); // manual garbage collection
 			return $output;
 		}
-	else
+		else
 		{
 			return null;
 		}
 	}
 }
+?>

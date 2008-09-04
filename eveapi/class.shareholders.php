@@ -25,26 +25,28 @@ class ShareHolders
 	{
 	if (!empty($contents) && is_string($contents))
 		{
-	        	$output = array();
+	        $output = array();
 	 		$xml = new SimpleXMLElement($contents);
 			foreach($xml->result->rowset as $rowset)
 			{
-			$att = $rowset->attributes();
-			$type = $att['name'];
-			foreach ($rowset->row as $row)
-			{
+				$att = $rowset->attributes();
+				$type = $att['name'];
+				foreach ($rowset->row as $row)
+				{
 					$index = count($output[$type]);
 					foreach ($row->attributes() as $name => $value)
-						{
-					$output[(string) $type][$index][(string) $name] = (string) $value;
-						}
-					}	
-				}
+					{
+						$output[(string) $type][$index][(string) $name] = (string) $value;
+					}
+				}	
+			}
+			unset ($xml); // manual garbage collection
 			return $output;
 		}
-	else
+		else
 		{
 			return null;
 		}
 	}
 }
+?>
