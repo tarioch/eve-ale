@@ -945,5 +945,255 @@ class Api
 		return $contents;
 	}
 
+public function getFactionalOccupancy($timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getFactionalOccupancy: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+
+		$contents = $this->retrieveXml("/map/FacWarSystems.xml.aspx", $timeout, null, $cachethis);
+		
+		return $contents;
+	}
+
+	public function getFactionalStats($corp = false, $timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getFactionalStats: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+
+	 if (!is_bool($corp))
+		{
+		if ($this->debug)
+		{
+		$this->addMsg("Error","getFactionalStats: Non-bool value of corp param, reverting to default value");
+		}
+	$corp = false;
+	}
+	   $cachePath = array();
+	   $cachePath[0] = 'userID';
+	   $cachePath[1] = 'characterID';
+		if($corp == true)
+			{
+			$contents = $this->retrieveXml("/corp/FacWarStats.xml.aspx", $timeout, $cachePath, $cachethis);
+			}
+		else
+			{
+			$contents = $this->retrieveXml("/char/FacWarStats.xml.aspx", $timeout, $cachePath, $cachethis);
+			}
+		return $contents;
+	}
+
+	public function getFactionalTop100($timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getFactionalTop100: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+
+		$contents = $this->retrieveXml("/eve/FacWarTopStats.xml.aspx", $timeout, null, $cachethis);
+		
+		return $contents;
+	}
+
+	public function getMapJumps($timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMapJumps: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+
+		$contents = $this->retrieveXml("/map/Jumps.xml.aspx", $timeout, null, $cachethis);
+		
+		return $contents;
+	}
+
+	public function getMapSovereignty($timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMapSovereignty: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$contents = $this->retrieveXml("/map/Sovereignty.xml.aspx", $timeout, null, $cachethis);
+		return $contents;
+	}
+
+	public function getMapKills($timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMapKills: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$contents = $this->retrieveXml("/map/Kills.xml.aspx", $timeout, null, $cachethis);
+		return $contents;
+	}
+
+	public function getKillLog($corp = false, $timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getKillLog: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+	 
+	 if (!is_bool($corp))
+		{
+		if ($this->debug)
+		{
+		$this->addMsg("Error","getKillLog: Non-bool value of corp param, reverting to default value");
+		}
+	$corp = false;
+	}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		if($corp == true)
+			{
+			$contents = $this->retrieveXml("/corp/Killlog.xml.aspx", $timeout, $cachePath, $cachethis);
+			}
+		else
+			{
+			$contents = $this->retrieveXml("/char/KillLog.xml.aspx", $timeout, $cachePath, $cachethis);
+			}
+		return $contents;
+	}
+
+	public function getMarketOrders($corp = false, $timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMarketOrders: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+	 if (!is_bool($corp))
+		{
+		if ($this->debug)
+		{
+		$this->addMsg("Error","getMarketOrders: Non-bool value of corp param, reverting to default value");
+		}
+	$corp = false;
+	}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		if($corp == true)
+			{
+			$contents = $this->retrieveXml("/corp/MarketOrders.xml.aspx", $timeout, $cachePath, $cachethis);
+			}
+		else
+			{
+			$contents = $this->retrieveXml("/char/MarketOrders.xml.aspx", $timeout, $cachePath, $cachethis);
+			}
+		return $contents;
+	}
+
+	public function getConquerableStations($timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getConquerableStations: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout, null, $cachethis);
+		
+		return $contents;
+	}
+
+	public function getStandings($corp = false,$timeout = null)
+	{
+
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getConquerableStations: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		if($corp == true)
+		{
+		$contents = $this->retrieveXml("/corp/Standings.xml.aspx", $timeout, $cachePath, $cachethis);
+		}
+		else 
+		{
+		$contents = $this->retrieveXml("/char/Standings.xml.aspx", $timeout, $cachePath, $cachethis);
+		}
+		return $contents;
+	}
+
+	public function getContainerLog($timeout = null)
+	{
+
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getContainerLog: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		$contents = $this->retrieveXml("/corp/ContainerLog.xml.aspx", $timeout, $cachePath, $cachethis);
+		return $contents;
+	}
+
+	public function getShareHolders($timeout = null)
+	{
+
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getShareHolders: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		$contents = $this->retrieveXml("/corp/shareholders.xml.aspx", $timeout, $cachePath, $cachethis);
+		return $contents;
+	}
+
 }
 ?>
