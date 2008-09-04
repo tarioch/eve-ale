@@ -1191,9 +1191,61 @@ public function getFactionalOccupancy($timeout = null)
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
-		$contents = $this->retrieveXml("/corp/shareholders.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/ShareHolders.xml.aspx", $timeout, $cachePath, $cachethis);
+		return $contents;
+	}
+	public function getMemberSecurity($timeout = null)
+	{
+
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMemberSecurity: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		$contents = $this->retrieveXml("/corp/MemberSecurity.xml.aspx", $timeout, $cachePath, $cachethis);
 		return $contents;
 	}
 
+	public function getMemberSecurityLog($timeout = null)
+	{
+
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMemberSecurityLog: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		$contents = $this->retrieveXml("/corp/MemberSecurityLog.xml.aspx", $timeout, $cachePath, $cachethis);
+		return $contents;
+	}
+
+	public function getTitles($timeout = null)
+	{
+
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getTitles: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = 1500;
+		}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		$contents = $this->retrieveXml("/corp/Titles.xml.aspx", $timeout, $cachePath, $cachethis);
+		return $contents;
+	}
 }
 ?>
