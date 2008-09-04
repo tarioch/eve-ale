@@ -21,47 +21,45 @@
 
 class Standings
 {
+	function getToFrom($standing)
+	{
+		foreach($standing->children() as $tf)
+		{
+		$tfname = $tf->getName();
+			foreach ($tf->rowset as $rowst)
+			{
+				$rowatts = $rowst->attributes();
+				$rowname = $rowatts['name'];
+				foreach ($rowst->row as $row)
+				{
+					$index = count($op[$tfname][(string)$rowname]);
+					foreach ($row->attributes() as $name => $value)
+					{
+						$op[$tfname][(string) $rowname][$index][(string) $name] = (string) $value;
+					}
+				}	
+			}
+		}
+	return $op;
+	}	
+
 	function getStandings($contents)
 	{
 		if (!empty($contents) && is_string($contents))
 		{
 	       	$output = array();
 	 		$xml = new SimpleXMLElement($contents);
+			if($xml->result->allianceStandings->standingsTo)
+			{
+				$output[(string) 'allianceStandings'] = Standings::getToFrom($xml->result->allianceStandings);
+			}
 			if($xml->result->corporationStandings->standingsTo)
 			{
-				$st = $xml->result->corporationStandings->standingsTo;
-				$sf = $xml->result->corporationStandings->standingsFrom;
+				$output[(string) 'corporationStandings'] = Standings::getToFrom($xml->result->corporationStandings);
 			}
 			else
 			{
-				$st = $xml->result->standingsTo;
-				$sf = $xml->result->standingsFrom;
-			}
-			foreach ($st->rowset as $rowst)
-			{
-				$rowatts = $rowst->attributes();
-				$rowname = $rowatts['name'];
-				foreach ($rowst->row as $arow)
-				{
-					$aindex = count($output[(string) 'standingsto'][(string)$rowname]);
-					foreach ($arow->attributes() as $aname => $avalue)
-					{
-						$output[(string) 'standingsto'][(string) $rowname][$aindex][(string) $aname] = (string) $avalue;
-					}
-				}	
-			}
-			foreach ($sf->rowset as $rowst)	
-			{
-				$rowatts = $rowst->attributes();
-				$rowname = $rowatts['name'];
-				foreach ($rowst->row as $arow)
-				{
-					$aindex = count($output[(string) 'standingsfrom'][(string)$rowname]);
-					foreach ($arow->attributes() as $aname => $avalue)
-					{
-						$output[(string) 'standingsfrom'][(string) $rowname][$aindex][(string) $aname] = (string) $avalue;
-					}
-				}
+				$output[(string) 'characterStandings']= Standings::getToFrom($xml->result);
 			}
 			unset ($xml); // manual garbage collection
 			return $output;
