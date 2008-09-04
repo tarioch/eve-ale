@@ -2,6 +2,8 @@ TODO list for 0.22
 - Nothing to be done
 
 TODO list for further 0.2x point releases
+- getStandings requires alteration for Alliance, return array for Char to change to an equivlant format as Corp/Alliance Array
+- Addition of MemberSecurity, MemberSecurityLog and Titles to be added
 - Malformed XML throws an exception - might want to catch that and attempt fetching XML once more
 
 TODO list for 0.30
