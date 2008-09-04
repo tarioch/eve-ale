@@ -1,4 +1,4 @@
-version 0.22+ 2008-09-03
+version 0.23 2008-09-03
 
 
 - Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getMapKills, getMapSovereignty, getMapJumps, getFactionalTop100, getFactionalStats, getFactionalOccupancy by Eld

@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib ContainerLog Class
+	PHP Api Lib ConquerableStations Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
@@ -19,9 +19,9 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-class ContainerLog
+class ConquerableStations
 {
-	function getContainerLog($contents)
+	function getConquerableStations($contents)
 	{
 	if (!empty($contents) && is_string($contents))
 		{
