@@ -1248,5 +1248,79 @@ class Api
 		$contents = $this->retrieveXml("/corp/Titles.xml.aspx", $timeout, $cachePath);
 		return $contents;
 	}
+	public function getErrorList($timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getErrorList: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+		$contents = $this->retrieveXml("/eve/ErrorList.xml.aspx", $timeout);
+		return $contents;
+	}
+
+	public function getCharacterName($ids = array(),$timeout = null )
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getCharacterName: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+		if (!is_array($ids) or empty($ids) )
+			{
+				$this->addMsg("Error","getCharacterName: Non-array value or empty array of IDs param, returning null");
+				return null;
+			}
+		foreach($ids as $ind => $value)
+			{
+			if($ind == 1)
+			{
+			$app = $value;
+			}
+			else
+			{
+			$app = $app . ',' . $value;
+			}
+			}
+		$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx?ids=$app" , $timeout);
+		return $contents;		
+		
+	}
+	
+	public function getCharacterID($names = array(), $timeout = null)
+	{
+		if (!is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getCharacterID: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+		if (!is_array($names) or empty($names) )
+			{
+				$this->addMsg("Error","getCharacterID: Non-array value or empty array of names param, returning null");
+				return null;
+			}
+		foreach($names as $ind => $value)
+			{
+			if($ind  == 1)
+			{
+			$app = $value;
+			}
+			else
+			{
+			$app = $app . ',' . $value;
+			}
+			}		
+		$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx?names=$app" , $timeout);
+		return $contents;
+	}
 }
 ?>
