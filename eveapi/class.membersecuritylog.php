@@ -50,9 +50,13 @@ class MemberSecurityLog
 					}
 				}
 			}
-
+			unset($xml);
+			return $output;
 		}
-	return $output;
+		else
+		{
+			return null;
+		}
 	}
 }
 
