@@ -936,16 +936,16 @@ class Api
 
 		if ($corp == true)
 		{
-			$contents = $this->retrieveXml("/corp/IndustryJobs.xml.aspx", $timeout, $cachePath, $cachethis);
+			$contents = $this->retrieveXml("/corp/IndustryJobs.xml.aspx", $timeout, $cachePath);
 		}
 		else
 		{
-			$contents = $this->retrieveXml("/char/IndustryJobs.xml.aspx", $timeout, $cachePath, $cachethis);
+			$contents = $this->retrieveXml("/char/IndustryJobs.xml.aspx", $timeout, $cachePath);
 		}
 		return $contents;
 	}
 
-public function getFactionalOccupancy($timeout = null)
+	public function getFactionalOccupancy($timeout = null)
 	{
 		if (!is_numeric($timeout))
 		{
@@ -953,10 +953,10 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getFactionalOccupancy: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 
-		$contents = $this->retrieveXml("/map/FacWarSystems.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/map/FacWarSystems.xml.aspx", $timeout);
 		
 		return $contents;
 	}
@@ -969,28 +969,28 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getFactionalStats: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 
-	 if (!is_bool($corp))
+		if (!is_bool($corp))
 		{
-		if ($this->debug)
-		{
-		$this->addMsg("Error","getFactionalStats: Non-bool value of corp param, reverting to default value");
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getFactionalStats: Non-bool value of corp param, reverting to default value");
+			}
+			$corp = false;
 		}
-	$corp = false;
-	}
-	   $cachePath = array();
-	   $cachePath[0] = 'userID';
-	   $cachePath[1] = 'characterID';
+		$cachePath = array();
+		$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
 		if($corp == true)
-			{
-			$contents = $this->retrieveXml("/corp/FacWarStats.xml.aspx", $timeout, $cachePath, $cachethis);
-			}
+		{
+			$contents = $this->retrieveXml("/corp/FacWarStats.xml.aspx", $timeout, $cachePath);
+		}
 		else
-			{
-			$contents = $this->retrieveXml("/char/FacWarStats.xml.aspx", $timeout, $cachePath, $cachethis);
-			}
+		{
+			$contents = $this->retrieveXml("/char/FacWarStats.xml.aspx", $timeout, $cachePath);
+		}
 		return $contents;
 	}
 
@@ -1002,10 +1002,10 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getFactionalTop100: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 
-		$contents = $this->retrieveXml("/eve/FacWarTopStats.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/eve/FacWarTopStats.xml.aspx", $timeout);
 		
 		return $contents;
 	}
@@ -1018,10 +1018,10 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getMapJumps: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 
-		$contents = $this->retrieveXml("/map/Jumps.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/map/Jumps.xml.aspx", $timeout);
 		
 		return $contents;
 	}
@@ -1034,9 +1034,9 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getMapSovereignty: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
-		$contents = $this->retrieveXml("/map/Sovereignty.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/map/Sovereignty.xml.aspx", $timeout);
 		return $contents;
 	}
 
@@ -1048,9 +1048,9 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getMapKills: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
-		$contents = $this->retrieveXml("/map/Kills.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/map/Kills.xml.aspx", $timeout);
 		return $contents;
 	}
 
@@ -1062,28 +1062,28 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getKillLog: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 	 
-	 if (!is_bool($corp))
+		if (!is_bool($corp))
 		{
-		if ($this->debug)
-		{
-		$this->addMsg("Error","getKillLog: Non-bool value of corp param, reverting to default value");
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getKillLog: Non-bool value of corp param, reverting to default value");
+			}
+			$corp = false;
 		}
-	$corp = false;
-	}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 		if($corp == true)
-			{
-			$contents = $this->retrieveXml("/corp/Killlog.xml.aspx", $timeout, $cachePath, $cachethis);
-			}
+		{
+			$contents = $this->retrieveXml("/corp/Killlog.xml.aspx", $timeout, $cachePath);
+		}
 		else
-			{
-			$contents = $this->retrieveXml("/char/KillLog.xml.aspx", $timeout, $cachePath, $cachethis);
-			}
+		{
+			$contents = $this->retrieveXml("/char/KillLog.xml.aspx", $timeout, $cachePath);
+		}
 		return $contents;
 	}
 
@@ -1095,27 +1095,27 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getMarketOrders: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
-	 if (!is_bool($corp))
+		if (!is_bool($corp))
 		{
-		if ($this->debug)
-		{
-		$this->addMsg("Error","getMarketOrders: Non-bool value of corp param, reverting to default value");
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMarketOrders: Non-bool value of corp param, reverting to default value");
+			}
+			$corp = false;
 		}
-	$corp = false;
-	}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 		if($corp == true)
-			{
-			$contents = $this->retrieveXml("/corp/MarketOrders.xml.aspx", $timeout, $cachePath, $cachethis);
-			}
+		{
+			$contents = $this->retrieveXml("/corp/MarketOrders.xml.aspx", $timeout, $cachePath);
+		}
 		else
-			{
-			$contents = $this->retrieveXml("/char/MarketOrders.xml.aspx", $timeout, $cachePath, $cachethis);
-			}
+		{
+			$contents = $this->retrieveXml("/char/MarketOrders.xml.aspx", $timeout, $cachePath);
+		}
 		return $contents;
 	}
 
@@ -1127,9 +1127,9 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getConquerableStations: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
-		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout, null, $cachethis);
+		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout);
 		
 		return $contents;
 	}
@@ -1141,20 +1141,20 @@ public function getFactionalOccupancy($timeout = null)
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","getConquerableStations: Non-numeric value of timeout param, reverting to default value");
+				$this->addMsg("Error","getStandings: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 		if($corp == true)
 		{
-		$contents = $this->retrieveXml("/corp/Standings.xml.aspx", $timeout, $cachePath, $cachethis);
+			$contents = $this->retrieveXml("/corp/Standings.xml.aspx", $timeout, $cachePath);
 		}
 		else 
 		{
-		$contents = $this->retrieveXml("/char/Standings.xml.aspx", $timeout, $cachePath, $cachethis);
+			$contents = $this->retrieveXml("/char/Standings.xml.aspx", $timeout, $cachePath);
 		}
 		return $contents;
 	}
@@ -1168,12 +1168,12 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getContainerLog: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
-		$contents = $this->retrieveXml("/corp/ContainerLog.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/ContainerLog.xml.aspx", $timeout, $cachePath);
 		return $contents;
 	}
 
@@ -1186,14 +1186,15 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getShareHolders: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
-		$contents = $this->retrieveXml("/corp/ShareHolders.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/ShareHolders.xml.aspx", $timeout, $cachePath);
 		return $contents;
 	}
+	
 	public function getMemberSecurity($timeout = null)
 	{
 
@@ -1203,12 +1204,12 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getMemberSecurity: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
-		$contents = $this->retrieveXml("/corp/MemberSecurity.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/MemberSecurity.xml.aspx", $timeout, $cachePath);
 		return $contents;
 	}
 
@@ -1221,12 +1222,12 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getMemberSecurityLog: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
-		$contents = $this->retrieveXml("/corp/MemberSecurityLog.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/MemberSecurityLog.xml.aspx", $timeout, $cachePath);
 		return $contents;
 	}
 
@@ -1239,12 +1240,12 @@ public function getFactionalOccupancy($timeout = null)
 			{
 				$this->addMsg("Error","getTitles: Non-numeric value of timeout param, reverting to default value");
 			}
-			$timeout = 1500;
+			$timeout = null;
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
-		$contents = $this->retrieveXml("/corp/Titles.xml.aspx", $timeout, $cachePath, $cachethis);
+		$contents = $this->retrieveXml("/corp/Titles.xml.aspx", $timeout, $cachePath);
 		return $contents;
 	}
 }
