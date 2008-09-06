@@ -947,7 +947,7 @@ class Api
 
 	public function getFactionalOccupancy($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -963,7 +963,7 @@ class Api
 
 	public function getFactionalStats($corp = false, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -996,7 +996,7 @@ class Api
 
 	public function getFactionalTop100($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1012,7 +1012,7 @@ class Api
 
 	public function getMapJumps($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1028,7 +1028,7 @@ class Api
 
 	public function getMapSovereignty($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1042,7 +1042,7 @@ class Api
 
 	public function getMapKills($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1056,7 +1056,7 @@ class Api
 
 	public function getKillLog($corp = false, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1089,7 +1089,7 @@ class Api
 
 	public function getMarketOrders($corp = false, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1121,7 +1121,7 @@ class Api
 
 	public function getConquerableStations($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1137,7 +1137,7 @@ class Api
 	public function getStandings($corp = false,$timeout = null)
 	{
 
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1162,7 +1162,7 @@ class Api
 	public function getContainerLog($timeout = null)
 	{
 
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1180,7 +1180,7 @@ class Api
 	public function getShareHolders($timeout = null)
 	{
 
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1198,7 +1198,7 @@ class Api
 	public function getMemberSecurity($timeout = null)
 	{
 
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1216,7 +1216,7 @@ class Api
 	public function getMemberSecurityLog($timeout = null)
 	{
 
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1233,8 +1233,7 @@ class Api
 
 	public function getTitles($timeout = null)
 	{
-
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1248,9 +1247,10 @@ class Api
 		$contents = $this->retrieveXml("/corp/Titles.xml.aspx", $timeout, $cachePath);
 		return $contents;
 	}
+
 	public function getErrorList($timeout = null)
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1264,7 +1264,7 @@ class Api
 
 	public function getCharacterName($ids = array(),$timeout = null )
 	{
-		if (!is_numeric($timeout))
+		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
@@ -1273,54 +1273,63 @@ class Api
 			$timeout = null;
 		}
 		if (!is_array($ids) or empty($ids) )
-			{
+		{
 				$this->addMsg("Error","getCharacterName: Non-array value or empty array of IDs param, returning null");
 				return null;
-			}
+		}
 		foreach($ids as $ind => $value)
-			{
+		{
 			if($ind == 1)
 			{
-			$app = $value;
+				$app = $value;
 			}
 			else
 			{
-			$app = $app . ',' . $value;
+				$app = $app . ',' . $value;
 			}
-			}
+		}
 		$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx?ids=$app" , $timeout);
 		return $contents;		
-		
 	}
 	
-	public function getCharacterID($names = array(), $timeout = null)
+	public function getCharacterID($names, $timeout = null)
 	{
-		if (!is_numeric($timeout))
+	// This is a function that should not be cached.  Unless $timeout is given, indicating a desire to cache by the user, we will turn off caching.
+		$uc = $this->usecache;
+	
+		if ($timeout && !is_numeric($timeout))
 		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterID: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				if ($this->debug)
+				{
+					$this->addMsg("Error","getCharacterID: Non-numeric value of timeout param, reverting to default value");
+				}
+				$timeout = null;
 		}
-		if (!is_array($names) or empty($names) )
+
+		if (is_string($names))
+		{
+			if ($uc) // caching is currently enabled, disable it for the duration
 			{
-				$this->addMsg("Error","getCharacterID: Non-array value or empty array of names param, returning null");
+				$this->cache(FALSE);
+			}
+
+			$params = array();
+			$params['names'] = $names;
+
+			$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx",$timeout,null,$params);
+			
+			if ($uc) // caching was enabled, enable it again
+			{
+				$this->cache($uc);
+			}
+
+			return $contents;
+		}
+		else
+		{
+				$this->addMsg("Error","getCharacterID: Non-string or empty value of names param, returning null");
 				return null;
-			}
-		foreach($names as $ind => $value)
-			{
-			if($ind  == 1)
-			{
-			$app = $value;
-			}
-			else
-			{
-			$app = $app . ',' . $value;
-			}
-			}		
-		$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx?names=$app" , $timeout);
-		return $contents;
+		}
 	}
 }
 ?>

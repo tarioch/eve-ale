@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib MapSovereignty Class
+	PHP Api Lib CharacterName Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
@@ -29,10 +29,11 @@ class CharacterName
 	 		$xml = new SimpleXMLElement($contents);
 			foreach ($xml->result->rowset->row as $row)
 			{
-			$rowatt = $row->attributes();
-			$name = $rowatt[(string) 'name'];
-			$ID = $rowatt[(string) 'characterID']; 
-			$output[(string) $ID] = (string) $name;
+				$index = count($output);
+				foreach ($row->attributes() as $name => $value)
+				{
+					$output[$index][(string) $name] = (string) $value;
+				}
 			}
 			unset ($xml); // manual garbage collection
 			return $output;

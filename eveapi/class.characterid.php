@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib MapSovereignty Class
+	PHP Api Lib CharacterID Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
@@ -25,17 +25,21 @@ class CharacterID
 	{
 		if (!empty($contents) && is_string($contents))
 		{
-	 	      	$output = array();
+	 	    $output = array();
 	 		$xml = new SimpleXMLElement($contents);
-			$rs = $xml->result->rowset->children();
-			foreach ($rs as $row)
+			// BUGBUG - CCP returns <row:name/> here instead of <row>, with an xmlns:row="characterID" declaration. Hence, we have to use children() to step through that namespace
+			// Once CCP fixes the API, this parser will need to return to "standard" parsing, commented out below, instead of the two lines used now
+//			foreach ($xml->result->rowset->row as $row) 
+			$rows = $xml->result->rowset->children('characterID'); // Referencing the row namespace by its 'characterID' value
+			foreach ($rows as $row)
 			{
-				$rowatt = $row->attributes();
-				$name = $rowatt[(string) 'name'];
-				$id = $rowatt[(string) 'characterID']; 
-				print $name ." ". $id;
-				$output[(string) $name] = (string) $id;
+				$index = count($output);
+				foreach ($row->attributes() as $name => $value)
+				{
+					$output[$index][(string) $name] = (string) $value;
+				}
 			}
+
 			unset ($xml); // manual garbage collection
 			return $output;
 		}
