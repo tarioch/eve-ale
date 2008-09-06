@@ -7,6 +7,7 @@ TODO list for 0.23
 - Retest API functions that have changed in Revelations 1.1
 - Add the ability to autoload class files to the library, and change api-testing to use this
 - Change caching logic to deal with currentTime and cachedUntil being identical (indicating that the result should not be fetched from cache)
+- Change caching logic so no cache file is created if $api->cache(FALSE)
 - Malformed XML throws an exception - might want to catch that and attempt fetching XML once more. On 2nd thought, we can't re-fetch because of the current layout of the library. What a PITA. At least the exception can be caught.
 
 TODO list for 0.30

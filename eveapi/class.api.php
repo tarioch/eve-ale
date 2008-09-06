@@ -1262,8 +1262,11 @@ class Api
 		return $contents;
 	}
 
-	public function getCharacterName($ids = array(),$timeout = null )
+	public function getCharacterName($ids, $timeout = null )
 	{
+	// This is a function that should not be cached.  Unless $timeout is given, indicating a desire to cache by the user, we will turn off caching.
+		$uc = $this->usecache;
+
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
@@ -1272,24 +1275,30 @@ class Api
 			}
 			$timeout = null;
 		}
-		if (!is_array($ids) or empty($ids) )
+
+		if (is_string($ids) || is_numeric($ids))
 		{
-				$this->addMsg("Error","getCharacterName: Non-array value or empty array of IDs param, returning null");
+			if ($uc) // caching is currently enabled, disable it for the duration
+			{
+				$this->cache(FALSE);
+			}
+
+			$params = array();
+			$params['ids'] = $ids;
+
+			$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx",$timeout,null,$params);
+			
+			if ($uc) // caching was enabled, enable it again
+			{
+				$this->cache($uc);
+			}
+			return $contents;		
+		}
+		else
+		{
+				$this->addMsg("Error","getCharacterName: Non-string/non-numeric or empty value of ids param, returning null");
 				return null;
 		}
-		foreach($ids as $ind => $value)
-		{
-			if($ind == 1)
-			{
-				$app = $value;
-			}
-			else
-			{
-				$app = $app . ',' . $value;
-			}
-		}
-		$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx?ids=$app" , $timeout);
-		return $contents;		
 	}
 	
 	public function getCharacterID($names, $timeout = null)
