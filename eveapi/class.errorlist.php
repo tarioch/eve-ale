@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib MapSovereignty Class
+	PHP Api Lib ErrorList Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
