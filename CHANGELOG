@@ -1,7 +1,12 @@
 version 0.23 2008-09-03
 
+Addition of Eve central XML parsing classes.
+Addition of API classes CharacterName CharacterID ErrorList
+Addition of MemberSecurity, MemberSecurityLog and Titles APIs
+Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getMapKills, getMapSovereignty, getMapJumps, getFactionalTop100, getFactionalStats, getFactionalOccupancy
 
-- Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getMapKills, getMapSovereignty, getMapJumps, getFactionalTop100, getFactionalStats, getFactionalOccupancy by Eld
+class.standings.php
+- Standings::getStandings changed to parse and return allianceStandings with the corp standings, Array returned for personal standings altered to same format as Corpstandigns
 
 version 0.22, 2008-08-19
 
