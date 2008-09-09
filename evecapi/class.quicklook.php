@@ -31,9 +31,12 @@ class QuickLook
 			foreach ($children as $key=>$value)
 			{
 			//print $key ." = ". $value ."\n"; 
-			if($key != 'sell_orders' and $key != 'buy_orders' and $key != 'regions')
+			if($key == 'sell_orders' or $key == 'buy_orders' or $key == 'regions')
 			{
-				$output[(string) $key] = (string) $value;
+			}
+			else {
+			$output[(string) $key] = (string) $value;
+			}
 			}
 			foreach ($children as $child)
 			{
@@ -49,16 +52,20 @@ class QuickLook
 						}
 						foreach ($order->children() as $key=>$value)
 						{
-							$output[(string) $bsname][$index][(string) $key] = (string) $value;
+						$output[(string) $bsname][$index][(string) $key] = (string) $value;
 						}
 					}
-					if($child->getName() == 'regions')
+				if($child->getName() == 'regions')
 					{
-						$bsname = (string) $child->getName();
-						foreach ($child->children() as $key=>$value)
-						{
-							$output[(string) $bsname][] = (string) $value;
-						}
+					$bsname = (string) $child->getName();
+					foreach ($child->children() as $key=>$value)
+					{
+					$output[(string) $bsname][] = (string) $value;
+					}
+					if(!$child->children())
+					{
+					$output[(string) $bsname][] = "";
+					}
 					}
 				}
 			}

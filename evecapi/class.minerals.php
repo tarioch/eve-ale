@@ -26,12 +26,13 @@ class Minerals
 		if (!empty($contents) && is_string($contents))
 		{
 	       	$output = array();
+		// no xml line or initial tags, adding.
+		$contents = '<?xml version="1.0" encoding="utf-8" ?>' ."\n" .'<evec_api version="2.0" method="minerals_xml">' ."\n" . $contents .'</evec_api>';
 	 		$xml = new SimpleXMLElement($contents);
-			$xml->minerals;
-			foreach ($xml->minerals->mineral as $min)
+			foreach ($xml->minerals->children() as $min)
 			{
-				$index = count($ouput);
-				foreach($min->children as $key=>$value)
+				$index = count($output);
+				foreach($min->children() as $key=>$value)
 				{
 					$output[$index][(string) $key] = (string) $value;
 				}
