@@ -30,7 +30,7 @@ class MarketStat
 			$children = $xml->marketstat->children();
 			foreach ($children as $child)
 			{
-				$index = count($ouput);
+				$index = count($output);
 				$catt = $child->attributes();
 				$output[$index][(string) 'typeID'] = (string) $catt['id'];
 				foreach($child->children() as $sells)

@@ -166,7 +166,10 @@ class evec
 				ini_set('arg_separator.output','&');
 				// poststring
 				if (count($params) > 0)
-					$poststring = http_build_query($params); // which has been forced to use '&' by ini_set, at the end of this file
+							  // preg_replace to strip out urlencoded [int] introduced by using numbered and complex arrays with http_build_query
+							  // as this I only intend for this to be a hacked temp retrieval for evec this stops the build query giving a post string from $params that cuases evec to bomb with a 500
+							  // when wishing to supply more than one typeid or regionlimit.
+					$poststring = preg_replace( '/%5B(\d+)%5D/','', http_build_query($params)); // which has been forced to use '&' by ini_set, at the end of this file						
 				else
 					$poststring = "";
 				// And set it back to whatever sensical or non-sensical value it was in the 1st place

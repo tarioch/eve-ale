@@ -1,6 +1,6 @@
-version 0.23 2008-09-03
+version 0.23 2008-09-10
 
-Addition of Eve central XML parsing classes.
+Addition of Eve central XML parsing classes, basic retrieval function and testing script.
 Addition of API classes CharacterName CharacterID ErrorList
 Addition of MemberSecurity, MemberSecurityLog and Titles APIs
 Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getMapKills, getMapSovereignty, getMapJumps, getFactionalTop100, getFactionalStats, getFactionalOccupancy

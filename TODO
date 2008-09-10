@@ -1,5 +1,5 @@
 TODO list for 0.23
-- evecapi class files created but no retrieval and caching function yet exists 
+- evecapi class files created but only a basic retrieval not supporting a caching functions yet exists 
 - getStandings requires alteration for Alliance, return array for Char to change to an equivlant format as Corp/Alliance Array - done
 - Addition of MemberSecurity, MemberSecurityLog and Titles to be added - done
 - Addition of remaining API classes CharacterName CharacterID ErrorList and the ID to image service (done bar image)
@@ -11,5 +11,5 @@ TODO list for 0.23
 - Change caching logic so no cache file is created if $api->cache(FALSE)
 - Malformed XML throws an exception - might want to catch that and attempt fetching XML once more. On 2nd thought, we can't re-fetch because of the current layout of the library. What a PITA. At least the exception can be caught.
 
-TODO list for 0.30
+TODO list for 0.50
 - Captured in branch; not duplicating it here
