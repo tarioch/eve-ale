@@ -1,4 +1,5 @@
 TODO list for 0.23
+- caching method doesn't handle 0 length files in it's cache, fix added
 - evecapi class files created but only a basic retrieval not supporting a caching functions yet exists 
 - getStandings requires alteration for Alliance, return array for Char to change to an equivlant format as Corp/Alliance Array - done
 - Addition of MemberSecurity, MemberSecurityLog and Titles to be added - done

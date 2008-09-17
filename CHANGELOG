@@ -8,6 +8,9 @@ Added getShareHolders, getContainerLog, getStandings, getConquerableStations, ge
 class.standings.php
 - Standings::getStandings changed to parse and return allianceStandings with the corp standings, Array returned for personal standings altered to same format as Corpstandigns
 
+class.api.php + class.evec.php
+- isCached() add filesize check to the function else 0 sized cache files can cause fatal errors, and don't get replaced. 
+
 version 0.22, 2008-08-19
 
 class.api.php changes:

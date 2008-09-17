@@ -348,7 +348,7 @@ class evec
 		{
 		$file = $this->getCacheFile($path, $params, $cachePath);
 
-		if (file_exists($file))
+		if (file_exists($file) && filesize($file) > 0) // Added filesize to catch error on 0 length files.
 		{
 			$fp = fopen($file, "r");
 			
