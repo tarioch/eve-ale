@@ -236,7 +236,7 @@ class Api
 				else
 					$poststring = "";
 				// And set it back to whatever sensical or non-sensical value it was in the 1st place
-				ini_set('arg_separator.output','&');
+				ini_set('arg_separator.output',$sep);
 
 				// open connection to the api
 				// Note some free PHP5 servers block fsockopen() - in that case, find a different hosting provider, please
