@@ -6,14 +6,22 @@ TODO list for 0.23
 - Addition of remaining API classes CharacterName CharacterID ErrorList and the ID to image service (done bar image)
 - Add test cases for the added functions to api-testing 
 - Document added functions
-- Retest API functions that have changed in Revelations 1.1
 - Add the ability to autoload class files to the library, and change api-testing to use this
-- Change caching logic to deal with currentTime and cachedUntil being identical (indicating that the result should not be fetched from cache)
-- Change caching logic so no cache file is created if $api->cache(FALSE)
+- Change caching logic to deal with currentTime and cachedUntil being identical (indicating that the result should not be fetched from cache) - done, needs testing
+- Change caching logic so no cache file is created if $api->cache(FALSE) - done, needs testing
 - Malformed XML throws an exception - might want to catch that and attempt fetching XML once more. On 2nd thought, we can't re-fetch because of the current layout of the library. What a PITA. At least the exception can be caught.
 - If XML in cache file got corrupted, we need to be able to discard that file and fetch anew
 - Function to clean up the cache - maybe on a few levels: All by freshness, all by userid regardless of freshness, all by charid regardless of freshness
-
+- (Re)test API functions that have changed in Revelations 1.1
+Added ../corp/Shareholders.xml.aspx
+Added ../corp/MemberSecurity.xml.aspx
+Added ../corp/MemberSecurityLog.xml.aspx
+Added ../corp/Titles.xml.aspx
+Added ../corp/ContainerLog.xml.aspx
+Added ../corp/Standings.xml.aspx
+Added ../char/Standings.xml.aspx
+Added Clone Name and Skillpoints to character sheet.
+Added Role and Title lists to character sheet.
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here
