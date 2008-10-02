@@ -1,8 +1,7 @@
 <?php
 /**************************************************************************
-	PHP Api Lib WalletTransactions Class legacy include file and Transaction class def
-	Portions Copyright (C) 2007 Kw4h
-	Portions Copyright (c) 2008 Thorsten Behrens
+	PHP Api Lib StarbaseList Class
+	Copyright (c) 2008 Thorsten Behrens
 
 	This file is part of PHP Api Lib.
 
@@ -19,17 +18,32 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
-// class.transactions.php was renamed to be in line with new naming conventions - this file allows for legacy code to continue working
-require_once('./class.wallettransactions.php'); 
 
-// The below is legacy code and left in so as to not break code that expects 0.20 behavior
-class Transaction
-{
-	static function getTransaction($contents)
-	{
-		$output = WalletTransactions::getWalletTransactions($contents);
-		
-		return $output;
+class StarbaseList
+{	
+	static function getStarbaseList($contents)
+	{		
+		if (!empty($contents) && is_string($contents))
+		{
+			$xml = new SimpleXMLElement($contents);
+			$output = array();
+			
+			foreach ($xml->result->rowset->row as $row)
+			{
+				$index = count($output);
+				foreach ($row->attributes() as $key => $val)
+				{
+					$output[$index][(string) $key] = (string) $val;
+				}
+			}
+			unset ($xml); // manual garbage collection			
+			return $output;
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
+
 ?>

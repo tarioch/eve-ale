@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib Generic Class
+	PHP Api Lib SkillTree/RefTypes Class legacy include file and Generic Class def
 	Portions Copyright (C) 2007 Kw4h
 	Portions Copyright (c) 2008 Thorsten Behrens
 
@@ -19,114 +19,24 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
+// class.generic.php was renamed to be in line with new naming conventions - this file allows for legacy code to continue working
+require_once('./class.skilltree.php'); 
+require_once('./class.reftypes.php'); 
 
 class Generic
 {
 	static function getSkillTree($contents)
 	{		
-		if (!empty($contents) && is_string($contents))
-		{
-			$xml = new SimpleXMLElement($contents);
-			$output = array();
-			
-			// categories
-			foreach ($xml->result->rowset->row as $row)
-			{
-				$output[(string) $row['groupName']]['groupID'] = (int) $row['groupID'];
-				$output[(string) $row['groupName']]['skills'] = array();
-				
-				// get all skills
-				foreach ($row->rowset->row as $row2)
-				{
-					$index = count($output[(string) $row['groupName']]['skills']);
-					$output[(string) $row['groupName']]['skills'][$index]['requiredSkills'] = array();
-					$output[(string) $row['groupName']]['skills'][$index]['requiredAttributes'] = array();
-					
-					// foreach attribute of the skill
-					foreach ($row2->attributes() as $key => $val)
-					{
-						$output[(string) $row['groupName']]['skills'][$index][(string) $key] = (string) $val;
-					}
-					
-					// all the subitems, except 'rowset' & ' requiredAttributes'
-					foreach ($row2->children() as $key => $val)
-					{
-						if ((string) $key != "requiredAttributes" && (string) $key != "rowset")
-						{
-							$output[(string) $row['groupName']]['skills'][$index][(string) $key] = (string) $val;
-						}
-					}
-					
-					// get all the required skills
-					foreach ($row2->rowset->row as $row3)
-					{
-						$index2 = count($output[(string) $row['groupName']]['skills'][$index]['requiredSkills']);
-						
-						// attributes
-						foreach ($row3->attributes() as $key => $val)
-						{
-							$output[(string) $row['groupName']]['skills'][$index]['requiredSkills'][$index2][(string) $key] = (string) $val;
-						}
-					}
-					
-					// get all required attributes
-					foreach ($row2->requiredAttributes->children() as $key => $val)
-					{
-						$output[(string) $row['groupName']]['skills'][$index]['requiredAttributes'][(string) $key] = (string) $val;
-					}
-				}
-				
-			}
-			unset ($xml); // manual garbage collection			
-			return ($output);
-		}
-		else
-		{
-			return null;
-		}
+		$output = SkillTree::getSkillTree($contents);
+		
+		return $output;
 	}
 	
 	static function getRefTypes($contents)
 	{		
-		if (!empty($contents) && is_string($contents))
-		{
-			$xml = new SimpleXMLElement($contents);
-			$output = array();
-			
-			foreach ($xml->result->rowset->row as $row)
-			{
-				$output[(int) $row['refTypeID']] = (string) $row['refTypeName'];
-			}
-			unset ($xml); // manual garbage collection			
-			return $output;
-		}
-		else
-		{
-			return null;
-		}
-	}
-}
-
-// Classes to bring getSkillTree and getRefTypes in line with how all other parsers work
-
-class SkillTree
-{
-	static function getSkillTree($contents)
-	{
-		$output = Generic::getSkillTree($contents);
+		$output = RefTypes::getRefTypes($contents);
 		
 		return $output;
 	}
 }
-
-class RefTypes
-{
-	static function getRefTypes($contents)
-	{
-		$output = Generic::getRefTypes($contents);
-		
-		return $output;
-	}
-}
-
 ?>

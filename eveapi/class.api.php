@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib, v0.22, 2008-07-19
+	PHP Api Lib, v0.23, 2008-09-30
 
 	Portions Copyright (C) 2007  Kw4h
 	Portions Copyright (C) 2008 Pavol Kovalik
@@ -31,7 +31,7 @@ class Api
 	private $charid = null;
 	private $apisite = "api.eve-online.com";
 	private $cachedir = './xmlcache';
-	public $debug = false;
+	private $debug = false;
 	private $msg = array();
 	private $usecache = true;
 	private $timetolerance = 5; // minutes to wait after cachedUntil, to allow for the server's time being fast
@@ -90,7 +90,17 @@ class Api
 		return true;
 	}
 	
-	public function debug($bool)
+	public function getCredentials()
+	{
+		$result = array();
+		$result['userid'] = $this->userid;
+		$result['apikey'] = $this->apikey;
+		$result['charid'] = $this->charid;
+		
+		return $result;
+	}
+	
+	public function setDebug($bool)
 	{
 		if (is_bool($bool))
 		{
@@ -107,7 +117,17 @@ class Api
 		}
 	}
 	
-	public function cache($bool)
+	public function debug($bool)
+	{ // legacy name of setDebug
+		$this->setDebug($bool);
+	}
+	
+	public function getDebug()
+	{
+		return $this->debug;
+	}
+
+	public function setUseCache($bool)
 	{
 		if (is_bool($bool))
 		{
@@ -122,6 +142,16 @@ class Api
 			}
 			return false;
 		}
+	}
+	
+	public function cache($bool)
+	{ // legacy name of setUseCache
+		$this->setUseCache($bool);
+	}
+	
+	public function getUseCache()
+	{
+		return $this->usecache;
 	}
 
 	public function setCacheDir($dir)
@@ -141,6 +171,11 @@ class Api
 		}
 	}
 	
+	public function getCacheDir()
+	{
+		return $this->cachedir;
+	}
+	
 	public function setTimeTolerance($tolerance)
 	{
 		if (is_int($tolerance))
@@ -153,6 +188,29 @@ class Api
 			return false;
 		}
 
+	}
+	
+	public function getTimeTolerance()
+	{
+		return $this->timetolerance;
+	}
+	
+	public function setApiSite($site)
+	{
+		if (is_string($site))
+		{
+			$this->apisite = $site;
+			return true;
+		} else {
+			if ($this->debug)
+				$this->addMsg("Error","setApiSite: parameter must be present and a string");
+			return false;
+		}
+	}
+	
+	public function getApiSite()
+	{
+		return $this->apisite;
 	}
 	
 	// add error message - both params are strings and are formatted as: "$type: $message"
@@ -173,6 +231,14 @@ class Api
 				$this->addMsg("Error","addMsg: type and message must not be empty");
 			}
 			return 0;
+		}
+	}
+
+	public function printErrors()
+	{
+		foreach ($this->msg as $msg)
+		{
+			echo ("<b>" . $msg['type'] . "</b>: " . $msg['msg'] . "</br>\n");
 		}
 	}
 	
@@ -223,8 +289,11 @@ class Api
 				$params['characterID'] = $this->charid;
 			}
 			
+			// Save ourselves some calls and figure caching status out once for this function
+			if ($this->usecache)
+				$iscached = $this->isCached($path,$params,$cachePath,$timeout);
 			// continue when not cached
-			if (!$this->usecache || !$this->isCached($path, $params, $cachePath, $timeout))
+			if (!$this->usecache || !$iscached)
 			{
 				// Presumably, if it's not set to '&', they might have had a reason for that - be a good citizen
 				$sep = ini_get('arg_separator.output');
@@ -246,6 +315,9 @@ class Api
 				{
 					if ($this->debug)
 						$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
+					// If we do have this in cache regardless of freshness, return it
+					if ($this->usecache && $this->isCached($path,$params,$cachePath,0)
+						return $this->loadCache($path, $params, $cachePath);
 				}
 				else
 				{
@@ -281,21 +353,20 @@ class Api
 						if (!empty($error))
 						{
 							if ($this->debug)
-							{
-								$this->addMsg("Api", $error);
+							{ //BUGBUG - should also add the error code here
+								$this->addMsg("API Error", $error);
 							}
-							
-							if ($this->isCached($path, $params, $cachePath, $timeout))
-							{
+
+							// If we do have this in cache regardless of freshness, return it
+							if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
 								return $this->loadCache($path, $params, $cachePath);
-							}
 							
 							return null;
 						}
 						
 						unset ($xml); // reduce memory footprint
 
-						if (!$this->isCached($path, $params, $cachePath, $timeout))
+						if ($this->usecache && !$iscached)
 						{
 							$this->store($contents, $path, $params, $cachePath);
 						}
@@ -311,7 +382,7 @@ class Api
 					return null;
 				}
 			}
-			else
+			else // We are to use a cache and the api results are still valid in cache
 			{
 				return $this->loadCache($path, $params, $cachePath);
 			}
@@ -321,7 +392,7 @@ class Api
 			$this->addMsg("Error", "retrieveXml: path is empty");
 		}
 		
-		return null;
+		return null; //empty path, calling error
 	}
 	
 	private function getCacheFile($path, $params, $cachePath)
@@ -407,12 +478,19 @@ class Api
 	}
 	
 	// checking if the cache expired or not based on TQ time
+	// $path - The API path as given in the API URL, including the actual filename
+	// $params - optional array of parameters for the API URL
+	// $cachePath - optional array of strings or indizes into params to build the relative path to the cache file on disk
+	// $timeout - minutes to keep the cache. Special value NULL means to use CCP's cachedUntil hint, and 0 means to just check for the file, don't check for freshness
 	private function isCached($path, $params, $cachePath, $timeout)
-		{
+	{
 		$file = $this->getCacheFile($path, $params, $cachePath);
 
-		if (file_exists($file)&& filesize($file) > 0) // Added filesize to catch error on 0 length files. 
+		if (file_exists($file) && filesize($file) > 0) // Added filesize to catch error on 0 length files. 
 		{
+			if ($timeout === 0) // timeout is 0, not NULL - magic value to indicate we want to know whether the file is there, never mind the caching time
+				return true;
+
 			$fp = fopen($file, "r");
 			
 			if ($fp)
@@ -432,6 +510,9 @@ class Api
 				unset($contents); // Free us some memory
 				unset($xml); // and free memory for this one, too
 
+				if ($time === $until) // currentTime and cachedUntil are equal - CCP's way of telling us "don't cache"
+					return false;
+				
 				// get GMT time
 				$timenow = time();
 				$now = $timenow - date('Z', $timenow);
@@ -442,7 +523,7 @@ class Api
 //				   $this->addMsg("Info","Formatted: Got this at ".strftime("%b %d %Y %X",$time).", keep it until ".strftime("%b %d %Y %X",$until).", it is now ".strftime("%b %d %Y %X",$now));
 //				}
 
-				if (!$timeout) // no explicit timeout given, use the cachedUntil time CCP gave us
+				if ($timeout === NULL) // no explicit timeout given, use the cachedUntil time CCP gave us
 				{
 					if (($until + $this->timetolerance * 60) < $now) // time to fetch again, with some minutes leeway
 						return false;
@@ -471,14 +552,6 @@ class Api
 				$this->addMsg("Info", "isCached: Cache file does not (yet?) exist: " . $file);
 			}
 			return false;
-		}
-	}
-	
-	public function printErrors()
-	{
-		foreach ($this->msg as $msg)
-		{
-			echo ("<b>" . $msg['type'] . "</b>: " . $msg['msg'] . "</br>\n");
 		}
 	}
 	
@@ -1265,7 +1338,7 @@ class Api
 	public function getCharacterName($ids, $timeout = null )
 	{
 	// This is a function that should not be cached.  Unless $timeout is given, indicating a desire to cache by the user, we will turn off caching.
-		$uc = $this->usecache;
+//		$uc = $this->usecache;
 
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1278,20 +1351,23 @@ class Api
 
 		if (is_string($ids) || is_numeric($ids))
 		{
-			if ($uc) // caching is currently enabled, disable it for the duration
-			{
-				$this->cache(FALSE);
-			}
+//			if ($uc) // caching is currently enabled, disable it for the duration
+//			{
+//				$this->cache(FALSE);
+//			}
 
 			$params = array();
 			$params['ids'] = $ids;
-
-			$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx",$timeout,null,$params);
 			
-			if ($uc) // caching was enabled, enable it again
-			{
-				$this->cache($uc);
-			}
+			$cachePath = array();
+			$cachePath[0] = $ids;
+
+			$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx",$timeout,$cachePath,$params);
+
+//			if ($uc) // caching was enabled, enable it again
+//			{
+//				$this->cache($uc);
+//			}
 			return $contents;		
 		}
 		else
@@ -1304,7 +1380,7 @@ class Api
 	public function getCharacterID($names, $timeout = null)
 	{
 	// This is a function that should not be cached.  Unless $timeout is given, indicating a desire to cache by the user, we will turn off caching.
-		$uc = $this->usecache;
+	//	$uc = $this->usecache;
 	
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1317,20 +1393,23 @@ class Api
 
 		if (is_string($names))
 		{
-			if ($uc) // caching is currently enabled, disable it for the duration
-			{
-				$this->cache(FALSE);
-			}
+//			if ($uc) // caching is currently enabled, disable it for the duration
+//			{
+//				$this->cache(FALSE);
+//			}
 
 			$params = array();
 			$params['names'] = $names;
 
-			$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx",$timeout,null,$params);
-			
-			if ($uc) // caching was enabled, enable it again
-			{
-				$this->cache($uc);
-			}
+			$cachePath = array();
+			$cachePath[0] = $names;
+
+			$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx",$timeout,$cachePath,$params);
+
+//			if ($uc) // caching was enabled, enable it again
+//			{
+//				$this->cache($uc);
+//			}
 
 			return $contents;
 		}

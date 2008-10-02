@@ -11,6 +11,9 @@ TODO list for 0.23
 - Change caching logic to deal with currentTime and cachedUntil being identical (indicating that the result should not be fetched from cache)
 - Change caching logic so no cache file is created if $api->cache(FALSE)
 - Malformed XML throws an exception - might want to catch that and attempt fetching XML once more. On 2nd thought, we can't re-fetch because of the current layout of the library. What a PITA. At least the exception can be caught.
+- If XML in cache file got corrupted, we need to be able to discard that file and fetch anew
+- Function to clean up the cache - maybe on a few levels: All by freshness, all by userid regardless of freshness, all by charid regardless of freshness
+
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here
