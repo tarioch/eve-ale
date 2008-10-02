@@ -250,8 +250,9 @@ class Api
 				and will be used to build the relative path to the cache file
 		$params	optional array of paramaters (exclude apikey and userid, and charid)
 				$params['characterID'] = 123456789;
+		$binary	optional boolean - if true, treat the returned data as binary, not XML
 	***********************/
-	public function retrieveXml($path, $timeout = null, $cachePath = null, $params = null)
+	public function retrieveXml($path, $timeout = null, $cachePath = null, $params = null, $binary = false)
 	{
 		if ($cachePath != null && !is_array($cachePath))
 		{			
@@ -291,7 +292,7 @@ class Api
 			
 			// Save ourselves some calls and figure caching status out once for this function
 			if ($this->usecache)
-				$iscached = $this->isCached($path,$params,$cachePath,$timeout);
+				$iscached = $this->isCached($path,$params,$cachePath,$timeout,$binary);
 			// continue when not cached
 			if (!$this->usecache || !$iscached)
 			{
@@ -316,8 +317,8 @@ class Api
 					if ($this->debug)
 						$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
 					// If we do have this in cache regardless of freshness, return it
-					if ($this->usecache && $this->isCached($path,$params,$cachePath,0)
-						return $this->loadCache($path, $params, $cachePath);
+					if ($this->usecache && $this->isCached($path,$params,$cachePath,0,$binary)
+						return $this->loadCache($path, $params, $cachePath,$binary);
 				}
 				else
 				{
@@ -345,32 +346,35 @@ class Api
 					if ($start !== FALSE)
 					{
 						$contents = substr($contents, $start + strlen("\r\n\r\n"));
-						
-						// check if there's an error or not
-						$xml = new SimpleXMLElement($contents);
-						
-						$error = (string) $xml->error;
-						if (!empty($error))
+			
+						if (!$binary)
 						{
-							if ($this->debug)
-							{ //BUGBUG - should also add the error code here
-								$this->addMsg("API Error", $error);
-							}
-
-							// If we do have this in cache regardless of freshness, return it
-							if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
-								return $this->loadCache($path, $params, $cachePath);
+							// check if there's an error or not
+							$xml = new SimpleXMLElement($contents);
 							
-							return null;
+							$error = (string) $xml->error;
+							if (!empty($error))
+							{
+								if ($this->debug)
+								{ //BUGBUG - should also add the error code here
+									$this->addMsg("API Error", $error);
+								}
+
+								// If we do have this in cache regardless of freshness, return it
+								if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
+									return $this->loadCache($path, $params, $cachePath);
+								
+								return null;
+							}
+							
+							unset ($xml); // reduce memory footprint
 						}
-						
-						unset ($xml); // reduce memory footprint
 
 						if ($this->usecache && !$iscached)
 						{
-							$this->store($contents, $path, $params, $cachePath);
+							$this->store($contents, $path, $params, $cachePath,$binary);
 						}
-						
+
 						return $contents;
 					}
 					
@@ -384,7 +388,7 @@ class Api
 			}
 			else // We are to use a cache and the api results are still valid in cache
 			{
-				return $this->loadCache($path, $params, $cachePath);
+				return $this->loadCache($path, $params, $cachePath,$binary);
 			}
 		}
 		elseif ($this->debug)
@@ -395,33 +399,54 @@ class Api
 		return null; //empty path, calling error
 	}
 	
-	private function getCacheFile($path, $params, $cachePath)
+	private function getCacheFile($path, $params, $cachePath, $binary = false)
 	{
 		$realpath = $this->cachedir;
 		
 		if ($cachePath != null)
 		{
-			foreach ($cachePath as $segment)
+			if (!$binary)
 			{
-				if (isset($params[$segment]))
+				foreach ($cachePath as $segment)
 				{
-					$realpath .= '/'.$params[$segment];
+					if (isset($params[$segment]))
+					{
+						$realpath .= '/'.$params[$segment];
+					}
+					else
+					{
+						$realpath .= '/'.$segment;
+					}
 				}
-				else
+			}
+			else // for binary files, we construct a file name, not a path name. Really only valid for the JPEGs I'm doing - this logic can always be changed if CCP adds more binary stuff. Which I doubt.
+			{
+				$realpath .= '/';
+				foreach ($cachePath as $segment)
 				{
-					$realpath .= '/'.$segment;
+					if (isset($params[$segment]))
+					{
+						$realpath .= $params[$segment];
+					}
+					else
+					{
+						$realpath .= $segment;
+					}
 				}
 			}
 		}
 		
-		$realpath .= $path;
+		if (!$binary)
+		{
+			$realpath .= $path;
+		}
 				
 		return $realpath;
 	}
 	
-	private function store($contents, $path, $params, $cachePath)
+	private function store($contents, $path, $params, $cachePath, $binary = false)
 	{
-		$file = $this->getCacheFile($path, $params, $cachePath);
+		$file = $this->getCacheFile($path, $params, $cachePath, $binary);
 
 		if (!file_exists(dirname($file)))
 		{
@@ -450,10 +475,10 @@ class Api
 		
 	}
 	
-	private function loadCache($path, $params, $cachePath)
+	private function loadCache($path, $params, $cachePath, $binary = false)
 	{
 		// its cached, open it and use it
-		$file = $this->getCacheFile($path, $params, $cachePath);
+		$file = $this->getCacheFile($path, $params, $cachePath, $binary);
 		
 		$fp = fopen($file, "r");
 		if ($fp)
@@ -482,9 +507,9 @@ class Api
 	// $params - optional array of parameters for the API URL
 	// $cachePath - optional array of strings or indizes into params to build the relative path to the cache file on disk
 	// $timeout - minutes to keep the cache. Special value NULL means to use CCP's cachedUntil hint, and 0 means to just check for the file, don't check for freshness
-	private function isCached($path, $params, $cachePath, $timeout)
+	private function isCached($path, $params, $cachePath, $timeout, $binary = false)
 	{
-		$file = $this->getCacheFile($path, $params, $cachePath);
+		$file = $this->getCacheFile($path, $params, $cachePath, $binary);
 
 		if (file_exists($file) && filesize($file) > 0) // Added filesize to catch error on 0 length files. 
 		{
@@ -1360,7 +1385,7 @@ class Api
 			$params['ids'] = $ids;
 			
 			$cachePath = array();
-			$cachePath[0] = $ids;
+			$cachePath[0] = 'ids';
 
 			$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx",$timeout,$cachePath,$params);
 
@@ -1402,7 +1427,7 @@ class Api
 			$params['names'] = $names;
 
 			$cachePath = array();
-			$cachePath[0] = $names;
+			$cachePath[0] = 'names';
 
 			$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx",$timeout,$cachePath,$params);
 
@@ -1416,6 +1441,51 @@ class Api
 		else
 		{
 				$this->addMsg("Error","getCharacterID: Non-string or empty value of names param, returning null");
+				return null;
+		}
+	}
+	
+	// getCharacterPortrait works quite differently from anything else. It returns a path to a JPEG file in the cache dir, not the actual data. There is no XML parsing, since there's no XML
+	// Currently, there's also no real caching timeout, which needs to be changed
+	public function getCharacterPortrait($id = null, $size = 64, $timeout = 1440)
+	{ //  BUGBUG This will cache, but currently not set a timeout. A cleverer idea would be to cache for 24 hours, and check by file date
+
+		if (!is_numeric($size)) // possible values are 64 and 256, but that's not checked, as CCP may change their mind
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getCharacterPortrait: Non-numeric value of size param, reverting to default value");
+			}
+			$size = 64;
+		}
+		if (is_int($id))
+		{
+			$site = $this->getApiSite();
+			$this->setApiSite('img.eve.is');
+			
+			$cachedir = $this->getCacheDir();
+			$this->setCacheDir($cachedir."/imgcache");
+
+			$params = array();
+			$params['s'] = $size;
+			$params['c'] = $id;
+
+			$cachePath = array();
+			$cachePath[0] = 'c';
+			$cachePath[1] = '-'
+			$cachePath[2] = 's';
+			$cachePath[3] = '.jpg';
+
+			$this->retrieveXml("/serv.asp",0,$cachePath,$params,TRUE); // optional "binary" parameter, and the timeout is BUGBUG see above
+
+			$this->setApiSite($site);
+			$this->setCacheDir($cachedir);
+
+			return $this->getCacheFile("/serv.asp", $params, $cachePath,TRUE);
+		}
+		else
+		{
+				$this->addMsg("Error","getCharacterPortrait: Non-integer or empty value of id param, returning null");
 				return null;
 		}
 	}
