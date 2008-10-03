@@ -354,42 +354,6 @@ class evec
 			
 			if ($fp)
 			{
-				$contents = fread($fp, filesize($file));
-				fclose($fp);
-				
-				// check cache
-				$xml = new SimpleXMLElement($contents);
-				
-				$cachetime = (string) $xml->currentTime;
-				$time = strtotime($cachetime);
-				
-				$expirytime = (string) $xml->cachedUntil;
-				$until = strtotime($expirytime);
-				
-				unset($contents); // Free us some memory
-				unset($xml); // and free memory for this one, too
-
-				// get GMT time
-				$timenow = time();
-				$now = $timenow - date('Z', $timenow);
-
-// Uncomment in case we need some deep-dive debug. There's a TODO here - have levels of debug				
-//				if ($this->debug) {
-//				   $this->addMsg("Info","Got this at ".$time.", keep it until ".$until.", it is now ".$now);
-//				   $this->addMsg("Info","Formatted: Got this at ".strftime("%b %d %Y %X",$time).", keep it until ".strftime("%b %d %Y %X",$until).", it is now ".strftime("%b %d %Y %X",$now));
-//				}
-
-				if (!$timeout) // no explicit timeout given, use the cachedUntil time CCP gave us
-				{
-					if (($until + $this->timetolerance * 60) < $now) // time to fetch again, with some minutes leeway
-						return false;
-				} else {
-					// if now is $timeout minutes ahead of the cached time, pretend this file is not cached
-					$minutes = ($timeout + $this->timetolerance) * 60;
-					if ($now >= $time + $minutes)
-						return false;
-				}
-
 				return true; // default fall-through - cache is still valid
 			}
 			else

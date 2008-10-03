@@ -1,5 +1,5 @@
-version 0.23 "Eldstrom's Effort" 2008-09-30
-
+version 0.23 "Eldstrom's Effort" 2008-10-3
+Eldstrom: Removed the cache read for the evec, as it's surplus code and cuasing a random exception.
 Eldstrom: Addition of Eve central XML parsing classes, basic retrieval function and testing script.
 Eldstrom: Addition of API classes CharacterName CharacterID ErrorList
 Eldstrom: Addition of MemberSecurity, MemberSecurityLog and Titles APIs
