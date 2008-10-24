@@ -12,6 +12,8 @@ TODO list for 0.23
 - Malformed XML throws an exception - might want to catch that and attempt fetching XML once more. On 2nd thought, we can't re-fetch because of the current layout of the library. What a PITA. At least the exception can be caught.
 - If XML in cache file got corrupted, we need to be able to discard that file and fetch anew
 - Function to clean up the cache - maybe on a few levels: All by freshness, all by userid regardless of freshness, all by charid regardless of freshness
+- Think about re-ordering parameters in class.api.php to be more consistent across functions in their order, as long as this does not impact the public interface
+- Add some caching logic that can handle binary file timeouts
 - (Re)test API functions that have changed in Revelations 1.1
 Added ../corp/Shareholders.xml.aspx
 Added ../corp/MemberSecurity.xml.aspx
