@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************
-	PHP Api Lib CharacterID Class
-	Copyright (c) 2008 Dustin Tinklin
+	PHP Api Lib
+	Copyright (c) 2008 Thorsten Behrens
 
 	This file is part of PHP Api Lib.
 
@@ -19,31 +19,7 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-class CharacterID
+function print_as_html($string)
 {
-	function getCharacterID($contents)
-	{
-		if (!empty($contents) && is_string($contents))
-		{
-	 	    $output = array();
-	 		$xml = new SimpleXMLElement($contents);
-			foreach ($xml->result->rowset->row as $row) 
-			{
-				$index = count($output);
-				foreach ($row->attributes() as $name => $value)
-				{
-					$output[$index][(string) $name] = (string) $value;
-				}
-			}
-
-			unset ($xml); // manual garbage collection
-			return $output;
-		}
-		else
-		{
-			return null;
-		}
-	}
+	print(nl2br(str_replace(' ','&nbsp;',$string)));
 }
-?>
-

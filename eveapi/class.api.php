@@ -1404,9 +1404,6 @@ class Api
 	
 	public function getCharacterID($names, $timeout = null)
 	{
-	// This is a function that should not be cached.  Unless $timeout is given, indicating a desire to cache by the user, we will turn off caching.
-	//	$uc = $this->usecache;
-	
 		if ($timeout && !is_numeric($timeout))
 		{
 				if ($this->debug)
@@ -1418,11 +1415,6 @@ class Api
 
 		if (is_string($names))
 		{
-//			if ($uc) // caching is currently enabled, disable it for the duration
-//			{
-//				$this->cache(FALSE);
-//			}
-
 			$params = array();
 			$params['names'] = $names;
 
@@ -1430,11 +1422,6 @@ class Api
 			$cachePath[0] = 'names';
 
 			$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx",$timeout,$cachePath,$params);
-
-//			if ($uc) // caching was enabled, enable it again
-//			{
-//				$this->cache($uc);
-//			}
 
 			return $contents;
 		}

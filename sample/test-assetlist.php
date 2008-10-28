@@ -20,7 +20,7 @@
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
-require_once('./classes/eveapi/class.accountbalance.php');
+require_once('./classes/eveapi/class.assetlist.php');
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -47,28 +47,15 @@ foreach($apichars as $index => $thischar)
 // Set Credentials
 $api->setCredentials($apiuser,$apipass,$apichar);
 
-print ("<P>Raw char balance output</P>");
-$balancexml = $api->getAccountBalance();
-$balance = AccountBalance::getAccountBalance($balancexml);
-print_as_html(print_r($balance,TRUE));
+print("<P>Raw char asset list output</P>");
+$assetxml = $api->getAssetList();
+$asset = AssetList::getAssetList($assetxml);
+print_as_html(print_r($asset,TRUE));
 
-$blnc = new Balance($apiuser,$apipass,$apichar);
-$balanceold = $blnc->getBalance();
-if ($balance == $balanceold)
-	print ("<P>Legacy char balance function matches new balance function output.</P>");
-else
-	print ("<P>ERROR: Legacy char balance function output broken!</P>");
-
-print ("<P>Raw corp balance output</P>");
-$balancexml = $api->getAccountBalance(true);
-$balance = AccountBalance::getAccountBalance($balancexml);
-print_as_html(print_r($balance,TRUE));
-
-$balanceold = $blnc->getBalance(true);
-if ($balance == $balanceold)
-	print ("<P>Legacy corp balance function matches new balance function output.<P>");
-else
-	print ("<P>ERROR: Legacy corp balance function output broken!</P>");
+print("<P>Raw corp asset list output</P>");
+$assetxml = $api->getAssetList(true);
+$asset = AssetList::getAssetList($assetxml);
+print_as_html(print_r($asset,TRUE));
 
 $api->printErrors();
 ?>

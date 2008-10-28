@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************
-	PHP Api Lib CharacterID Class
-	Copyright (c) 2008 Dustin Tinklin
+	PHP Api Lib
+	Copyright (c) 2008 Thorsten Behrens
 
 	This file is part of PHP Api Lib.
 
@@ -18,32 +18,20 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
+require_once('./classes/eveapi/class.api.php');
+require_once('./classes/eveapi/class.charactername.php');
 
-class CharacterID
-{
-	function getCharacterID($contents)
-	{
-		if (!empty($contents) && is_string($contents))
-		{
-	 	    $output = array();
-	 		$xml = new SimpleXMLElement($contents);
-			foreach ($xml->result->rowset->row as $row) 
-			{
-				$index = count($output);
-				foreach ($row->attributes() as $name => $value)
-				{
-					$output[$index][(string) $name] = (string) $value;
-				}
-			}
+require_once('./print-as-html.php');
 
-			unset ($xml); // manual garbage collection
-			return $output;
-		}
-		else
-		{
-			return null;
-		}
-	}
-}
+$api = new Api();
+$api->debug(true);
+$api->cache(true); // that's the default, done for testing purposes
+$api->setTimeTolerance(5); // also the default value
+
+print ("<P>Raw character name output</P>");
+$dataxml = $api->getCharacterName('221710318,797400947');
+$data = CharacterName::getCharacterName($dataxml);
+print_as_html(print_r($data,TRUE));
+
+$api->printErrors();
 ?>
-
