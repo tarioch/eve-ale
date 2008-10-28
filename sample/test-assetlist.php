@@ -48,14 +48,18 @@ foreach($apichars as $index => $thischar)
 $api->setCredentials($apiuser,$apipass,$apichar);
 
 print("<P>Raw char asset list output</P>");
-$assetxml = $api->getAssetList();
-$asset = AssetList::getAssetList($assetxml);
-print_as_html(print_r($asset,TRUE));
+$dataxml = $api->getAssetList();
+$data = AssetList::getAssetList($dataxml);
+print_as_html(print_r($data,TRUE));
+
+unset ($dataxml,$data);
 
 print("<P>Raw corp asset list output</P>");
-$assetxml = $api->getAssetList(true);
-$asset = AssetList::getAssetList($assetxml);
-print_as_html(print_r($asset,TRUE));
+$dataxml = $api->getAssetList(true);
+$data = AssetList::getAssetList($dataxml);
+print_as_html(print_r($data,TRUE));
+
+unset ($dataxml,$data);
 
 $api->printErrors();
 ?>

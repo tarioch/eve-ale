@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib FactionalTop100 Class
+	PHP Api Lib FacWarSystems Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
@@ -19,15 +19,15 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-class FactionalTop100
+class FacWarSystems
 {
-	function getFactionalTop100($contents)
+	function getFacWarSystems($contents)
 	{
 		if (!empty($contents) && is_string($contents))
 		{
 	       	$output = array();
 	 		$xml = new SimpleXMLElement($contents);
-			foreach ($xml->result->characters->rowset->row as $row)
+			foreach ($xml->result->rowset->row as $row)
 			{
 				$index = count($output);
 				foreach ($row->attributes() as $name => $value)

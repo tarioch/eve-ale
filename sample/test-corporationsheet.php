@@ -19,21 +19,43 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
-require_once('./classes/eveapi/class.alliancelist.php');
+require_once('./classes/eveapi/class.characters.php');
+require_once('./classes/eveapi/class.corporationsheet.php');
 
 require_once('./print-as-html.php');
+require_once('./config.php');
 
 $api = new Api();
 $api->debug(true);
 $api->cache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
+$api->setCredentials($apiuser,$apipass);
 
-print ("<P>Raw alliance list output</P>");
-$dataxml = $api->getAllianceList();
-$data = Alliancelist::getAllianceList($dataxml);
+$apicharsxml = $api->getCharacters();
+$apichars = Characters::getCharacters($apicharsxml);
+
+// Find the character I'm interested in
+
+foreach($apichars as $index => $thischar)
+{
+	if($thischar['charname']==$mychar)
+	{
+		$apichar=$thischar['charid'];
+		$apicorp=$thischar['corpid'];
+	}
+}
+
+// Set Credentials
+$api->setCredentials($apiuser,$apipass,$apichar);
+
+print ("<P>Raw corporation sheet output</P>");
+$dataxml = $api->getCorporationSheet();
+$data = CorporationSheet::getCorporationSheet($dataxml);
 print_as_html(print_r($data,TRUE));
 
-unset ($dataxml, $data);
+unset ($dataxml,$data);
+
+// Ideally, I'd have some code here to test the alliance / corpid function as well. TODO then.
 
 $api->printErrors();
 ?>

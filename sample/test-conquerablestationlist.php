@@ -33,5 +33,7 @@ $dataxml = $api->getConquerableStationList();
 $data = ConquerableStationList::getConquerableStationList($dataxml);
 print_as_html(print_r($data,TRUE));
 
+unset ($dataxml,$data);
+
 $api->printErrors();
 ?>

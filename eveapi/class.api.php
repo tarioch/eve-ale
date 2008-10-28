@@ -1043,13 +1043,13 @@ class Api
 		return $contents;
 	}
 
-	public function getFactionalOccupancy($timeout = null)
+	public function getFacWarSystems($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","getFactionalOccupancy: Non-numeric value of timeout param, reverting to default value");
+				$this->addMsg("Error","getFacWarSystems: Non-numeric value of timeout param, reverting to default value");
 			}
 			$timeout = null;
 		}
@@ -1059,13 +1059,13 @@ class Api
 		return $contents;
 	}
 
-	public function getFactionalStats($corp = false, $timeout = null)
+	public function getFacWarStats($corp = false, $timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","getFactionalStats: Non-numeric value of timeout param, reverting to default value");
+				$this->addMsg("Error","getFacWarStats: Non-numeric value of timeout param, reverting to default value");
 			}
 			$timeout = null;
 		}
@@ -1074,7 +1074,7 @@ class Api
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","getFactionalStats: Non-bool value of corp param, reverting to default value");
+				$this->addMsg("Error","getFacWarStats: Non-bool value of corp param, reverting to default value");
 			}
 			$corp = false;
 		}
@@ -1092,13 +1092,13 @@ class Api
 		return $contents;
 	}
 
-	public function getFactionalTop100($timeout = null)
+	public function getFacWarTopStats($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","getFactionalTop100: Non-numeric value of timeout param, reverting to default value");
+				$this->addMsg("Error","getFacWarTopStats: Non-numeric value of timeout param, reverting to default value");
 			}
 			$timeout = null;
 		}

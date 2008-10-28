@@ -35,5 +35,7 @@ $dataxml = $api->getCharacters();
 $data = Characters::getCharacters($dataxml);
 print_as_html(print_r($data,TRUE));
 
+unset ($dataxml,$data);
+
 $api->printErrors();
 ?>

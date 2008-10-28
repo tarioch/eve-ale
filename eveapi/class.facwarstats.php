@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib FactionalOccupancy Class
+	PHP Api Lib FacWarStats Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
@@ -19,15 +19,15 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-class FactionalOccupancy
+class FacWarStats
 {
-	function getFactionalOccupancy($contents)
+	function getFacWarStats($contents)
 	{
 		if (!empty($contents) && is_string($contents))
 		{
 	       	$output = array();
 	 		$xml = new SimpleXMLElement($contents);
-			foreach ($xml->result->rowset->row as $row)
+			foreach ($xml->result->row as $row)
 			{
 				$index = count($output);
 				foreach ($row->attributes() as $name => $value)

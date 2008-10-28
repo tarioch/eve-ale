@@ -33,5 +33,7 @@ $dataxml = $api->getCharacterName('221710318,797400947');
 $data = CharacterName::getCharacterName($dataxml);
 print_as_html(print_r($data,TRUE));
 
+unset ($dataxml,$data);
+
 $api->printErrors();
 ?>

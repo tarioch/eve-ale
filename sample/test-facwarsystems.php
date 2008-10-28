@@ -19,7 +19,7 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
-require_once('./classes/eveapi/class.alliancelist.php');
+require_once('./classes/eveapi/class.facwarsystems.php');
 
 require_once('./print-as-html.php');
 
@@ -28,12 +28,12 @@ $api->debug(true);
 $api->cache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
 
-print ("<P>Raw alliance list output</P>");
-$dataxml = $api->getAllianceList();
-$data = Alliancelist::getAllianceList($dataxml);
+print ("<P>Raw factional warfare occupancy map</P>");
+$dataxml = $api->getFacWarSystems();
+$data = FacWarSystems::getFacWarSystems($dataxml);
 print_as_html(print_r($data,TRUE));
 
-unset ($dataxml, $data);
+unset ($dataxml,$data);
 
 $api->printErrors();
 ?>

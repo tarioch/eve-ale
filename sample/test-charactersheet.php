@@ -49,9 +49,11 @@ foreach($apichars as $index => $thischar)
 $api->setCredentials($apiuser,$apipass,$apichar);
 
 print ("<P>Raw character sheet output</P>");
-$charsheetxml = $api->getCharacterSheet();
-$charsheet = CharacterSheet::getCharacterSheet($charsheetxml);
-print_as_html(print_r($charsheet,TRUE));
+$dataxml = $api->getCharacterSheet();
+$data = CharacterSheet::getCharacterSheet($dataxml);
+print_as_html(print_r($data,TRUE));
+
+unset ($dataxml,$data);
 
 $api->printErrors();
 ?>

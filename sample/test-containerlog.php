@@ -52,5 +52,7 @@ $dataxml = $api->getContainerLog();
 $data = ContainerLog::getContainerLog($dataxml);
 print_as_html(print_r($data,TRUE));
 
+unset ($dataxml,$data);
+
 $api->printErrors();
 ?>

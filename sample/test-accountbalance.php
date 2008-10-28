@@ -59,16 +59,21 @@ if ($balance == $balanceold)
 else
 	print ("<P>ERROR: Legacy char balance function output broken!</P>");
 
+unset ($balancexml,$balance,$blnc,$balanceold);
+
 print ("<P>Raw corp balance output</P>");
 $balancexml = $api->getAccountBalance(true);
 $balance = AccountBalance::getAccountBalance($balancexml);
 print_as_html(print_r($balance,TRUE));
 
+$blnc = new Balance($apiuser,$apipass,$apichar);
 $balanceold = $blnc->getBalance(true);
 if ($balance == $balanceold)
 	print ("<P>Legacy corp balance function matches new balance function output.<P>");
 else
 	print ("<P>ERROR: Legacy corp balance function output broken!</P>");
+
+unset ($balancexml,$balance,$blnc,$balanceold);
 
 $api->printErrors();
 ?>

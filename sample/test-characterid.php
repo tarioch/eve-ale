@@ -29,9 +29,11 @@ $api->cache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
 
 print ("<P>Raw character ID output</P>");
-$charidxml = $api->getCharacterID('Yorick Downe,CCP Garthagk');
-$charid = CharacterID::getCharacterID($charidxml);
-print_as_html(print_r($charid,TRUE));
+$dataxml = $api->getCharacterID('Yorick Downe,CCP Garthagk');
+$data = CharacterID::getCharacterID($dataxml);
+print_as_html(print_r($data,TRUE));
+
+unset ($dataxml,$data);
 
 $api->printErrors();
 ?>
