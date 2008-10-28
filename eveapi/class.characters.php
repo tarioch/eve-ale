@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib CharSelect Class legacy include file and CharSelect Class def
+	PHP Api Lib CharSelect Class
 	Portions Copyright (C) 2007 Kw4h
 	Portions Copyright (c) 2008 Thorsten Behrens
 
@@ -19,16 +19,32 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
-// class.generic.php was renamed to be in line with new naming conventions - this file allows for legacy code to continue working
-require_once('./class.characters.php'); 
 
-class CharSelect
+class Characters
 {
 	static function getCharacters($contents)
-	{		
-		$output = Characters::getCharacters($contents);
-		
-		return $output;
+	{
+		if (!empty($contents) && is_string($contents))
+		{
+			// create our xml parser
+			$characters = array();
+			$xml = new SimpleXMLElement($contents);
+			
+			foreach ($xml->result->rowset->row as $row)
+			{
+				$index = count($characters);
+				$characters[$index]['charname'] = (string) $row['name'];
+				$characters[$index]['charid'] = (int) $row['characterID'];
+				$characters[$index]['corpname'] = (string) $row['corporationName'];
+				$characters[$index]['corpid'] = (int) $row['corporationID'];
+			}
+			unset ($xml); // manual garbage collection			
+			return $characters;
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
 ?>

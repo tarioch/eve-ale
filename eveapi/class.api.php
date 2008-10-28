@@ -317,7 +317,7 @@ class Api
 					if ($this->debug)
 						$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
 					// If we do have this in cache regardless of freshness, return it
-					if ($this->usecache && $this->isCached($path,$params,$cachePath,0,$binary)
+					if ($this->usecache && $this->isCached($path,$params,$cachePath,0,$binary))
 						return $this->loadCache($path, $params, $cachePath,$binary);
 				}
 				else
@@ -1472,7 +1472,7 @@ class Api
 
 			$cachePath = array();
 			$cachePath[0] = 'c';
-			$cachePath[1] = '-'
+			$cachePath[1] = '-';
 			$cachePath[2] = 's';
 			$cachePath[3] = '.jpg';
 

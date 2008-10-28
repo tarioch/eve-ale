@@ -19,6 +19,7 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
+require_once('./classes/eveapi/class.characters.php');
 require_once('./classes/eveapi/class.accountbalance.php');
 
 require_once('./config.php');
@@ -48,7 +49,7 @@ $api->setCredentials($apiuser,$apipass,$apichar);
 print ("<P>Raw char balance output</P>");
 $balancexml = $api->getAccountBalance();
 $balance = AccountBalance::getAccountBalance($balancexml);
-print_r($balance);
+print(nl2br(print_r($balance,TRUE)));
 
 $blnc = new Balance($apiuser,$apipass,$apichar);
 $balanceold = $blnc->getBalance();
@@ -60,7 +61,7 @@ else
 print ("<P>Raw corp balance output</P>");
 $balancexml = $api->getAccountBalance(true);
 $balance = AccountBalance::getAccountBalance($balancexml);
-print_r($balance);
+print(nl2br(print_r($balance,TRUE)));
 
 $balanceold = $blnc->getBalance(true);
 if ($balance == $balanceold)
