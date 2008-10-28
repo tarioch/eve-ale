@@ -1217,13 +1217,13 @@ class Api
 		return $contents;
 	}
 
-	public function getConquerableStations($timeout = null)
+	public function getConquerableStationList($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","getConquerableStations: Non-numeric value of timeout param, reverting to default value");
+				$this->addMsg("Error","getConquerableStationList: Non-numeric value of timeout param, reverting to default value");
 			}
 			$timeout = null;
 		}

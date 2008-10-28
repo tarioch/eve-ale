@@ -19,9 +19,9 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-class ConquerableStations
+class ConquerableStationList
 {
-	function getConquerableStations($contents)
+	function getConquerableStationList($contents)
 	{
 		if (!empty($contents) && is_string($contents))
 		{
