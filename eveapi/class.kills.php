@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib MapSovereignty Class
+	PHP Api Lib Kills Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
@@ -19,9 +19,9 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
-class MapSovereignty
+class Kills
 {
-	function getMapSovereignty($contents)
+	function getKills($contents)
 	{
 		if (!empty($contents) && is_string($contents))
 		{

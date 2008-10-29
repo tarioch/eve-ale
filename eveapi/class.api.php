@@ -1108,7 +1108,7 @@ class Api
 		return $contents;
 	}
 
-	public function getMapJumps($timeout = null)
+	public function getJumps($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1124,7 +1124,7 @@ class Api
 		return $contents;
 	}
 
-	public function getMapSovereignty($timeout = null)
+	public function getSovereignty($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1138,7 +1138,7 @@ class Api
 		return $contents;
 	}
 
-	public function getMapKills($timeout = null)
+	public function getKills($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
