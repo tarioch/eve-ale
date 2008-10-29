@@ -66,12 +66,11 @@ class KillLog
 							{
 								$output[$index][(string) $rowname][$aindex][(string) $aname] = (string) $avalue;
 							}
-						}
-						if(count((array)$arow->children()) > 1 ) // children contains @attributes, which we don't care about
-						{
-							  $output[$index][(string) $rowname][$aindex]["contents"] = KillLog::getContents($arow->children());
-						}
-							
+							if(count((array)$arow->children()) > 1 ) // children contains @attributes, which we don't care about
+							{
+								$output[$index][(string) $rowname][$aindex]["contents"] = KillLog::getContents($arow->children());
+							}
+						}	
 					}
 				}
 			}
