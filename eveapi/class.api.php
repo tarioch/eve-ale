@@ -834,7 +834,7 @@ class Api
 		$cachePath[1] = 'characterID';
 		$cachePath[2] = 'accountKey';
 		
-		// beforeRefID
+		// beforeTransID
 		if ($transid != null && is_numeric($transid))
 		{
 			$params['beforeTransID'] = $transid;
@@ -1152,7 +1152,7 @@ class Api
 		return $contents;
 	}
 
-	public function getKillLog($corp = false, $timeout = null)
+	public function getKillLog($killid = null, $corp = false, $timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1171,16 +1171,36 @@ class Api
 			}
 			$corp = false;
 		}
+		
+		if ($killid != null && !is_numeric($killid))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getKillLog: Non-numeric value of killid param, reverting to default value");
+			}
+			$killid = null;
+		}
+		
+		$params = array();
+			
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
+		
+		//beforeKillID
+		if ($killid != null && is_numeric($killid))
+		{
+			$params['beforeKillID'] = $killid;
+			$cachePath[3] = 'beforeKillID';
+		}
+
 		if($corp == true)
 		{
-			$contents = $this->retrieveXml("/corp/Killlog.xml.aspx", $timeout, $cachePath);
+			$contents = $this->retrieveXml("/corp/Killlog.xml.aspx", $timeout, $cachePath,$params);
 		}
 		else
 		{
-			$contents = $this->retrieveXml("/char/KillLog.xml.aspx", $timeout, $cachePath);
+			$contents = $this->retrieveXml("/char/KillLog.xml.aspx", $timeout, $cachePath,$params);
 		}
 		return $contents;
 	}

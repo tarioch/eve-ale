@@ -3,7 +3,7 @@ Eldstrom: Removed the cache read for the evec, as it's surplus code and cuasing 
 Eldstrom: Addition of Eve central XML parsing classes, basic retrieval function and testing script.
 Eldstrom: Addition of API classes CharacterName CharacterID ErrorList
 Eldstrom: Addition of MemberSecurity, MemberSecurityLog and Titles APIs
-Eldstrom: Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getMapKills, getMapSovereignty, getMapJumps, getFactionalTop100, getFactionalStats, getFactionalOccupancy
+Eldstrom: Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getMapKills, getMapSovereignty, getMapJumps, getFacWarTopStats, getFacWarStats, getFacWarSystems
 Yorick: Reworked testing code to use buttons for individual tests
 
 class.characterid.php
@@ -17,6 +17,8 @@ class.api.php + class.evec.php
 - Yorick: isCached() now knows "magic" $timeout value of 0, in which case it will only check that the file exists, and will not check for freshness.
   This is used when the library cannot connect to the API server or encounters an API error - you still get the cached content
 - Yorick: isCached() now understands "do not cache" hint by CCP, when currentTime and cachedUntil are equal
+- Yorick: Changed caching logic to not create a cache file if api->cache(FALSE)
+- Eldstrom: Fixed the separator always being set to '&' after retrieveXML fetched content. It is now set back to its original value as intended.
 
 version 0.22, 2008-08-19
 

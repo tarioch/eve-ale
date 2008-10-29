@@ -19,7 +19,6 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
-require_once('./classes/eveapi/class.img.php');
 
 $api = new Api();
 $api->debug(true);
