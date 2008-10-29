@@ -21,6 +21,24 @@
 
 class KillLog
 {
+	function getContents($child)
+	{
+		foreach ($child->rowset->row as $row)
+		{
+			$index = count($C1);
+			foreach ($row->attributes() as $name => $value)
+			{
+				$C1[$index][(string) $name] = (string) $value;
+			}
+			if(count((array)$row->children()) > 1) // children contains @attributes, which we don't care about
+			{
+				$C1[$index]["contents"] = KillLog::getContents($row->children());
+			}
+		}
+		return $C1;
+	}
+
+
 	function getKillLog($contents)
 	{
 		if (!empty($contents) && is_string($contents))
@@ -48,7 +66,12 @@ class KillLog
 							{
 								$output[$index][(string) $rowname][$aindex][(string) $aname] = (string) $avalue;
 							}
-						}	
+						}
+						if(count((array)$arow->children()) > 1 ) // children contains @attributes, which we don't care about
+						{
+							  $output[$index][(string) $rowname][$aindex]["contents"] = KillLog::getContents($arow->children());
+						}
+							
 					}
 				}
 			}
