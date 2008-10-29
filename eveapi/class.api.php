@@ -1465,10 +1465,12 @@ class Api
 
 			$this->retrieveXml("/serv.asp",0,$cachePath,$params,TRUE); // optional "binary" parameter, and the timeout is BUGBUG see above
 
+			$result = $this->getCacheFile("/serv.asp", $params, $cachePath,TRUE);
+			
 			$this->setApiSite($site);
 			$this->setCacheDir($cachedir);
 
-			return $this->getCacheFile("/serv.asp", $params, $cachePath,TRUE);
+			return $result;
 		}
 		else
 		{
