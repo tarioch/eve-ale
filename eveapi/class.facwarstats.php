@@ -27,13 +27,9 @@ class FacWarStats
 		{
 	       	$output = array();
 	 		$xml = new SimpleXMLElement($contents);
-			foreach ($xml->result->row as $row)
+			foreach ($xml->result->children() as $name => $value)
 			{
-				$index = count($output);
-				foreach ($row->attributes() as $name => $value)
-				{
-					$output[$index][(string) $name] = (string) $value;
-				}
+				$output[(string) $name] = (string) $value;
 			}
 			unset ($xml); // manual garbage collection
 			return $output;

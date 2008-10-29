@@ -20,7 +20,7 @@
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
-require_once('./classes/eveapi/class.accountbalance.php');
+require_once('./classes/eveapi/class.facwarstats.php');
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -47,33 +47,19 @@ foreach($apichars as $index => $thischar)
 // Set Credentials
 $api->setCredentials($apiuser,$apipass,$apichar);
 
-print ("<P>Raw char balance output</P>");
-$dataxml = $api->getAccountBalance();
-$data = AccountBalance::getAccountBalance($dataxml);
+print ("<P>Raw char faction war stats output</P>");
+$dataxml = $api->getFacWarStats();
+$data = FacWarStats::getFacWarStats($dataxml);
 print_as_html(print_r($data,TRUE));
 
-$blnc = new Balance($apiuser,$apipass,$apichar);
-$balanceold = $blnc->getBalance();
-if ($data == $balanceold)
-	print ("<P>Legacy char balance function matches new balance function output.</P>");
-else
-	print ("<P>ERROR: Legacy char balance function output broken!</P>");
+unset ($dataxml,$data);
 
-unset ($dataxml,$data,$blnc,$balanceold);
-
-print ("<P>Raw corp balance output</P>");
-$dataxml = $api->getAccountBalance(true);
-$data = AccountBalance::getAccountBalance($dataxml);
+print ("<P>Raw corp faction war stats output</P>");
+$dataxml = $api->getFacWarStats(true);
+$data = FacWarStats::getFacWarStats($dataxml);
 print_as_html(print_r($data,TRUE));
 
-$blnc = new Balance($apiuser,$apipass,$apichar);
-$balanceold = $blnc->getBalance(true);
-if ($data == $balanceold)
-	print ("<P>Legacy corp balance function matches new balance function output.<P>");
-else
-	print ("<P>ERROR: Legacy corp balance function output broken!</P>");
-
-unset ($dataxml,$data,$blnc,$balanceold);
+unset ($dataxml,$data);
 
 $api->printErrors();
 ?>
