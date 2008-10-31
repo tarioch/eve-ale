@@ -87,12 +87,18 @@ class CharacterSheet
 			
 			// get the actual skills
 			$output['skills'] = array();
-			foreach ($xml->result->rowset->row as $row)
+			foreach ($xml->result->rowset as $rs)
 			{
-				$index = count($output['skills']);
-				foreach ($row->attributes() as $name => $value)
+				$rsatts = $rs->attributes();
+				$rsname = $rsatts[(string) "name"];
+				print $rsname;
+				foreach ($rs->row as $row)
 				{
-					$output['skills'][$index][(string) $name] = (int) $value;
+					$index = count($output[(string) $rsname]);
+					foreach ($row->attributes() as $name => $value)
+					{
+						$output[(string) $rsname][$index][(string) $name] = (string) $value;
+					}
 				}
 			}
 			unset ($xml); // manual garbage collection			

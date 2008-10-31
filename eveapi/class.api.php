@@ -34,6 +34,7 @@ class Api
 	private $debug = false;
 	private $msg = array();
 	private $usecache = true;
+	private $cachestatus = false;
 	private $timetolerance = 5; // minutes to wait after cachedUntil, to allow for the server's time being fast
 
 	public function setCredentials($userid, $apikey, $charid = null)
@@ -175,7 +176,30 @@ class Api
 	{
 		return $this->cachedir;
 	}
-	
+
+	private function setCacheStatus($bool)
+	{
+		if (is_bool($bool))
+		{
+			$this->cachestatus = $bool;
+			return true;
+		}
+		else
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","cachestatus: parameter must be present and boolean");
+			}
+			return false;
+		}
+
+	}
+
+	public function getCacheStatus()
+	{
+		return $this->cachestatus;	
+	}
+
 	public function setTimeTolerance($tolerance)
 	{
 		if (is_int($tolerance))
@@ -189,7 +213,8 @@ class Api
 		}
 
 	}
-	
+
+
 	public function getTimeTolerance()
 	{
 		return $this->timetolerance;
@@ -254,6 +279,7 @@ class Api
 	***********************/
 	public function retrieveXml($path, $timeout = null, $cachePath = null, $params = null, $binary = false)
 	{
+		$this->setCacheStatus($state = false);
 		if ($cachePath != null && !is_array($cachePath))
 		{			
 			if ($this->debug)
@@ -485,7 +511,7 @@ class Api
 		{
 			$contents = fread($fp, filesize($file));
 			fclose($fp);
-
+			$this->setCacheStatus($state = true);
 			if ($this->debug)
 			{
 				$this->addMsg("Info","loadCache: Fetched cache file:" . $file);
