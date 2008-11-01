@@ -43,7 +43,6 @@ class MemberSecurity
 					$rsname =  $rsatt[(string) 'name'];
 					$rsid = $rsatt[(string) 'roleID'];
 					$output[$mindex][(string) 'roleName'] = (string) $rsname;
-					$output[$mindex][(string) $rsname][(string) 'roleID'] = (string) $rsid;
 					foreach ($rs->row as $r)
 					{
 					$rindex = count($output[$mindex][(string) $rsname]);
