@@ -35,20 +35,18 @@ class MemberSecurity
 				$mindex = count($output);
 				foreach($member->attributes() as $mname => $mvalue)
 				{
-				$output[$mindex][$mname] = (string) $mvalue;
+					$output[$mindex][$mname] = (string) $mvalue;
 				}
 				foreach ($member->rowset as $rs)
 				{
 					$rsatt = $rs->attributes();
 					$rsname =  $rsatt[(string) 'name'];
-					$rsid = $rsatt[(string) 'roleID'];
-					$output[$mindex][(string) 'roleName'] = (string) $rsname;
 					foreach ($rs->row as $r)
 					{
-					$rindex = count($output[$mindex][(string) $rsname]);
+						$rindex = count($output[$mindex][(string) $rsname]);
 						foreach ($r->attributes() as $id => $name)
 						{
-						$output[$mindex][(string) $rsname][$rindex][ (string) $id] =  (string) $name;
+							$output[$mindex][(string) $rsname][$rindex][ (string) $id] =  (string) $name;
 						}
 					}
 				}

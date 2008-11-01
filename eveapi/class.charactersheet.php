@@ -22,6 +22,7 @@
 
 class CharacterSheet
 {	
+	// legacy function - this should be in its own class, but is kept for legacy reasons
 	static function getSkillInTraining($contents)
 	{		
 		if (!empty($contents) && is_string($contents))
@@ -51,7 +52,7 @@ class CharacterSheet
 			$output = array();
 			
 			// get the general info of the char
-			$output['info'] = array();
+//			$output['info'] = array();
 			foreach ($xml->result->children() as $name => $value)
 			{
 				// The enhancers,  attributes and skills will be handled separately further down
@@ -60,9 +61,10 @@ class CharacterSheet
 				if ($name == "attributeEnhancers" || $name == "attributes" || $name == "rowset")
 					continue;
 
-				$output['info'][(string) $name] = (string) $value;
+//				$output['info'][(string) $name] = (string) $value;
+				$output[(string) $name] = (string) $value;
 			}
-			
+
 			// get the attributeEnhancers of the char
 			$output['enhancers'] = array();
 			foreach ($xml->result->attributeEnhancers as $attribute)
@@ -85,13 +87,11 @@ class CharacterSheet
 				$output['attributes'][(string) $name] = (int) $value;
 			}
 			
-			// get the actual skills
-			$output['skills'] = array();
+			// get the rowsets
 			foreach ($xml->result->rowset as $rs)
 			{
 				$rsatts = $rs->attributes();
 				$rsname = $rsatts[(string) "name"];
-				print $rsname;
 				foreach ($rs->row as $row)
 				{
 					$index = count($output[(string) $rsname]);

@@ -6,9 +6,6 @@ TODO list for next point release
 - Think about re-ordering parameters in class.api.php to be more consistent across functions in their order, as long as this does not impact the public interface
 
 TODO list for 0.23
-- The additional rowsets in charactersheet aren't being parsed - converted skills rowset parsing to do all rowsets extra rowsets
-- We have multiple rowsets in membersecurity, and would have to either do a charactersheet-style custom parsing, or redo / rethink the way we parse into an array. Consistency would be good, but
-breaking existing code might be bad.
 - Add a way to know whether we fetched from cache - getCacheStatus Added.
 - Add a way to know what API error occured - getAPIError maybe
 - getStandings requires alteration for Alliance, return array for Char to change to an equivlant format as Corp/Alliance Array - done

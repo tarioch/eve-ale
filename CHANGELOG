@@ -1,13 +1,17 @@
-version 0.23 "Eldstrom's Effort" 2008-10-31
+version 0.23 "Eldstrom's Effort" 2008-11-15
 Eldstrom: Removed the cache read for the evec, as it's surplus code and cuasing a random exception.
 Eldstrom: Addition of Eve central XML parsing classes, basic retrieval function and testing script.
 Eldstrom: Addition of API classes CharacterName CharacterID ErrorList
 Eldstrom: Addition of MemberSecurity, MemberSecurityLog and Titles APIs
-Eldstrom: Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getMapKills, getMapSovereignty, getMapJumps, getFacWarTopStats, getFacWarStats, getFacWarSystems
+Eldstrom: Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getKills, getSovereignty, getJumps, getFacWarTopStats, getFacWarStats, getFacWarSystems
 Yorick: Reworked testing code to use buttons for individual tests
 
 class.characterid.php
 - Yorick: CCP fixed the XML, switched to a standard parser instead of working around the old bug
+
+class.charactersheet.php
+- Eldstrom: Changed parser to understand an arbitrary number of rowsets
+- Yorick: Removed the "info" array from output; output now matches the XML in the manner all other parsers do
 
 class.standings.php
 - Eldstrom: Standings::getStandings changed to parse and return allianceStandings with the corp standings, Array returned for personal standings altered to same format as Corpstandigns

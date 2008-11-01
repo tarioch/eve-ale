@@ -188,7 +188,7 @@ class Api
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","cachestatus: parameter must be present and boolean");
+				$this->addMsg("Error","setCacheStatus: parameter must be present and boolean");
 			}
 			return false;
 		}
@@ -279,7 +279,7 @@ class Api
 	***********************/
 	public function retrieveXml($path, $timeout = null, $cachePath = null, $params = null, $binary = false)
 	{
-		$this->setCacheStatus($state = false);
+		$this->setCacheStatus(false);
 		if ($cachePath != null && !is_array($cachePath))
 		{			
 			if ($this->debug)
@@ -511,7 +511,7 @@ class Api
 		{
 			$contents = fread($fp, filesize($file));
 			fclose($fp);
-			$this->setCacheStatus($state = true);
+			$this->setCacheStatus(true);
 			if ($this->debug)
 			{
 				$this->addMsg("Info","loadCache: Fetched cache file:" . $file);
