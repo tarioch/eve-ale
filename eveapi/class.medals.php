@@ -1,9 +1,8 @@
 <?php
 /**************************************************************************
-	PHP Api Lib CharacterSheet Class
-	Portions Copyright (C) 2007 Kw4h
-	Portions Copyright (c) 2008 Thorsten Behrens
-
+	PHP Api Lib Medals Class
+	Copyright (C) 2008 Dustin Tinklin
+	
 	This file is part of PHP Api Lib.
 
 	PHP Api Lib is free software: you can redistribute it and/or modify

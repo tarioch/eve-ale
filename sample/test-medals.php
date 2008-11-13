@@ -1,7 +1,8 @@
 <?php
 /**************************************************************************
 	PHP Api Lib
-	Copyright (c) 2008 Thorsten Behrens
+	Copyright (c) 2008 Dustin Tinklin
+	Portions Copyright (c) 2008 Thorsten Behrens
 
 	This file is part of PHP Api Lib.
 
@@ -38,24 +39,26 @@ $apichars = Characters::getCharacters($apicharsxml);
 
 foreach($apichars as $index => $thischar)
 {
-        if($thischar['charname']==$mychar)
-	        {
-		                $apichar=$thischar['charid'];
-				                $apicorp=$thischar['corpid'];
-						        }
-							}
+	if($thischar['charname']==$mychar)
+	{
+		$apichar=$thischar['charid'];
+		$apicorp=$thischar['corpid'];
+	}
+}
+// Set Credentials
+$api->setCredentials($apiuser,$apipass,$apichar);
 
-							// Set Credentials
-							$api->setCredentials($apiuser,$apipass,$apichar);
+print("<P>Raw char medals output</P>");
 
-print("<P>Raw characters output</P>");
-//$dataxml = $api->getMedals();
-//$data = Medals::getMedals($dataxml);
-//print_as_html(print_r($data,TRUE));
+$dataxml = $api->getMedals();
+$data = Medals::getMedals($dataxml);
+print_as_html(print_r($data,TRUE));
 
-//unset ($dataxml,$data);
+unset ($dataxml,$data);
 
-$dataxml = $api->getMedals((bool) 1);
+print("<P>Raw corp medals output</P>");
+
+$dataxml = $api->getMedals(TRUE);
 $data = Medals::getMedals($dataxml);
 print_as_html(print_r($data,TRUE));
 
