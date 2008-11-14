@@ -720,6 +720,22 @@ class Api
 		return $contents;
 	}
 	
+	public function getCertificateTree($timeout = null)
+	{
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getCertificateTree: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+
+		$contents = $this->retrieveXml("/eve/CertificateTree.xml.aspx", $timeout);
+		
+		return $contents;
+	}
+
 	public function getRefTypes($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
