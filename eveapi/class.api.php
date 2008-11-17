@@ -1247,6 +1247,23 @@ class Api
 		return $contents;
 	}
 
+public function getMemberMedals($timeout = null)
+	{
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMedals: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+		$cachePath = array();
+	 	$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		$contents = $this->retrieveXml("/corp/MemberMedals.xml.aspx", $timeout, $cachePath);
+		return $contents;
+	}
+
 	public function getMedals($corp = false, $timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
@@ -1279,7 +1296,6 @@ class Api
 		return $contents;
 	}
 
-	
 	public function getMarketOrders($corp = false, $timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
