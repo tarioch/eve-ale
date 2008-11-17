@@ -20,37 +20,18 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
-require_once('./classes/eveapi/class.characters.php');
-require_once('./classes/eveapi/class.membermedals.php');
+require_once('./classes/eveapi/class.reftypes.php');
 
 require_once('./print-as-html.php');
-require_once('./config.php');
 
 $api = new Api();
 $api->debug(true);
 $api->cache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
-$api->setCredentials($apiuser,$apipass);
 
-$apicharsxml = $api->getCharacters();
-$apichars = Characters::getCharacters($apicharsxml);
-
-// Find the character I'm interested in
-
-foreach($apichars as $index => $thischar)
-{
-	if($thischar['charname']==$mychar)
-	{
-		$apichar=$thischar['charid'];
-		$apicorp=$thischar['corpid'];
-	}
-}
-// Set Credentials
-$api->setCredentials($apiuser,$apipass,$apichar);
-
-print("<P>Raw corp Member Medals output</P>");
-$dataxml = $api->getMemberMedals();
-$data = MemberMedals::getMemberMedals($dataxml);
+print ("<P>Raw Reftypes output</P>");
+$dataxml = $api->getRefTypes();
+$data = RefTypes::getRefTypes($dataxml);
 print_as_html(print_r($data,TRUE));
 
 unset ($dataxml,$data);

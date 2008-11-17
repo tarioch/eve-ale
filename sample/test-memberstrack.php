@@ -21,7 +21,7 @@
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
-require_once('./classes/eveapi/class.membermedals.php');
+require_once('./classes/eveapi/class.memberstrack.php');
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -48,9 +48,9 @@ foreach($apichars as $index => $thischar)
 // Set Credentials
 $api->setCredentials($apiuser,$apipass,$apichar);
 
-print("<P>Raw corp Member Medals output</P>");
-$dataxml = $api->getMemberMedals();
-$data = MemberMedals::getMemberMedals($dataxml);
+print("<P>Raw corp MembersTrack output</P>");
+$dataxml = $api->getMembersTrack();
+$data = MembersTrack::getMembersTrack($dataxml);
 print_as_html(print_r($data,TRUE));
 
 unset ($dataxml,$data);
