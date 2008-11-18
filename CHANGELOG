@@ -1,8 +1,9 @@
-version 0.23 "Eldstrom's Effort" 2008-11-15
+version 0.23 "Eldstrom's Effort" 2008-11-18
+Eldstrom: added the last test cases.
 Eldstrom: Removed the cache read for the evec, as it's surplus code and cuasing a random exception.
 Eldstrom: Addition of Eve central XML parsing classes, basic retrieval function and testing script.
 Eldstrom: Addition of API classes CharacterName CharacterID ErrorList
-Eldstrom: Addition of MemberSecurity, MemberSecurityLog and Titles APIs
+Eldstrom: Addition of MemberSecurity, MemberSecurityLog and Titles, Medals, MemberMedals and Cetificatetree APIs
 Eldstrom: Added getShareHolders, getContainerLog, getStandings, getConquerableStations, getMarketOrders, getKillLog, getKills, getSovereignty, getJumps, getFacWarTopStats, getFacWarStats, getFacWarSystems
 Yorick: Reworked testing code to use buttons for individual tests
 
@@ -17,6 +18,7 @@ class.standings.php
 - Eldstrom: Standings::getStandings changed to parse and return allianceStandings with the corp standings, Array returned for personal standings altered to same format as Corpstandigns
 
 class.api.php + class.evec.php
+- Eldstrom: GetCacheStatus added
 - Eldstrom: isCached() add filesize check to the function else 0 sized cache files can cause fatal errors, and don't get replaced.
 - Yorick: isCached() now knows "magic" $timeout value of 0, in which case it will only check that the file exists, and will not check for freshness.
   This is used when the library cannot connect to the API server or encounters an API error - you still get the cached content

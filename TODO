@@ -6,23 +6,12 @@ TODO list for next point release
 - Think about re-ordering parameters in class.api.php to be more consistent across functions in their order, as long as this does not impact the public interface
 
 TODO list for 0.23
-- Add a way to know whether we fetched from cache - getCacheStatus Added.
 - Add a way to know what API error occured - getAPIError maybe
-- getStandings requires alteration for Alliance, return array for Char to change to an equivlant format as Corp/Alliance Array - done
-- Add test cases for the added functions to api-testing 
 - Document added functions
 - Change caching logic so no cache file is created if $api->cache(FALSE) - done, needs testing
 - Add some caching logic that can handle binary file timeouts
 - (Re)test API functions that have changed in Revelations 1.1
-Added ../corp/Shareholders.xml.aspx
-Added ../corp/MemberSecurity.xml.aspx
-Added ../corp/MemberSecurityLog.xml.aspx
-Added ../corp/Titles.xml.aspx
-Added ../corp/ContainerLog.xml.aspx
-Added ../corp/Standings.xml.aspx
-Added ../char/Standings.xml.aspx
-Added Clone Name and Skillpoints to character sheet.
-Added Role and Title lists to character sheet.
+
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here
