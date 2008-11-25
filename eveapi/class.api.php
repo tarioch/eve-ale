@@ -704,6 +704,22 @@ class Api
 		return $contents;
 	}
 	
+	public function getServerStatus($timeout = null)
+	{
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getServerStatus: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+
+		$contents = $this->retrieveXml("/Server/ServerStatus.xml.aspx", $timeout);
+		
+		return $contents;
+	}
+
 	public function getSkillTree($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
