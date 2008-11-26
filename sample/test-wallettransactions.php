@@ -50,7 +50,7 @@ $api->setCredentials($apiuser,$apipass,$apichar);
 
 print("<P>Raw char Wallet Transaction output</P>");
 
-$dataxml = $api->getwallettransations();
+$dataxml = $api->getWalletTransactions();
 $data = WalletTransactions::getWalletTransactions($dataxml);
 print_as_html(print_r($data,TRUE));
 
@@ -58,7 +58,7 @@ unset ($dataxml,$data);
 
 print("<P>Raw corp Wallet Transaction output</P>");
 
-$dataxml = $api->getWalletTransactions(TRUE);
+$dataxml = $api->getWalletTransactions(null,TRUE);
 $data = WalletTransactions::getWalletTransactions($dataxml);
 print_as_html(print_r($data,TRUE));
 

@@ -50,7 +50,7 @@ $api->setCredentials($apiuser,$apipass,$apichar);
 
 print("<P>Raw char Wallet Journal output</P>");
 
-$dataxml = $api->getwallettransations();
+$dataxml = $api->getWalletJournal();
 $data = WalletJournal::getWalletJournal($dataxml);
 print_as_html(print_r($data,TRUE));
 
@@ -58,7 +58,7 @@ unset ($dataxml,$data);
 
 print("<P>Raw corp Wallet Journal output</P>");
 
-$dataxml = $api->getWalletJournal(TRUE);
+$dataxml = $api->getWalletJournal(null,TRUE);
 $data = WalletJournal::getWalletJournal($dataxml);
 print_as_html(print_r($data,TRUE));
 
