@@ -1,7 +1,8 @@
 <?php
 /**************************************************************************
 	PHP Api Lib MemberTrack Class
-	Copyright (c) 2008 Thorsten Behrens
+	Portions Copyright (C) 2007 Kw4h
+	Portions Copyright (c) 2008 Thorsten Behrens
 
 	This file is part of PHP Api Lib.
 
@@ -18,6 +19,41 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
-// class.membertrack.php was renamed to be in line with new naming conventions - this file allows for legacy code to continue working
-require_once('./class.membertracking.php'); 
+
+class MemberTrack
+{	
+	static function getMembers($contents)
+	{		
+		if (!empty($contents) && is_string($contents))
+		{
+			$xml = new SimpleXMLElement($contents);
+			$output = array();
+			
+			foreach ($xml->result->rowset->row as $row)
+			{
+				$index = count($output);
+				foreach ($row->attributes() as $key => $val)
+				{
+					$output[$index][(string) $key] = (string) $val;
+				}
+			}
+			unset ($xml); // manual garbage collection			
+			return $output;
+		}
+		else
+		{
+			return null;
+		}
+	}
+}
+
+class MemberTracking
+{
+	static function getMemberTracking($contents)
+	{
+		$output = MemberTrack::getMembers($contents);
+		
+		return $output;
+	}
+}
 ?>
