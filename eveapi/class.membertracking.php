@@ -23,7 +23,18 @@
 class MemberTrack
 {	
 	static function getMembers($contents)
-	{		
+	{	
+		$output = MemberTracking::getMemberTracking($contents);
+		
+		return $output;
+	}
+}
+
+class MemberTracking
+{
+	static function getMemberTracking($contents)
+	{
+		
 		if (!empty($contents) && is_string($contents))
 		{
 			$xml = new SimpleXMLElement($contents);
@@ -44,16 +55,6 @@ class MemberTrack
 		{
 			return null;
 		}
-	}
-}
-
-class MemberTracking
-{
-	static function getMemberTracking($contents)
-	{
-		$output = MemberTrack::getMembers($contents);
-		
-		return $output;
 	}
 }
 ?>
