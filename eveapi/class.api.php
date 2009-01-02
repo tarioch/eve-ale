@@ -326,11 +326,24 @@ class Api
 				$sep = ini_get('arg_separator.output');
 				// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers
 				ini_set('arg_separator.output','&');
-				// poststring
+				// query string
 				if (count($params) > 0)
-					$poststring = http_build_query($params); // which has been forced to use '&' by ini_set, at the end of this file
-				else
-					$poststring = "";
+				{
+					$query_string = http_build_query($params); // which has been forced to use '&' by ini_set, above. 5.2 notation being spurned to allow the code to run on 5.1
+					$query_string = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $query_string);
+					// http_build_query introduces array notation when it encounters multiple parameters of the same name, such as ?this=that&this=theother
+					// This is encountered when making EvE-Central API calls, which uses that notation
+					// The preg_replace takes single dimension arrays and encodes them back the way we expect it
+					// This works because the '=' character can't appear non-urlencoded except for exactly where I expect it to appear (between key / value pairs)
+					// The above preg_replace will work  when a parameter has multiple "simple" values, resulting in single dimension arrays.
+					// It will likely mangle anything more complex than that.
+					// This preg_replace code is courtesy of donovan jimenez, taken from http://www.php.net/http_build_query
+					// Dustin "Eldstrom" Tinklin suggested similar code, that did not account for encountering [...] elsewhere in the string, however - unlikely as that is 
+					// Query strings can pretty much look like anything they want, but the square-bracket notation is not in widespread-use, as it goes against
+					// W3C recommendations for field-value pairs in query strings
+				} else {
+					$query_string = "";
+				}
 				// And set it back to whatever sensical or non-sensical value it was in the 1st place
 				ini_set('arg_separator.output',$sep);
 
@@ -353,10 +366,10 @@ class Api
 					fputs ($fp, "Host: " . $this->apisite . "\r\n");
 					fputs ($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
 					fputs ($fp, "User-Agent: PHPApi\r\n");
-					fputs ($fp, "Content-Length: " . strlen($poststring) . "\r\n");
+					fputs ($fp, "Content-Length: " . strlen($query_string) . "\r\n");
 					fputs ($fp, "Connection: close\r\n\r\n");
-					if (strlen($poststring) > 0)
-						fputs ($fp, $poststring."\r\n");
+					if (strlen($query_string) > 0)
+						fputs ($fp, $query_string."\r\n");
 					
 					// retrieve contents
 					$contents = "";
