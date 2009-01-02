@@ -19,6 +19,6 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 // class.starbases.php was renamed to be in line with new naming conventions - this file allows for legacy code to continue working
-require_once('./class.starbaselist.php'); 
-require_once('./class.starbasedetail.php'); 
+require_once(dirname(__FILE__).'/class.starbaselist.php'); 
+require_once(dirname(__FILE__).'/class.starbasedetail.php'); 
 ?>

@@ -22,6 +22,7 @@
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
 require_once('./classes/eveapi/class.wallettransactions.php');
+require_once('./classes/eveapi/class.transactions.php'); // Legacy function, for testing purposes only
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -42,7 +43,6 @@ foreach($apichars as $index => $thischar)
 	if($thischar['charname']==$mychar)
 	{
 		$apichar=$thischar['charid'];
-		$apicorp=$thischar['corpid'];
 	}
 }
 // Set Credentials
@@ -52,17 +52,31 @@ print("<P>Raw char Wallet Transaction output</P>");
 
 $dataxml = $api->getWalletTransactions();
 $data = WalletTransactions::getWalletTransactions($dataxml);
+
+$dataold = Transaction::getTransaction($dataxml);
+if ($data == $dataold)
+	print ("<P>Legacy char transaction function matches new transaction function output.</P>");
+else
+	print ("<P>ERROR: Legacy char transaction function output broken!</P>");
+
 print_as_html(print_r($data,TRUE));
 
-unset ($dataxml,$data);
+unset ($dataxml,$data,$dataold);
 
 print("<P>Raw corp Wallet Transaction output</P>");
 
 $dataxml = $api->getWalletTransactions(null,TRUE);
 $data = WalletTransactions::getWalletTransactions($dataxml);
-print_as_html(print_r($data,TRUE));
 
-unset ($dataxml,$data);
+$dataold = Transaction::getTransaction($dataxml);
+if ($data == $dataold)
+	print ("<P>Legacy corp transaction function matches new transaction function output.</P>");
+else
+	print ("<P>ERROR: Legacy corp transaction function output broken!</P>");
+
+	print_as_html(print_r($data,TRUE));
+
+unset ($dataxml,$data,$dataold);
 
 $api->printErrors();
 ?>

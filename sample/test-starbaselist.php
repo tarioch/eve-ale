@@ -20,8 +20,8 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
-require_once('./classes/eveapi/class.starbasesdetail.php');
-require_once('./classes/eveapi/class.titles.php');
+require_once('./classes/eveapi/class.characters.php');
+require_once('./classes/eveapi/class.starbaselist.php');
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -48,10 +48,10 @@ foreach($apichars as $index => $thischar)
 // Set Credentials
 $api->setCredentials($apiuser,$apipass,$apichar);
 
-print("<P>Raw corp starbase detail output</P>");
+print("<P>Raw starbase list output</P>");
 
-$dataxml = $api->getStarBaseDetail();
-$data = StarBaseDetail::getStarBaseDetail($dataxml);
+$dataxml = $api->getStarbaseList();
+$data = StarbaseList::getStarbaseList($dataxml);
 print_as_html(print_r($data,TRUE));
 
 unset ($dataxml,$data);

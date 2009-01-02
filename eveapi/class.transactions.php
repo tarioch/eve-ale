@@ -19,8 +19,9 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
+
 // class.transactions.php was renamed to be in line with new naming conventions - this file allows for legacy code to continue working
-require_once('./class.wallettransactions.php'); 
+require_once(dirname(__FILE__).'/class.wallettransactions.php'); 
 
 // The below is legacy code and left in so as to not break code that expects 0.20 behavior
 class Transaction

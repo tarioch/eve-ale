@@ -20,8 +20,9 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
+require_once('./classes/eveapi/class.characters.php');
+require_once('./classes/eveapi/class.starbaselist.php');
 require_once('./classes/eveapi/class.starbasedetail.php');
-require_once('./classes/eveapi/class.titles.php');
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -42,19 +43,27 @@ foreach($apichars as $index => $thischar)
 	if($thischar['charname']==$mychar)
 	{
 		$apichar=$thischar['charid'];
-		$apicorp=$thischar['corpid'];
 	}
 }
 // Set Credentials
 $api->setCredentials($apiuser,$apipass,$apichar);
 
-print("<P>Raw corp starbase detail output</P>");
+print("<P>Raw starbase detail output</P>");
 
-$dataxml = $api->getStarBaseDetail();
-$data = StarBaseDetail::getStarBaseDetail($dataxml);
-print_as_html(print_r($data,TRUE));
+$dataxml = $api->getStarbaseList();
+$data = StarbaseList::getStarbaseList($dataxml);
 
-unset ($dataxml,$data);
+if(!empty($data))
+{
+	$baseid = $data[0]['itemID'];
+	$data2xml = $api->getStarbaseDetail($baseid);
+	$data2 = StarbaseDetail::getStarbaseDetail($data2xml);
+	print_as_html(print_r($data2,TRUE));
+} else {
+	print('No starbases found<br>');
+}
+
+unset ($dataxml,$data,$data2xml,$data2);
 
 $api->printErrors();
 ?>
