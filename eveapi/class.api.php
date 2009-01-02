@@ -332,7 +332,7 @@ class Api
 					$query_string = http_build_query($params); // which has been forced to use '&' by ini_set, above. 5.2 notation being spurned to allow the code to run on 5.1
 					$query_string = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $query_string);
 					// http_build_query introduces array notation when it encounters multiple parameters of the same name, such as ?this=that&this=theother
-					// This is encountered when making EvE-Central API calls, which uses that notation
+					// This is encountered when making EvE-Central API calls, which use that notation
 					// The preg_replace takes single dimension arrays and encodes them back the way we expect it
 					// This works because the '=' character can't appear non-urlencoded except for exactly where I expect it to appear (between key / value pairs)
 					// The above preg_replace will work  when a parameter has multiple "simple" values, resulting in single dimension arrays.
