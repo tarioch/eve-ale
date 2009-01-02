@@ -29,8 +29,8 @@ $api->debug(true);
 $api->cache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
 
-print ("<P>Raw CertifcateTree output</P>");
-$dataxml = $api->getCertifitcateTree();
+print ("<P>Raw CertificateTree output</P>");
+$dataxml = $api->getCertificateTree();
 $data = CertificateTree::getCertificateTree($dataxml);
 print_as_html(print_r($data,TRUE));
 

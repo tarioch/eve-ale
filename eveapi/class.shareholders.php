@@ -33,7 +33,7 @@ class ShareHolders
 				$type = $att['name'];
 				foreach ($rowset->row as $row)
 				{
-					$index = count($output[$type]);
+					$index = count($output[(string) $type]);
 					foreach ($row->attributes() as $name => $value)
 					{
 						$output[(string) $type][$index][(string) $name] = (string) $value;

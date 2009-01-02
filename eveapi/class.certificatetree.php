@@ -1,9 +1,8 @@
 <?php
 /**************************************************************************
-	PHP Api Lib SkillTree Class
-	Portions Copyright (C) 2007 Kw4h
+	PHP Api Lib CertificateTree Class
+	Copyright (c) 2008 Dustin Tinklin
 	Portions Copyright (c) 2008 Thorsten Behrens
-	Portions Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
 
@@ -23,13 +22,13 @@
 
 class CertificateTree
 {
-	function descendtree($child)
+	function descendTree($child)
 	{
 		foreach ($child->rowset as $rs)
 		{
 			$rsatts = $rs->attributes();
-			$rsname = $rsatts[(string) "name"];
-			$key = $rsatt[(string) "key"];
+			$rsname = $rsatts["name"];
+			$key = $rsatt["key"];
 			foreach ($rs->row as $row)
 			{
 				$rat = $row->attributes();
@@ -41,8 +40,8 @@ class CertificateTree
 				if(count((array)$row->children()) > 1) // children contains @attributes, which we don't care about
 				{
 					$clatts = $row->rowset->attributes;
-					$clid = $clatts[(string) "name"]
-					$co[(string) $rsname][(string) $index][(string) $clid] = CertificateTree::descendtree($row->children());
+					$clid = $clatts["name"];
+					$co[(string) $rsname][(string) $index][(string) $clid] = CertificateTree::descendTree($row->children());
 				}
 
 			}
@@ -50,7 +49,7 @@ class CertificateTree
 		
 		return $co;
 	}
-							
+	
 				
 	static function getCertificateTree($contents)
 	{		
@@ -69,8 +68,9 @@ class CertificateTree
 					$index = $rat[(string) $key];
 					foreach ($row->attributes() as $name => $value)
 					{
-						$output[(string) $rsname][($string) $index][(string) $name] = (string) $value;
+						$output[(string) $rsname][(string) $index][(string) $name] = (string) $value;
 					}
+					//BUGBUG below - was this meant to also trigger on @attributes?
 					if(count((array)$row->children()) > 0) // children contains @attributes, which we don't care about
 					{
 						$output[(string) $rsname][(string) $index]  = CertificateTree::descendtree($row->children());
