@@ -22,6 +22,7 @@
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
 require_once('./classes/eveapi/class.starbaselist.php');
+require_once('./classes/eveapi/class.starbases.php'); //  Legacy function, for testing purposes only
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -42,7 +43,6 @@ foreach($apichars as $index => $thischar)
 	if($thischar['charname']==$mychar)
 	{
 		$apichar=$thischar['charid'];
-		$apicorp=$thischar['corpid'];
 	}
 }
 // Set Credentials

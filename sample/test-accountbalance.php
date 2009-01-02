@@ -21,6 +21,7 @@
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
 require_once('./classes/eveapi/class.accountbalance.php');
+require_once('./classes/eveapi/class.balance.php'); //  Legacy function, for testing purposes only
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -40,7 +41,6 @@ foreach($apichars as $index => $thischar)
 	if($thischar['charname']==$mychar)
 	{
 		$apichar=$thischar['charid'];
-		$apicorp=$thischar['corpid'];
 	}
 }
 
@@ -50,7 +50,6 @@ $api->setCredentials($apiuser,$apipass,$apichar);
 print ("<P>Raw char balance output</P>");
 $dataxml = $api->getAccountBalance();
 $data = AccountBalance::getAccountBalance($dataxml);
-print_as_html(print_r($data,TRUE));
 
 $blnc = new Balance($apiuser,$apipass,$apichar);
 $balanceold = $blnc->getBalance();
@@ -59,12 +58,13 @@ if ($data == $balanceold)
 else
 	print ("<P>ERROR: Legacy char balance function output broken!</P>");
 
+print_as_html(print_r($data,TRUE));
+
 unset ($dataxml,$data,$blnc,$balanceold);
 
 print ("<P>Raw corp balance output</P>");
 $dataxml = $api->getAccountBalance(true);
 $data = AccountBalance::getAccountBalance($dataxml);
-print_as_html(print_r($data,TRUE));
 
 $blnc = new Balance($apiuser,$apipass,$apichar);
 $balanceold = $blnc->getBalance(true);
@@ -72,6 +72,8 @@ if ($data == $balanceold)
 	print ("<P>Legacy corp balance function matches new balance function output.<P>");
 else
 	print ("<P>ERROR: Legacy corp balance function output broken!</P>");
+
+print_as_html(print_r($data,TRUE));
 
 unset ($dataxml,$data,$blnc,$balanceold);
 

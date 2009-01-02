@@ -50,17 +50,50 @@ $api->setCredentials($apiuser,$apipass,$apichar);
 
 print("<P>Raw char Wallet Journal output</P>");
 
-$dataxml = $api->getWalletJournal();
-$data = WalletJournal::getWalletJournal($dataxml);
-print_as_html(print_r($data,TRUE));
+$beforeRefID = null;
+$i = 1;
+do
+{
+	$dataxml = $api->getWalletJournal($beforeRefID);
+	$data = WalletJournal::getWalletJournal($dataxml);
+
+	if(!$data)
+	{
+		print("<P>Received empty wallet data on run $i</P>");
+		break;
+	}
+
+	print("<P>Run $i yields the following wallet journal data</P>");
+	print_as_html(print_r($data,TRUE));
+
+	$i++;
+	// Set the last refID in the array to be the one we're grabbing from next
+	$beforeRefID = $data[count($data)-1]['refID'];
+} while(count($data) == 1000); // API never returns more than 1000. If it returned 1000, there may be more data
 
 unset ($dataxml,$data);
 
 print("<P>Raw corp Wallet Journal output</P>");
 
-$dataxml = $api->getWalletJournal(null,TRUE);
-$data = WalletJournal::getWalletJournal($dataxml);
-print_as_html(print_r($data,TRUE));
+$beforeRefID = null;
+$i = 1;
+do
+{
+	$dataxml = $api->getWalletJournal($beforeRefID,TRUE);
+	$data = WalletJournal::getWalletJournal($dataxml);
+
+	if(!$data)
+	{
+		print("<P>Received empty wallet data on run $i</P>");
+		break;
+	}
+
+	print("<P>Run $i yields the following wallet journal data</P>");
+	print_as_html(print_r($data,TRUE));
+	$i++;
+	// Set the last refID in the array to be the one we're grabbing from next
+	$beforeRefID = $data[count($data)-1]['refID'];
+} while(count($data) == 1000); // API never returns more than 1000. If it returned 1000, there may be more data
 
 unset ($dataxml,$data);
 

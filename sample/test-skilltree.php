@@ -21,6 +21,7 @@
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.skilltree.php');
+require_once('./classes/eveapi/class.generic.php'); //  Legacy function, for testing purposes only
 
 require_once('./print-as-html.php');
 
@@ -32,9 +33,16 @@ $api->setTimeTolerance(5); // also the default value
 print ("<P>Raw SkillTree output</P>");
 $dataxml = $api->getSkilltree();
 $data = SkillTree::getSkillTree($dataxml);
+$dataold = Generic::getSkillTree($dataxml);
+
+if ($data == $dataold)
+	print ("<P>New skill tree function matches legacy skill tree function output.</P>");
+else
+	print ("<P>ERROR: New skill tree function output broken!</P>");
+
 print_as_html(print_r($data,TRUE));
 
-unset ($dataxml,$data);
+unset ($dataxml,$data,$dataold);
 
 $api->printErrors();
 ?>

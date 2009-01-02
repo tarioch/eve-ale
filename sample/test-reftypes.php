@@ -21,6 +21,7 @@
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.reftypes.php');
+require_once('./classes/eveapi/class.generic.php'); //  Legacy function, for testing purposes only
 
 require_once('./print-as-html.php');
 
@@ -32,9 +33,16 @@ $api->setTimeTolerance(5); // also the default value
 print ("<P>Raw Reftypes output</P>");
 $dataxml = $api->getRefTypes();
 $data = RefTypes::getRefTypes($dataxml);
+$dataold = Generic::getRefTypes($dataxml);
+
+if ($data == $dataold)
+	print ("<P>New refTypes function matches legacy refTypes function output.</P>");
+else
+	print ("<P>ERROR: New refTypes function output broken!</P>");
+
 print_as_html(print_r($data,TRUE));
 
-unset ($dataxml,$data);
+unset ($dataxml,$data,$dataold);
 
 $api->printErrors();
 ?>

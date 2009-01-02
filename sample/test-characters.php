@@ -20,6 +20,7 @@
 **************************************************************************/
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
+require_once('./classes/eveapi/class.charselect.php'); //  Legacy function, for testing purposes only
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -33,9 +34,16 @@ $api->setCredentials($apiuser,$apipass);
 print("<P>Raw characters output</P>");
 $dataxml = $api->getCharacters();
 $data = Characters::getCharacters($dataxml);
+$dataold = CharSelect::getCharacters($dataxml);
+
+if ($data == $dataold)
+	print ("<P>New character selection function matches legacy character selection function output.</P>");
+else
+	print ("<P>nERROR: New character selection function output broken!</P>");
+
 print_as_html(print_r($data,TRUE));
 
-unset ($dataxml,$data);
+unset ($dataxml,$data,$dataold);
 
 $api->printErrors();
 ?>

@@ -22,6 +22,7 @@
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.characters.php');
 require_once('./classes/eveapi/class.membertracking.php');
+require_once('./classes/eveapi/class.membertrack.php');  //  Legacy function, for testing purposes only
 
 require_once('./print-as-html.php');
 require_once('./config.php');
@@ -42,7 +43,6 @@ foreach($apichars as $index => $thischar)
 	if($thischar['charname']==$mychar)
 	{
 		$apichar=$thischar['charid'];
-		$apicorp=$thischar['corpid'];
 	}
 }
 // Set Credentials
@@ -51,9 +51,16 @@ $api->setCredentials($apiuser,$apipass,$apichar);
 print("<P>Raw corp MemberTracking output</P>");
 $dataxml = $api->getMemberTracking();
 $data = MemberTracking::getMemberTracking($dataxml);
+$dataold = MemberTrack::getMembers($dataxml);
+
+if ($data == $dataold)
+	print ("<P>New member tracking function matches legacy member tracking function output.</P>");
+else
+	print ("<P>ERROR: New member tracking function output broken!</P>");
+
 print_as_html(print_r($data,TRUE));
 
-unset ($dataxml,$data);
+unset ($dataxml,$data,$dataold);
 
 $api->printErrors();
 ?>

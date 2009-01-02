@@ -19,5 +19,5 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 // class.membertrack.php was renamed to be in line with new naming conventions - this file allows for legacy code to continue working
-require_once('./class.membertracking.php'); 
+require_once(dirname(__FILE__).'/class.membertracking.php'); 
 ?>
