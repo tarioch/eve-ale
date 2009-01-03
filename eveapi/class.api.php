@@ -30,6 +30,7 @@ class Api
 	private $userid = null;
 	private $charid = null;
 	private $apisite = "api.eve-online.com";
+	private $apisiteevec = "eve-central.com";
 	private $cachedir = './xmlcache';
 	private $debug = false;
 	private $msg = array();
@@ -238,6 +239,24 @@ class Api
 		return $this->apisite;
 	}
 	
+	public function setApiSiteEvEC($site)
+	{
+		if (is_string($site))
+		{
+			$this->apisiteevec = $site;
+			return true;
+		} else {
+			if ($this->debug)
+				$this->addMsg("Error","setApiSiteEvEC: parameter must be present and a string");
+			return false;
+		}
+	}
+	
+	public function getApiSiteEvEC()
+	{
+		return $this->apisiteevec;
+	}
+
 	// add error message - both params are strings and are formatted as: "$type: $message"
 	private function addMsg($type, $message)
 	{
@@ -1618,5 +1637,98 @@ public function getMemberMedals($timeout = null)
 				return null;
 		}
 	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Functions to retrieve EvE-Central API data
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Can we say kludge, boys and girls? However, as 0.2x doesn't lend itself to inheritance and I don't want to add yet another parameter to already-burdened retrieveXML, this will have to do for now
+	private function switchApiSites($tocentral)
+	{
+		if (!is_boolean($tocentral))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","switchApiSites: parameter must be present and boolean");
+			}
+			return false;
+		}
+
+		$evesite = $this->getApiSite();
+		$centralsite = $this->getApiSiteEvEC();
+		if ($tocentral)
+		{
+			$this->setApiSite($centralsite);
+		}
+		else
+		{
+			$this->setApiSite($evesite);
+		}
+
+		return true;
+	}
+	
+	public function getMinerals($timeout = null)
+	{
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMinerals: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+		$this->switchApiSites(true);
+		$contents = $this->retrieveXml("/api/evemon", $timeout);
+		$this->switchApiSites(false);
+		
+		return $contents;
+	}
+
+	public function getQuickLook($params = array(),$timeout = null)
+	{
+		if (empty($params) or empty($params[(string) 'typeid']))
+		{	
+				$this->addMsg("Error","getQuickLook: typeid is a required element of $params");
+				return null;
+		}
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getQuickLook: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+		$this->switchApiSites(true);
+		$contents = $this->retrieveXml("/api/quicklook", $timeout, null, $params);
+		$this->switchApiSites(false);
+		
+		return $contents;
+	}
+
+
+	public function getMarketStat($params = array(),$timeout = null)
+	{
+		if (empty($params) or empty($params[(string) 'typeid']))
+		{
+				$this->addMsg("Error","getMarketStat: typeid is a required element of $params");
+				return null;
+		}
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","getMarketStat: Non-numeric value of timeout param, reverting to default value");
+			}
+			$timeout = null;
+		}
+		$this->switchApiSites(true);
+		$contents = $this->retrieveXml("/api/marketstat", $timeout, null, $params);
+		$this->switchApiSites(false);
+		
+		return $contents;
+	}
+
 }
 ?>
