@@ -28,22 +28,20 @@ class CertificateTree
 		{
 			$rsatts = $rs->attributes();
 			$rsname = $rsatts["name"];
-			$key = $rsatt["key"];
 			foreach ($rs->row as $row)
 			{
 				$rat = $row->attributes();
-				$index = $rat[(string) $key];
-				foreach ($row->attributes() as $name => $value)
-				{
-					$co[(string) $rsname][(string) $index][(string) $name] = (string) $value;
-				}
-				if(count((array)$row->children()) > 1) // children contains @attributes, which we don't care about
+				$index++;
+				if(count((array)$row->children()) > 0) 
 				{
 					$clatts = $row->rowset->attributes;
 					$clid = $clatts["name"];
-					$co[(string) $rsname][(string) $index][(string) $clid] = CertificateTree::descendTree($row->children());
+					$co[(string) $rsname][$index] = CertificateTree::descendTree($row->children());
 				}
-
+				foreach ($row->attributes() as $name => $value)
+				{
+					$co[(string) $rsname][$index][(string) $name] = (string) $value;
+				}
 			}
 		}
 		
@@ -61,19 +59,17 @@ class CertificateTree
 			{
 				$rsatts = $rs->attributes();
 				$rsname = $rsatts[(string) "name"];
-				$key = $rsatt[(string) "key"];
 				foreach ($rs->row as $row)
 				{
 					$rat = $row->attributes();
-					$index = $rat[(string) $key];
+					$index++;
+					if(count((array)$row->children()) > 0) 
+					{
+						$output[(string) $rsname][$index]  = CertificateTree::descendtree($row->children());
+					}
 					foreach ($row->attributes() as $name => $value)
 					{
-						$output[(string) $rsname][(string) $index][(string) $name] = (string) $value;
-					}
-					//BUGBUG below - was this meant to also trigger on @attributes?
-					if(count((array)$row->children()) > 0) // children contains @attributes, which we don't care about
-					{
-						$output[(string) $rsname][(string) $index]  = CertificateTree::descendtree($row->children());
+						$output[(string) $rsname][$index][(string) $name] = (string) $value;
 					}
 				}
 			}
