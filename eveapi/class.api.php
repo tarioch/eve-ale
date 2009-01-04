@@ -1666,6 +1666,7 @@ public function getMemberMedals($timeout = null)
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Can we say kludge, boys and girls? However, as 0.2x doesn't lend itself to inheritance and I don't want to add yet another parameter to already-burdened retrieveXML, this will have to do for now
+	// BUGBUG - this will not switch back. Needs to be fixed before release of 0.23
 	private function switchApiSites($tocentral)
 	{
 		if (!is_bool($tocentral))
