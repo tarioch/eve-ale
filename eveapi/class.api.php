@@ -31,6 +31,7 @@ class Api
 	private $charid = null;
 	private $apisite = "api.eve-online.com";
 	private $apisiteevec = "eve-central.com";
+	private $useragent = "eve-apiphp-0.23";
 	private $cachedir = './xmlcache';
 	private $debug = false;
 	private $msg = array();
@@ -154,6 +155,28 @@ class Api
 	public function getUseCache()
 	{
 		return $this->usecache;
+	}
+
+	public function setUserAgent($agent)
+	{
+		if (is_string($agent))
+		{
+			$this->useragent = $agent;
+			return true;
+		}
+		else
+		{
+			if ($this->debug)
+			{
+				$this->addMsg("Error","setUserAgent: parameter must be present and a string");
+			}
+			return false;
+		}
+	}
+	
+	public function getUserAgent()
+	{
+		return $this->useragent;
 	}
 
 	public function setCacheDir($dir)
@@ -384,7 +407,7 @@ class Api
 					fputs ($fp, "POST " . $path . " HTTP/1.0\r\n");
 					fputs ($fp, "Host: " . $this->apisite . "\r\n");
 					fputs ($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
-					fputs ($fp, "User-Agent: PHPApi\r\n");
+					fputs ($fp, "User-Agent: " . $this->useragent . "\r\n");
 					fputs ($fp, "Content-Length: " . strlen($query_string) . "\r\n");
 					fputs ($fp, "Connection: close\r\n\r\n");
 					if (strlen($query_string) > 0)
