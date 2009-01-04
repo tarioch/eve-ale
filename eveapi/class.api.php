@@ -1645,7 +1645,7 @@ public function getMemberMedals($timeout = null)
 	// Can we say kludge, boys and girls? However, as 0.2x doesn't lend itself to inheritance and I don't want to add yet another parameter to already-burdened retrieveXML, this will have to do for now
 	private function switchApiSites($tocentral)
 	{
-		if (!is_boolean($tocentral))
+		if (!is_bool($tocentral))
 		{
 			if ($this->debug)
 			{
@@ -1668,7 +1668,7 @@ public function getMemberMedals($timeout = null)
 		return true;
 	}
 	
-	public function getMinerals($timeout = null)
+	public function getMinerals($timeout = 1440)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1685,7 +1685,7 @@ public function getMemberMedals($timeout = null)
 		return $contents;
 	}
 
-	public function getQuickLook($params = array(),$timeout = null)
+	public function getQuickLook($params = array(),$timeout = 60)
 	{
 		if (empty($params) or empty($params[(string) 'typeid']))
 		{	
@@ -1708,7 +1708,7 @@ public function getMemberMedals($timeout = null)
 	}
 
 
-	public function getMarketStat($params = array(),$timeout = null)
+	public function getMarketStat($params = array(),$timeout = 60)
 	{
 		if (empty($params) or empty($params[(string) 'typeid']))
 		{
