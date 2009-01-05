@@ -26,6 +26,8 @@ class.api.php + class.evec.php
 - Yorick: isCached() now understands "do not cache" hint by CCP, when currentTime and cachedUntil are equal
 - Yorick: Changed caching logic to not create a cache file if api->cache(FALSE)
 - Eldstrom: Fixed the separator always being set to '&' after retrieveXML fetched content. It is now set back to its original value as intended.
+- Yorick: Changed caching logic to handle file-date caching hints, for portraits and EvE-Central
+- Yorick: Moved all of the EvE-Central logic into class.api.php
 
 version 0.22, 2008-08-19
 
