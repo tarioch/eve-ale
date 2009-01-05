@@ -898,8 +898,8 @@ class Api
 		}
 	}
 	
-	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = 65)
-	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
+	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = null)
+	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053, 65
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -966,8 +966,8 @@ class Api
 		return $contents;
 	}
 	
-	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = 65)
-	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
+	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = null)
+	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053, 65
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
