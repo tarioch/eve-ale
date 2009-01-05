@@ -37,6 +37,7 @@ class Api
 	private $msg = array();
 	private $usecache = true;
 	private $cachestatus = false;
+	private $cachehint = true; // A kludge to handle data without cachedUntil hint. Again, inheritance would make this go away 
 	private $timetolerance = 5; // minutes to wait after cachedUntil, to allow for the server's time being fast
 
 	public function setCredentials($userid, $apikey, $charid = null)
@@ -122,7 +123,8 @@ class Api
 	
 	public function debug($bool)
 	{ // legacy name of setDebug
-		$this->setDebug($bool);
+		$r = $this->setDebug($bool);
+		return $r;
 	}
 	
 	public function getDebug()
@@ -149,7 +151,8 @@ class Api
 	
 	public function cache($bool)
 	{ // legacy name of setUseCache
-		$this->setUseCache($bool);
+		$r = $this->setUseCache($bool);
+		return $r;
 	}
 	
 	public function getUseCache()
@@ -597,16 +600,13 @@ class Api
 			if ($timeout === 0) // timeout is 0, not NULL - magic value to indicate we want to know whether the file is there, never mind the caching time
 				return true;
 
-			$fp = fopen($file, "r");
-			
-			if ($fp)
+			if ($this->cachehint) // This file contains a cachedUntil hint - workaround because we don't have easy inheritance
 			{
-				$contents = fread($fp, filesize($file));
-				fclose($fp);
+				$contents = file_get_contents($file);
 				
 				// check cache
 				$xml = new SimpleXMLElement($contents);
-				
+			
 				$cachetime = (string) $xml->currentTime;
 				$time = strtotime($cachetime);
 				
@@ -642,13 +642,27 @@ class Api
 
 				return true; // default fall-through - cache is still valid
 			}
-			else
+			else // no cachedUntil hint, use the file date
 			{
-				if ($this->debug)
+				// get local time
+				$now = time();
+				$time = filemtime($file); // Get the file modification time
+				if ($timeout === NULL) // no explicit timeout given, which is not a supported thing to do in this case
 				{
-					$this->addMsg("Error", "isCached: Could not open cache file for reading: " . $file);
+					if ($this->debug)
+					{
+						$this->addMsg("Error","isCached: $timeout cannot be NULL if no cachedUntil hint is present");
+					}
+					return false;
 				}
-				return false;
+				else
+				{
+					$minutes = $timeout * 60; // Don't need a time tolerance in this case
+					if ($now >= $time + $minutes) // Time to fetch again
+						return false;
+					else // Cache is still valid
+						return true;
+				}
 			}
 		}
 		else
@@ -898,8 +912,8 @@ class Api
 		}
 	}
 	
-	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = null)
-	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053, 65
+	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = 65)
+	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -966,8 +980,8 @@ class Api
 		return $contents;
 	}
 	
-	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = null)
-	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053, 65
+	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = 65)
+	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1617,7 +1631,7 @@ public function getMemberMedals($timeout = null)
 	// getCharacterPortrait works quite differently from anything else. It returns a path to a JPEG file in the cache dir, not the actual data. There is no XML parsing, since there's no XML
 	// Currently, there's also no real caching timeout, which needs to be changed
 	public function getCharacterPortrait($id = null, $size = 64, $timeout = 1440)
-	{ //  BUGBUG This will cache, but currently not set a timeout. A cleverer idea would be to cache for 24 hours, and check by file date
+	{
 
 		if (!is_numeric($size)) // possible values are 64 and 256, but that's not checked, as CCP may change their mind
 		{
@@ -1645,7 +1659,9 @@ public function getMemberMedals($timeout = null)
 			$cachePath[2] = 's';
 			$cachePath[3] = '.jpg';
 
-			$this->retrieveXml("/serv.asp",0,$cachePath,$params,TRUE); // optional "binary" parameter, and the timeout is BUGBUG see above
+			$this->cachehint = false; // workaround, inheritance would resolve this
+			$this->retrieveXml("/serv.asp",$timeout,$cachePath,$params,TRUE); // optional "binary" parameter
+			$this->cachehint = true;
 
 			$result = $this->getCacheFile("/serv.asp", $params, $cachePath,TRUE);
 			
@@ -1666,32 +1682,7 @@ public function getMemberMedals($timeout = null)
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Can we say kludge, boys and girls? However, as 0.2x doesn't lend itself to inheritance and I don't want to add yet another parameter to already-burdened retrieveXML, this will have to do for now
-	// BUGBUG - this will not switch back. Needs to be fixed before release of 0.23
-	private function switchApiSites($tocentral)
-	{
-		if (!is_bool($tocentral))
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","switchApiSites: parameter must be present and boolean");
-			}
-			return false;
-		}
 
-		$evesite = $this->getApiSite();
-		$centralsite = $this->getApiSiteEvEC();
-		if ($tocentral)
-		{
-			$this->setApiSite($centralsite);
-		}
-		else
-		{
-			$this->setApiSite($evesite);
-		}
-
-		return true;
-	}
-	
 	public function getMinerals($timeout = 1440)
 	{
 		if ($timeout && !is_numeric($timeout))
@@ -1702,9 +1693,13 @@ public function getMemberMedals($timeout = null)
 			}
 			$timeout = null;
 		}
-		$this->switchApiSites(true);
+		
+		$site = $this->getApiSite(); // current
+		$this->setApiSite($this->getApiSiteEvEC()); // gonna use EvE-C
+		$this->cachehint = false; // workaround, inheritance would resolve this
 		$contents = $this->retrieveXml("/api/evemon", $timeout);
-		$this->switchApiSites(false);
+		$this->cachehint = true;
+		$this->setApiSite($site); // and switch back
 		
 		return $contents;
 	}
@@ -1724,9 +1719,12 @@ public function getMemberMedals($timeout = null)
 			}
 			$timeout = null;
 		}
-		$this->switchApiSites(true);
+		$site = $this->getApiSite(); // current
+		$this->setApiSite($this->getApiSiteEvEC()); // gonna use EvE-C
+		$this->cachehint = false; // workaround, inheritance would resolve this
 		$contents = $this->retrieveXml("/api/quicklook", $timeout, null, $params);
-		$this->switchApiSites(false);
+		$this->cachehint = true;
+		$this->setApiSite($site); // and switch back
 		
 		return $contents;
 	}
@@ -1747,9 +1745,12 @@ public function getMemberMedals($timeout = null)
 			}
 			$timeout = null;
 		}
-		$this->switchApiSites(true);
+		$site = $this->getApiSite(); // current
+		$this->setApiSite($this->getApiSiteEvEC()); // gonna use EvE-C
+		$this->cachehint = false; // workaround, inheritance would resolve this
 		$contents = $this->retrieveXml("/api/marketstat", $timeout, null, $params);
-		$this->switchApiSites(false);
+		$this->cachehint = true;
+		$this->setApiSite($site); // and switch back
 		
 		return $contents;
 	}
