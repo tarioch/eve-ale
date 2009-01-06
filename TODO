@@ -9,6 +9,7 @@ TODO list for 0.23
 - Add a way to know what API error occured - getAPIError maybe
 - Document added functions - Done can someone check nothing is missed? 
 - (Re)test API functions that have changed in Revelations 1.1
+- Change caching logic for EvE-Central so caching is specific to the parameters passed
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here
