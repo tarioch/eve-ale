@@ -28,10 +28,10 @@ class CertificateTree
 		{
 			$rsatts = $rs->attributes();
 			$rsname = $rsatts["name"];
+			$index = 0;
 			foreach ($rs->row as $row)
 			{
 				$rat = $row->attributes();
-				$index++;
 				if(count((array)$row->children()) > 0) 
 				{
 					$clatts = $row->rowset->attributes;
@@ -42,6 +42,7 @@ class CertificateTree
 				{
 					$co[(string) $rsname][$index][(string) $name] = (string) $value;
 				}
+			$index++;
 			}
 		}
 		
@@ -59,10 +60,10 @@ class CertificateTree
 			{
 				$rsatts = $rs->attributes();
 				$rsname = $rsatts[(string) "name"];
+				$index =0;
 				foreach ($rs->row as $row)
 				{
 					$rat = $row->attributes();
-					$index++;
 					if(count((array)$row->children()) > 0) 
 					{
 						$output[(string) $rsname][$index]  = CertificateTree::descendtree($row->children());
@@ -71,6 +72,7 @@ class CertificateTree
 					{
 						$output[(string) $rsname][$index][(string) $name] = (string) $value;
 					}
+				$index++;
 				}
 			}
 
