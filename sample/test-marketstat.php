@@ -32,13 +32,13 @@ $api->setTimeTolerance(5); // also the default value
 print("<P>Raw EvE-Central market statistics output</P>");
 
 // MarketStat returns buy, sell and combine stats for unfulfilled buy sell orders for items as give by typeid and stats scope limited by the optional arguments.
-// params required: typeid optional: sethours, setminQ, usesystem, regionlimit (multiples) 
-$params = array();
-$params[(string) 'typeid'][] = 34;  // multiples added by numberical sub array 
-$params[(string) 'typeid'][] = 35; 
-$params[(string) 'regionlimit'][] = 10000002;
-$params[(string) 'regionlimit'][] = 10000052;
-$dataxml = $api->getMarketStat($params);
+// params required: typeid (multiples) optional: sethours, regionlimit (multiples) , setminQ
+
+$typeid[] = 34;  // multiples added by numberical sub array 
+$typeid[] = 35; 
+$regionlimit[] = 10000002;
+$regionlimit[] = 10000052;
+$dataxml = $api->getMarketStat($typeid,null,$regionlimit);
 $data = MarketStat::getMarketStat($dataxml);
 
 print_as_html(print_r($data,TRUE));

@@ -29,7 +29,7 @@ $api->debug(true);
 $api->cache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
 
-print("<P>Raw EvE-Central Minerals Pricelist (in EvEMon format) output</P>");
+print("<P>Raw EvE-Central Mineral Median Prices (in EvEMon format) output</P>");
 $dataxml = $api->getMinerals();
 $data = Minerals::getMinerals($dataxml);
 

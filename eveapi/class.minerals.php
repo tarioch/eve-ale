@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib Eve Central MarketStat Class
+	PHP Api Lib Eve Central Minerals Class
 	Copyright (c) 2008 Dustin Tinklin
 
 	This file is part of PHP Api Lib.
@@ -19,6 +19,8 @@
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
 
+// If I were to follow library convention to a T, this class would be
+// EvEMon - but I can't bring myself to do it
 class Minerals
 {
 	function getMinerals($contents)

@@ -32,13 +32,11 @@ $api->setTimeTolerance(5); // also the default value
 print("<P>Raw EvE-Central Quick Look output</P>");
 
 // QuickLook retrieves market order details for item of typeid, limited by the other arguments
-// params required: typeid optional: hours, minQ, regionlimit (multiples) 
-$params = array();
-$params[(string) 'typeid'] = 34;
-$params[(string) 'regionlimit'][] = 10000002;
-$params[(string) 'regionlimit'][] = 10000052;
+// params required: typeid optional: sethours, regionlimit (multiples), usesystem, setminQ 
+$regionlimit[] = 10000002;
+$regionlimit[] = 10000052;
 print "<P>Market Orders</P>";
-$dataxml = $api->getQuickLook($params);
+$dataxml = $api->getQuickLook(34,null,$regionlimit);
 $data = QuickLook::getQuickLook($dataxml);
 
 print_as_html(print_r($data,TRUE));

@@ -1558,9 +1558,6 @@ public function getMemberMedals($timeout = null)
 
 	public function getCharacterName($ids, $timeout = null )
 	{
-	// This is a function that should not be cached.  Unless $timeout is given, indicating a desire to cache by the user, we will turn off caching.
-//		$uc = $this->usecache;
-
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
@@ -1570,13 +1567,8 @@ public function getMemberMedals($timeout = null)
 			$timeout = null;
 		}
 
-		if (is_string($ids) || is_numeric($ids))
+		if (is_numeric($ids))
 		{
-//			if ($uc) // caching is currently enabled, disable it for the duration
-//			{
-//				$this->cache(FALSE);
-//			}
-
 			$params = array();
 			$params['ids'] = $ids;
 			
@@ -1585,10 +1577,21 @@ public function getMemberMedals($timeout = null)
 
 			$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx",$timeout,$cachePath,$params);
 
-//			if ($uc) // caching was enabled, enable it again
-//			{
-//				$this->cache($uc);
-//			}
+			return $contents;		
+		}
+		else if (is_array($ids))
+		{
+			// Sort elements of $ids in order
+			sort($ids);
+
+			$params = array();
+			$params['ids'] = implode(',',$ids);
+			
+			$cachePath = array();
+			$cachePath[0] = 'ids';
+
+			$contents = $this->retrieveXml("/eve/CharacterName.xml.aspx",$timeout,$cachePath,$params);
+
 			return $contents;		
 		}
 		else
@@ -1621,6 +1624,21 @@ public function getMemberMedals($timeout = null)
 
 			return $contents;
 		}
+		else if (is_array($names))
+		{
+			// Sort elements of $names in order
+			sort($names);
+
+			$params = array();
+			$params['names'] = implode(',',$names);
+
+			$cachePath = array();
+			$cachePath[0] = 'names';
+
+			$contents = $this->retrieveXml("/eve/CharacterID.xml.aspx",$timeout,$cachePath,$params);
+
+			return $contents;
+		}
 		else
 		{
 				$this->addMsg("Error","getCharacterID: Non-string or empty value of names param, returning null");
@@ -1629,7 +1647,7 @@ public function getMemberMedals($timeout = null)
 	}
 	
 	// getCharacterPortrait works quite differently from anything else. It returns a path to a JPEG file in the cache dir, not the actual data. There is no XML parsing, since there's no XML
-	// Currently, there's also no real caching timeout, which needs to be changed
+
 	public function getCharacterPortrait($id = null, $size = 64, $timeout = 1440)
 	{
 
@@ -1672,7 +1690,8 @@ public function getMemberMedals($timeout = null)
 		}
 		else
 		{
-				$this->addMsg("Error","getCharacterPortrait: Non-integer or empty value of id param, returning null");
+				if ($this->debug)
+					$this->addMsg("Error","getCharacterPortrait: Non-integer or empty value of id param, returning null");
 				return null;
 		}
 	}
@@ -1683,13 +1702,14 @@ public function getMemberMedals($timeout = null)
 
 	// Can we say kludge, boys and girls? However, as 0.2x doesn't lend itself to inheritance and I don't want to add yet another parameter to already-burdened retrieveXML, this will have to do for now
 
-	public function getMinerals($timeout = 1440)
+	// EvE-Central "evemon" function - really median mineral prices
+	public function getMinerals($timeout = 30)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
 			{
-				$this->addMsg("Error","getMinerals: Non-numeric value of timeout param, reverting to default value");
+				$this->addMsg("Error","getEveMon: Non-numeric value of timeout param, reverting to default value");
 			}
 			$timeout = null;
 		}
@@ -1704,25 +1724,103 @@ public function getMemberMedals($timeout = null)
 		return $contents;
 	}
 
-	public function getQuickLook($params = array(),$timeout = 60)
+	// EvE-Central QuickLook function
+	// regionlimit can exist as multiples, and can thus be passed as a numeric, a string, or an array
+	public function getQuickLook($typeid,$sethours = null, $regionlimit = null, $usesystem = null, $setminQ = null, $timeout = 30)
 	{
-		if (empty($params) or empty($params[(string) 'typeid']))
-		{	
-				$this->addMsg("Error","getQuickLook: typeid is a required element of $params");
-				return null;
-		}
+
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","getQuickLook: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+			$timeout = 30;
 		}
+
+		$params = array();
+		$cachePath = array();
+
+		if (!is_numeric($typeid))
+		{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric or empty value of typeid param, returning null");
+				return null;
+		}
+		else
+		{
+			$params['typeid'] = $typeid;
+			$cachePath[] = 'typeid';
+		}
+
+		if ($sethours)
+		{
+			if (is_numeric($sethours))
+			{
+				$params['sethours'] = $sethours;
+				$cachePath[] = 'sethours';
+			}
+			else
+			{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric value of sethours param, returning null");
+				return null;
+			}
+		}
+		
+		if ($regionlimit)
+		{
+			if (is_numeric($regionlimit))
+			{
+				$params['regionlimit'] = $regionlimit;
+				$cachePath[] = 'regionlimit';
+			}
+			else if (is_array($regionlimit))
+			{
+				sort($regionlimit); // really just for the cache path
+				$params['regionlimit'] = $regionlimit;
+				$cachePath[] = implode(',',$regionlimit); // Comma-separated string for the cache path
+			}
+			else
+			{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric and non-array value of regionlimit param, returning null");
+				return null;
+			}
+		}
+		
+		if	($usesystem)
+		{
+			if(is_numeric($usesystem))
+			{
+				$params['usesystem'] = $usesystem;
+				$cachePath[] = 'usesystem';
+			}
+			else
+			{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric value of usesystem param, returning null");
+				return null;
+			}
+		}
+
+		if	($setminQ)
+		{
+			if (is_numeric($setminQ))
+			{
+				$params['setminQ'] = $setminQ;
+				$cachePath[] = 'setminQ';
+			}
+			else
+			{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric value of setminQ param, returning null");
+				return null;
+			}
+		}
+		
 		$site = $this->getApiSite(); // current
 		$this->setApiSite($this->getApiSiteEvEC()); // gonna use EvE-C
 		$this->cachehint = false; // workaround, inheritance would resolve this
-		$contents = $this->retrieveXml("/api/quicklook", $timeout, null, $params);
+		$contents = $this->retrieveXml("/api/quicklook", $timeout, $cachePath, $params);
 		$this->cachehint = true;
 		$this->setApiSite($site); // and switch back
 		
@@ -1730,25 +1828,91 @@ public function getMemberMedals($timeout = null)
 	}
 
 
-	public function getMarketStat($params = array(),$timeout = 60)
+	public function getMarketStat($typeid, $sethours = null, $regionlimit = null, $setminQ = null, $timeout = 30)
 	{
-		if (empty($params) or empty($params[(string) 'typeid']))
-		{
-				$this->addMsg("Error","getMarketStat: typeid is a required element of $params");
-				return null;
-		}
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","getMarketStat: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+			$timeout = 30;
 		}
+
+		$params = array();
+		$cachePath = array();
+
+		if (is_numeric($typeid))
+		{
+			$params['typeid'] = $typeid;
+			$cachePath[] = 'typeid';
+		}
+		else if (is_array($typeid))
+		{
+			sort($typeid); // really just for the cache path
+			$params['typeid'] = $typeid;
+			$cachePath[] = implode(',',$typeid); // Comma-separated string for the cache path
+		}
+		else 
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getQuickLook: Non-numeric or empty value of typeid param, returning null");
+			return null;
+		}
+
+		if ($sethours)
+		{
+			if (is_numeric($sethours))
+			{
+				$params['sethours'] = $sethours;
+				$cachePath[] = 'sethours';
+			}
+			else
+			{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric value of sethours param, returning null");
+				return null;
+			}
+		}
+		
+		if ($regionlimit)
+		{
+			if (is_numeric($regionlimit))
+			{
+				$params['regionlimit'] = $regionlimit;
+				$cachePath[] = 'regionlimit';
+			}
+			else if (is_array($regionlimit))
+			{
+				sort($regionlimit); // really just for the cache path
+				$params['regionlimit'] = $regionlimit;
+				$cachePath[] = implode(',',$regionlimit); // Comma-separated string for the cache path
+			}
+			else
+			{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric and non-array value of regionlimit param, returning null");
+				return null;
+			}
+		}
+		
+		if	($setminQ)
+		{
+			if (is_numeric($setminQ))
+			{
+				$params['setminQ'] = $setminQ;
+				$cachePath[] = 'setminQ';
+			}
+			else
+			{
+				if ($this->debug)
+					$this->addMsg("Error","getQuickLook: Non-numeric value of setminQ param, returning null");
+				return null;
+			}
+		}
+
 		$site = $this->getApiSite(); // current
 		$this->setApiSite($this->getApiSiteEvEC()); // gonna use EvE-C
 		$this->cachehint = false; // workaround, inheritance would resolve this
-		$contents = $this->retrieveXml("/api/marketstat", $timeout, null, $params);
+		$contents = $this->retrieveXml("/api/marketstat", $timeout, $cachePath, $params);
 		$this->cachehint = true;
 		$this->setApiSite($site); // and switch back
 		
