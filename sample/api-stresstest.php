@@ -18,6 +18,12 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
+// This used to be the main test code. It is kept around because it is a decent way
+// to test the API under memory pressure conditions - this used to break in all
+// kinds of ways. We're doing unset()s now in the API; keeping this around
+// just so we can see how badly (and how often) the API will break
+// when a lot of stuff is fetched from one file
+
 header("Content-type: text/plain");
 require_once('./classes/eveapi/class.api.php');
 require_once('./classes/eveapi/class.alliancelist.php');
