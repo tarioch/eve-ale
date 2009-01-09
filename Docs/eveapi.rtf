@@ -66,25 +66,24 @@
 {\*\soutlvl{\listlevel\levelnfc23\leveljc0\levelstartat1\levelfollow0{\leveltext \'01\u8226 ?;}{\levelnumbers;}\f3\f3\f3\f6\fi-360\li3600}}\listid5}
 }{\listoverridetable{\listoverride\listid1\listoverridecount0\ls0}{\listoverride\listid2\listoverridecount0\ls1}{\listoverride\listid3\listoverridecount0\ls2}{\listoverride\listid4\listoverridecount0\ls3}{\listoverride\listid5\listoverridecount0\ls4}}
 
-{\info{\creatim\yr0\mo0\dy0\hr0\min0}{\author Dustin Tinklin}{\revtim\yr2008\mo12\dy1\hr11\min42}{\printim\yr0\mo0\dy0\hr0\min0}{\comment StarWriter}{\vern3000}}\deftab720
+{\info{\creatim\yr0\mo0\dy0\hr0\min0}{\revtim\yr2009\mo1\dy8\hr20\min0}{\printim\yr0\mo0\dy0\hr0\min0}{\comment StarWriter}{\vern3000}}\deftab720
 {\*\pgdsctbl
 {\pgdsc0\pgdscuse195\pgwsxn11905\pghsxn16837\marglsxn1134\margrsxn1134\margtsxn1134\margbsxn1134\pgdscnxt0 Standard;}
-{\pgdsc1\pgdscuse195\pgwsxn12240\pghsxn15840\marglsxn1800\margrsxn1800\margtsxn1440\margbsxn1440\pgdscnxt1 Standard;}}
-{\*\pgdscno1}\paperh15840\paperw12240\margl1800\margr1800\margt1440\margb1440\sectd\sbknone\pgwsxn12240\pghsxn15840\marglsxn1800\margrsxn1800\margtsxn1440\margbsxn1440\ftnbj\ftnstart1\ftnrstcont\ftnnar\aenddoc\aftnrstcont\aftnstart1\aftnnrlc
-\pard\plain \ltrpar\s1\ql\rtlch\afs28\lang255\ab\ltrch\dbch\langfe1033\hich\fs28\lang1033\b\loch\fs28\lang1033\b {\rtlch \ltrch\loch\f1\fs28\lang1033\i0\b PHP EvE API Library}
+{\pgdsc1\pgdscuse195\pgwsxn12240\pghsxn15840\marglsxn780\margrsxn735\margtsxn1440\margbsxn1440\pgdscnxt1 Standard;}}
+{\*\pgdscno1}\paperh15840\paperw12240\margl780\margr735\margt1440\margb1440\sectd\sbknone\pgwsxn12240\pghsxn15840\marglsxn780\margrsxn735\margtsxn1440\margbsxn1440\ftnbj\ftnstart1\ftnrstcont\ftnnar\aenddoc\aftnrstcont\aftnstart1\aftnnrlc
+\pard\plain \ltrpar\s1\ql\rtlch\afs28\lang255\ab\ltrch\dbch\langfe1033\hich\fs28\lang1033\b\loch\fs28\lang1033\b {\rtlch \ltrch\loch\f1\fs28\lang1033\i0\b PHP EvE API / EvE-Central API Library (eveapi-php)}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b Requirements}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 For this library to be useful, you will need:}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 - A web server that runs PHP5. Some functions require PHP 5.1.3 or greater; the recommended version would be a recent version of PHP 5.2.x. This library uses SimpleXML. It is possible to replace that with another XML parser and run it on PHP4 - feel free t
-o branch the code :)}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 - A web server that runs PHP5. Some functions require PHP 5.1.3 or greater; the recommended version would be a recent version of PHP 5.2.x. This library uses SimpleXML.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 - A web server that does not block the fsockopen() function. Unfortunately, many free PHP5 webhosts do block that function.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 - A good deal of patience :)}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b Overview}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 PHP API grabs XML data through the EvE API, caches it locally in a text file, and parses the XML into an array for further processing by you.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 eveapi-php grabs XML data through the EvE API or EvE-Central API, caches it locally in a text file, and parses the XML into an array for further processing by you.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 The caching is a bit naive, but on the upside, very simple to maintain - no DB administration needed. There is no "cleanup" of the cache directory in this code at present. If you are going to use this API to grab data for many different users, that may bec
 ome a small nuisance.}
@@ -93,7 +92,7 @@ ome a small nuisance.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Copy the contents of the eveapi directory into a directory on your server. For purposes of this document, the examples will assume that you copied everything into \'91./classes/eveapi\'92.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 The EvE API library defaults to caching its fetches, in accordance with CCP\'92s wishes. The default caching directory is \'91./xmlcache/\'92.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 The EvE API library defaults to caching its fetches, in accordance with CCP\'92s (and EvE-Central's) wishes. The default caching directory is \'91./xmlcache/\'92.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b Basic operation}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
@@ -109,10 +108,10 @@ need 'class.charselect.php'.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $apipass = '67890'; // API Key - limited or full, depending on what you intend to fetch}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $mychar = 'Win Sauce'; // Character name}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Time to initialize a new Api object. You'll want to decide on whether to debug; and you'll set the credentials. Note we just use User ID and API Key to start. You can only fetch rather limited things with that combo, but that's how we need to start out.}
+\par \pard\plain \ltrpar\s1\li15\ri0\lin15\rin0\fi0\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Time to initialize a new Api object. You'll want to decide on whether to debug; and you'll set the credentials. Note we just use User ID and API Key to start. You can only fetch rather limited things with that combo, but that's how we need to start out.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api = new Api();}
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->debug(true); // When testing and debugging your code \'96 comment out once everything\'92s working}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setDebug(true); // When testing and debugging your code \'96 comment out once everything\'92s working}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setCredentials($apiuser,$apipass);}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Alright, now we'll go fetch us the character ID for that character name, and we'll grab the corporation ID while we're at it. Fetching anything in the PHP API Library is done in two steps: Get the raw XML, then parse it using a parser class. The function n
@@ -134,8 +133,8 @@ ame in Api and in the parsing class is identical, by convention in this library.
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Really what you\'92d do is present the existing characters to a user to choose from, but this works for a demonstration example.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 At this point, you can continue by grabbing more data, using the $apichar variable. For example, to get a list of the members of your corporation (which assumes an include of class.membertrack.php - remember, each API function has a separate parsing class)
-:}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 At this point, you can continue by grabbing more data, using the $apichar variable. For example, to get a list of the members of your corporation (which assumes an include of class.membertracking.php - remember, each API function has a separate parsing cla
+ss):}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 // The following fetch will need our character ID - so set it, now that we have it}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setCredentials($apiuser,$apipass,$apichar); }
@@ -150,11 +149,11 @@ ame in Api and in the parsing class is identical, by convention in this library.
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->printErrors();}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 There's an example api-testing.php file included in this release, which shows some of the functions of the API. It fetches hard-coded user ID and API key from config.php, so edit config.php before you upload the code to your server for testing.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 There's an example api-testing.html file included in this release, which shows some of the functions of the API. It fetches hard-coded user ID and API key from config.php, so edit config.php before you upload the code to your server for testing.}
 \par \page\pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ab\ltrch\dbch\langfe1033\hich\fs24\lang1033\b\loch\fs24\lang1033\b {\rtlch \ltrch\loch\f1\fs24\lang1033\i0\b Error Reporting}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Error reporting is rudimentary in this version of the library. The individual functions will return \'93null\'94 if an API error was encountered. If $api->debug(true); has been set, you can print out any encountered errors with $api->printErrors();. Currently, t
-his also outputs informational debug information, such as cache file creation, cache loading, &c.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Error reporting is rudimentary in this version of the library. The individual functions will return \'93null\'94 if an API error was encountered. If $api->setDebug(true); has been set, you can print out any encountered errors with $api->printErrors();. Currently
+, this also outputs informational debug information, such as cache file creation, cache loading, &c.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Note that PHP itself will throw Warning: error messages if the API server cannot be resolved or cannot be reached. You may want to set error_reporting() in your script if you do not wish to have these Warning: messages displayed when the API server is down
 .}
@@ -174,11 +173,18 @@ his also outputs informational debug information, such as cache file creation, c
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setCredentials(userid, apikey, charid);}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch \'93}{\rtlch \ltrch\loch\f1\fs24\lang1033\i0\b0\ltrch\hich\fs20\loch\fs20 userid\'94 and \'93apikey\'94 are required parameters, while \'93charid\'94 is optional.}
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Note that \'93charid\'94 is a numeric value. You can grab it using getCharacters \'96 see above example, please \'96 or using getCharacterID(name);. That latter one\'92s not implemented yet, though, so natch.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Note that \'93charid\'94 is a numeric value. You can grab it using getCharacters \'96 see above example, please \'96 or using getCharacterID(name);.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ltrch\dbch\langfe1033\hich\fs22\lang1033\loch\fs22\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getCacheStatus()}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Return \'93true\'94 if the previous API call had been serviced from cache, and \'93false\'94 if the previous API call had not been serviced from cache.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $dataxml = $api->getMemberTracking();}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $cached = $api->getCacheStatus(); // Did we just fetch that, or did we get it from our cache?}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getCredentials()}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Returns an array containing \'91userid\'92, \'91apikey\'92 and \'91charid\'92 indices filled with the vales set previously with the setCredentials call}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Returns an array containing \'91userid\'92, \'91apikey\'92 and \'91charid\'92 indices filled with the vales set previously with the setCredentials call.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $credentials = $api->getCredentials();}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
@@ -197,22 +203,52 @@ his also outputs informational debug information, such as cache file creation, c
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $debug = $api->getDebug();}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b cache(bool)}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b setUseCache(bool)}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Set caching to \'93true\'94 or \'93false\'94. It defaults to \'93true\'94.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Returns \'93true\'94 if successful, and \'93false\'94 if not.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->cache(false);}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setUseCache(false);}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getUseCache()}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Return the value of the caching variable, \'93true\'94 or \'93false\'94.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $caching = $api->getUseCache();}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b setCacheDir(dir)}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Set the caching directory to a value. It defaults to \'93./xmlcache\'94.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Set the caching directory to a string. It defaults to \'93./xmlcache\'94.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Returns \'93true\'94 if successful, and \'93false\'94 if not.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setCacheDir(\'93/var/tmp/dont-live-in-my-homedir-you-bum/\'94);}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getCacheDir()}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Return the caching directory as a string value.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $cachedir = $api->getCacheDir();}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b setUserAgent(agent)}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Set the HTTP User Agent to a string. It defaults to \'93eve-apiphp-x.x\'94, where \'93x.x\'94 is the version of the library.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Returns \'93true\'94 if successful, and \'93false\'94 if not.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setUserAgent(\'93FleetManager\'94);}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getUserAgent()}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Return the HTTP User Agent string.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $useragent = $api->getUserAgent();}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b setTimeTolerance(tolerance)}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Set the amount of time in minutes that the API functions will wait after CCP\'92s \'93cachedUntil\'94 time has expired before attempting to call an API function again instead of delivering from cache. Default is 5 minutes. Used to allow some leeway in your server\'92s
@@ -222,10 +258,49 @@ his also outputs informational debug information, such as cache file creation, c
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setTimeTolerance(10); // 5 minutes, pshaw, we need 10}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b printErrors()}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getTimeTolerance(tolerance)}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Return the value (in minutes) of the timeTolerance variable.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $tolerance = $api->getTimeTolerance();}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b setApiSite(site)}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Set the value of the URL that the library will use to connect to the EvE API server. Defaults to "api.eve-online.com".}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Returns \'93true\'94 if successful, and \'93false\'94 if not.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setApiSite(\'93sisi-api.eve-online.com\'94);}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getApiSite()}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Return the apisite URL as a string.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $apisite = $api->getApiSite();}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b setApiSiteEvEC(site)}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Set the value of the URL that the library will use to connect to the EvE-Central API server. Defaults to "eve-central.com".}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Returns \'93true\'94 if successful, and \'93false\'94 if not.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $api->setApiSiteEvEC(\'93test.eve-central.com\'94);}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b getApiSiteEvEC()}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Return the apisiteevec URL as a string.}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 $apisite = $api->getApiSiteEvEC();}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch  }
+\par \pard\plain \ltrpar\s1\ql 
+\par \pard\plain \ltrpar\s1\ql {\rtlch \ltrch\loch\f1\fs22\lang1033\i0\b printErrors()}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 Print debug messages. These may be actual errors, or merely informational debug.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs22\lang255\ab\ltrch\dbch\langfe1033\hich\fs22\lang1033\b\loch\fs22\lang1033\b 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ab\ltrch\dbch\langfe1033\hich\fs24\lang1033\b\loch\fs24\lang1033\b {\rtlch \ltrch\loch\f1\fs24\lang1033\i0\b Implemented EvE API functions}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 See the very handy API index at http://wiki.eve-id.net/APIv2_Page_Index for EvE server requirements for each API function and sample output, please.}
@@ -477,7 +552,7 @@ n one week.}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ab\ltrch\dbch\langfe1033\hich\fs20\lang1033\b\loch\fs20\lang1033\b {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b Include needed:}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
-\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 {\*\bkmkstart DDE_LINK}require_once('./classes/eveapi/class.api.php');{\*\bkmkend DDE_LINK}}
+\par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 require_once('./classes/eveapi/class.api.php');}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 require_once(\'91./classes/eveapi/class.wallettransactions.php\'92);}
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs20\lang255\ltrch\dbch\langfe1033\hich\fs20\lang1033\loch\fs20\lang1033 
 \par \pard\plain \ltrpar\s1\ql\rtlch\afs24\lang255\ltrch\dbch\langfe1033\hich\fs24\lang1033\loch\fs24\lang1033 {\rtlch \ltrch\loch\f1\fs20\lang1033\i0\b0 previously just class.transactions.php}
