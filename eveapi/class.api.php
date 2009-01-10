@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	PHP Api Lib, v0.23, 2008-09-30
+	PHP Api Lib, v0.23, 2009-01-10
 
 	Portions Copyright (C) 2007  Kw4h
 	Portions Copyright (C) 2008 Pavol Kovalik
@@ -37,6 +37,7 @@ class Api
 	private $msg = array();
 	private $usecache = true;
 	private $cachestatus = false;
+	private $apierror = 0; // API Error code, if any
 	private $cachehint = true; // A kludge to handle data without cachedUntil hint. Again, inheritance would make this go away 
 	private $timetolerance = 5; // minutes to wait after cachedUntil, to allow for the server's time being fast
 
@@ -282,6 +283,16 @@ class Api
 	{
 		return $this->apisiteevec;
 	}
+	
+	private function setApiError($code)
+	{
+		$this->apierror = $code;
+	}
+
+	public function getApiError()
+	{
+		return $this->apierror;
+	}
 
 	// add error message - both params are strings and are formatted as: "$type: $message"
 	private function addMsg($type, $message)
@@ -433,16 +444,37 @@ class Api
 			
 						if (!$binary)
 						{
+							if(!$this->debug) // turn off warnings that SimpleXML may throw
+								$errlevel = error_reporting(E_ERROR);
+
 							// check if there's an error or not
-							$xml = new SimpleXMLElement($contents);
-							
+							try {
+								$xml = new SimpleXMLElement($contents);
+							} catch (Exception $e) {
+								// If SimpleXML throws an Exception, there was likely a good reason - but as 0.2x doesn't "do" exceptions
+								// I'll stay with just returning null or from cache. A "proper" rewrite would throw exception here, and elsewhere in the library
+								if(!$this->debug) // Set PHP error reporting back to original value
+									$errlevel = error_reporting(E_ERROR);
+								else
+									$this->addMsg("Failure","SimpleXML threw an exception on ".$contents);
+								
+								// If we do have this in cache regardless of freshness, return it
+								if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
+									return $this->loadCache($path, $params, $cachePath);
+								
+								return null;
+							}
+
 							$error = (string) $xml->error;
 							if (!empty($error))
 							{
+								$code = $xml->error->attributes()->code;
+								$this->setApiError($code);
+
 								if ($this->debug)
-								{ //BUGBUG - should also add the error code here
-									$this->addMsg("API Error", $error);
-								}
+									$this->addMsg("API Error", $code." : ".$error);
+								else // Set PHP error reporting back to original value
+									error_reporting($errlevel);
 
 								// If we do have this in cache regardless of freshness, return it
 								if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
@@ -450,9 +482,13 @@ class Api
 								
 								return null;
 							}
-							
+							if(!$this->debug) // Set PHP error reporting back to original value
+								error_reporting($errlevel); 							
 							unset ($xml); // reduce memory footprint
 						}
+						
+						$this->setApiError(0); // We fetched successfully
+
 
 						if ($this->usecache && !$iscached)
 						{

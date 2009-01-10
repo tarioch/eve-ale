@@ -6,11 +6,11 @@ TODO list for next point release
 - Think about re-ordering parameters in class.api.php to be more consistent across functions in their order, as long as this does not impact the public interface
 
 TODO list for 0.23
-- Add a way to know what API error occured - getAPIError maybe
 - Document added functions - Done can someone check nothing is missed? 
 - (Re)test API functions that have changed in Revelations 1.1
 - Change parameter checking to throw exception instead of silently changing the passed parameter - much friendlier that way
 - Change setCredentials to allow "wiping" of credentials
+- Test offline due to timeout, not 404
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here

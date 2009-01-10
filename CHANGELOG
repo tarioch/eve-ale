@@ -1,4 +1,4 @@
-version 0.23 "Eldstrom's Effort" 2008-11-25
+version 0.23 "Eldstrom's Effort" 2009-01-10
 Eldstrom: added ServerStatus and test file, added documentation for features export to api with Quantum Rise patch.
 Eldstrom: added the last test cases.
 Eldstrom: Removed the cache read for the evec, as it's surplus code and cuasing a random exception.
@@ -18,7 +18,7 @@ class.charactersheet.php
 class.standings.php
 - Eldstrom: Standings::getStandings changed to parse and return allianceStandings with the corp standings, Array returned for personal standings altered to same format as Corpstandigns
 
-class.api.php + class.evec.php
+class.api.php
 - Eldstrom: GetCacheStatus added
 - Eldstrom: isCached() add filesize check to the function else 0 sized cache files can cause fatal errors, and don't get replaced.
 - Yorick: isCached() now knows "magic" $timeout value of 0, in which case it will only check that the file exists, and will not check for freshness.
@@ -28,6 +28,8 @@ class.api.php + class.evec.php
 - Eldstrom: Fixed the separator always being set to '&' after retrieveXML fetched content. It is now set back to its original value as intended.
 - Yorick: Changed caching logic to handle file-date caching hints, for portraits and EvE-Central
 - Yorick: Moved all of the EvE-Central logic into class.api.php
+- Yorick: Added getApiError(), [get|set]ApiSite(), [get|set]ApiSite()EvEC, getCredentials(), [get|set]Debug(), [get|set]UseCache(), [get|set]UserAgent(), getTimeTolerance(), and a probably a couple other utility functions
+- Yorick: Catch SimpleXML exceptions and return from cache or null, also turn off PHP Warnings unless setDebug(true);. Done for situations where the API is offline.
 
 version 0.22, 2008-08-19
 
