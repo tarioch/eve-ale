@@ -8,9 +8,7 @@ TODO list for next point release
 TODO list for 0.23
 - Document added functions - Done can someone check nothing is missed? 
 - (Re)test API functions that have changed in Revelations 1.1
-- Change parameter checking to throw exception instead of silently changing the passed parameter - much friendlier that way
-- Change setCredentials to allow "wiping" of credentials
-- Test offline due to timeout, not 404
+- Bug-report WalletJournal/Transaction, as it's clearly not fixed yet by the previous bugreport
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here

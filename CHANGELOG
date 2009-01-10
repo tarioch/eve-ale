@@ -30,6 +30,7 @@ class.api.php
 - Yorick: Moved all of the EvE-Central logic into class.api.php
 - Yorick: Added getApiError(), [get|set]ApiSite(), [get|set]ApiSite()EvEC, getCredentials(), [get|set]Debug(), [get|set]UseCache(), [get|set]UserAgent(), getTimeTolerance(), and a probably a couple other utility functions
 - Yorick: Catch SimpleXML exceptions and return from cache or null, also turn off PHP Warnings unless setDebug(true);. Done for situations where the API is offline.
+- Yorick: Parameter passing checks have been changed to throw an Exception, which is considered more friendly than just silently changing the parameter to the default or returning "null"
 
 version 0.22, 2008-08-19
 

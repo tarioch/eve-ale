@@ -66,4 +66,16 @@ else
 	print("Did NOT receive any data from cache after offline error<BR>");
 
 $api->printErrors();
+unset ($api);
+
+// Test timeout offline
+
+print ("<P>Forced offline timeout test</P>");
+$api = new Api();
+$api->setDebug(true);
+$api->setApiSite("localhost");
+$api->getCharacterSheet();
+
+$api->printErrors();
+unset ($api);
 ?>

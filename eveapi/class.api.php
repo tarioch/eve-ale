@@ -43,54 +43,48 @@ class Api
 
 	public function setCredentials($userid, $apikey, $charid = null)
 	{
+		// Allow wiping of credentials by passing "null" in
+		if ($userid === null && $apikey === null)
+		{
+			$this->userid = null;
+			return true;
+		}
+		if ($charid === null)
+			$this->charid = null;
+
 		if (empty($userid) || empty ($apikey))
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","setCredentials: userid and apikey must not be empty");
-			}
-			return false;
+			throw new Exception('setCredentials: userid and apikey must not be empty');
 		}
 
 		if (!is_numeric($userid))
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","setCredentials: userid must be a numeric value");
-			}
-			return true;
+			throw new Exception('setCredentials: userid must be a numeric value');
 		}
 		
 		if (!is_string($apikey))
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","setCredentials: apikey must be a string value");
-			}
-			return false;
+			throw new Exception('setCredentials: apikey must be a string value');
 		}
 		
-		if ($charid != null && !is_numeric($charid))
+		if (!empty($charid) && !is_numeric($charid))
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","setCredentials: charid must be a numeric value");
-			}
-			return false;
+			throw new Exception('setCredentials: charid must be a numeric value');
 		}
 	
-		if (!empty($userid) && !empty($apikey) && is_numeric($userid) && is_string($apikey))
-		{
-			$this->userid = $userid;
-			$this->apikey = $apikey;
-		}
+		$this->userid = $userid;
+		$this->apikey = $apikey;
 		
-		if (!empty($charid) && is_numeric($charid))
-		{
+		if (!empty($charid))
 			$this->charid = $charid;
-		} else {
-			$this->charid = null;
-		}
 		
 		return true;
 	}
@@ -115,13 +109,11 @@ class Api
 		else
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","debug: parameter must be present and boolean");
-			}
-			return false;
+				$this->addMsg("Error","setDebug: parameter must be present and boolean");
+			throw new Exception('setDebug: parameter must be present and boolean');
 		}
 	}
-	
+
 	public function debug($bool)
 	{ // legacy name of setDebug
 		$r = $this->setDebug($bool);
@@ -143,13 +135,11 @@ class Api
 		else
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","cache: parameter must be present and boolean");
-			}
-			return false;
+				$this->addMsg("Error","setUseCache: parameter must be present and boolean");
+			throw new Exception('setUseCache: parameter must be present and boolean');
 		}
 	}
-	
+
 	public function cache($bool)
 	{ // legacy name of setUseCache
 		$r = $this->setUseCache($bool);
@@ -171,10 +161,8 @@ class Api
 		else
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","setUserAgent: parameter must be present and a string");
-			}
-			return false;
+			throw new Exception('setUserAgent: parameter must be present and a string');
 		}
 	}
 	
@@ -193,10 +181,8 @@ class Api
 		else
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","setCacheDir: parameter must be present and a string");
-			}
-			return false;
+			throw new Exception('setCacheDir: parameter must be present and a string');
 		}
 	}
 	
@@ -215,10 +201,8 @@ class Api
 		else
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","setCacheStatus: parameter must be present and boolean");
-			}
-			return false;
+			throw new Exception('setCacheStatus: parameter must be present and boolean');
 		}
 
 	}
@@ -237,7 +221,7 @@ class Api
 		} else {
 			if ($this->debug)
 				$this->addMsg("Error","setTimeTolerance: parameter must be present and an integer");
-			return false;
+			throw new Exception('setTimeTolerance: parameter must be present and an integer');
 		}
 
 	}
@@ -257,7 +241,7 @@ class Api
 		} else {
 			if ($this->debug)
 				$this->addMsg("Error","setApiSite: parameter must be present and a string");
-			return false;
+			throw new Exception('setApiSite: parameter must be present and a string');
 		}
 	}
 	
@@ -275,7 +259,7 @@ class Api
 		} else {
 			if ($this->debug)
 				$this->addMsg("Error","setApiSiteEvEC: parameter must be present and a string");
-			return false;
+			throw new Exception('setApiSiteEvEC: parameter must be present and a string');
 		}
 	}
 	
@@ -303,24 +287,20 @@ class Api
 			
 			$this->msg[$index]['type'] = $type;
 			$this->msg[$index]['msg'] = $message;
-			return 1;
+			return true;
 		}
 		else
 		{
 			if ($this->debug)
-			{
 				$this->addMsg("Error","addMsg: type and message must not be empty");
-			}
-			return 0;
+			throw new Exception('addMsg: type and message must not be empty');
 		}
 	}
 
 	public function printErrors()
 	{
 		foreach ($this->msg as $msg)
-		{
 			echo ("<b>" . $msg['type'] . "</b>: " . $msg['msg'] . "</br>\n");
-		}
 	}
 	
 	/**********************
@@ -339,184 +319,172 @@ class Api
 		if ($cachePath != null && !is_array($cachePath))
 		{			
 			if ($this->debug)
-			{
-				$this->addMsg("Error","retrieveXml: Non-array value of cachePath param, reverting to default value");
-			}
-			$cachePath = null;
+				$this->addMsg("Error","retrieveXml: Non-array value of cachePath param, not supported");
+			throw new Exception('retrieveXml: Non-array value of cachePath param, not supported');
 		}
 		
 		if ($params != null && !is_array($params))
 		{			
 			if ($this->debug)
-			{
-				$this->addMsg("Error","retrieveXml: Non-array value of params param, reverting to default value");
-			}
-			$params = null;
-		}
-
-		if (!empty($path))
-		{
-			if (!is_array($params))
-			{
-				$params = array();
-			}
-
-			if ($this->userid != null && $this->apikey != null)
-			{
-				$params['userID'] = $this->userid;
-				$params['apiKey'] = $this->apikey;
-			}
-			
-			if ($this->charid != null)
-			{
-				$params['characterID'] = $this->charid;
-			}
-			
-			// Save ourselves some calls and figure caching status out once for this function
-			if ($this->usecache)
-				$iscached = $this->isCached($path,$params,$cachePath,$timeout,$binary);
-			// continue when not cached
-			if (!$this->usecache || !$iscached)
-			{
-				// Presumably, if it's not set to '&', they might have had a reason for that - be a good citizen
-				$sep = ini_get('arg_separator.output');
-				// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers
-				ini_set('arg_separator.output','&');
-				// query string
-				if (count($params) > 0)
-				{
-					$query_string = http_build_query($params); // which has been forced to use '&' by ini_set, above. 5.2 notation being spurned to allow the code to run on 5.1
-					$query_string = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $query_string);
-					// http_build_query introduces array notation when it encounters multiple parameters of the same name, such as ?this=that&this=theother
-					// This is encountered when making EvE-Central API calls, which use that notation
-					// The preg_replace takes single dimension arrays and encodes them back the way we expect it
-					// This works because the '=' character can't appear non-urlencoded except for exactly where I expect it to appear (between key / value pairs)
-					// The above preg_replace will work  when a parameter has multiple "simple" values, resulting in single dimension arrays.
-					// It will likely mangle anything more complex than that.
-					// This preg_replace code is courtesy of donovan jimenez, taken from http://www.php.net/http_build_query
-					// Dustin "Eldstrom" Tinklin suggested similar code, that did not account for encountering [...] elsewhere in the string, however - unlikely as that is 
-					// Query strings can pretty much look like anything they want, but the square-bracket notation is not in widespread-use, as it goes against
-					// W3C recommendations for field-value pairs in query strings
-				} else {
-					$query_string = "";
-				}
-				// And set it back to whatever sensical or non-sensical value it was in the 1st place
-				ini_set('arg_separator.output',$sep);
-
-				// open connection to the api
-				// Note some free PHP5 servers block fsockopen() - in that case, find a different hosting provider, please
-				$fp = fsockopen($this->apisite, 80, $errno, $errstr, 30);
-
-				if (!$fp)
-				{
-					if ($this->debug)
-						$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
-					// If we do have this in cache regardless of freshness, return it
-					if ($this->usecache && $this->isCached($path,$params,$cachePath,0,$binary))
-						return $this->loadCache($path, $params, $cachePath,$binary);
-				}
-				else
-				{
-					// request the xml
-					fputs ($fp, "POST " . $path . " HTTP/1.0\r\n");
-					fputs ($fp, "Host: " . $this->apisite . "\r\n");
-					fputs ($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
-					fputs ($fp, "User-Agent: " . $this->useragent . "\r\n");
-					fputs ($fp, "Content-Length: " . strlen($query_string) . "\r\n");
-					fputs ($fp, "Connection: close\r\n\r\n");
-					if (strlen($query_string) > 0)
-						fputs ($fp, $query_string."\r\n");
-					
-					// retrieve contents
-					$contents = "";
-					while (!feof($fp))
-					{
-						$contents .= fgets($fp);
-					}
-					
-					// close connection
-					fclose($fp);
-					
-					$start = strpos($contents, "\r\n\r\n");
-					if ($start !== FALSE)
-					{
-						$contents = substr($contents, $start + strlen("\r\n\r\n"));
-			
-						if (!$binary)
-						{
-							if(!$this->debug) // turn off warnings that SimpleXML may throw
-								$errlevel = error_reporting(E_ERROR);
-
-							// check if there's an error or not
-							try {
-								$xml = new SimpleXMLElement($contents);
-							} catch (Exception $e) {
-								// If SimpleXML throws an Exception, there was likely a good reason - but as 0.2x doesn't "do" exceptions
-								// I'll stay with just returning null or from cache. A "proper" rewrite would throw exception here, and elsewhere in the library
-								if(!$this->debug) // Set PHP error reporting back to original value
-									$errlevel = error_reporting(E_ERROR);
-								else
-									$this->addMsg("Failure","SimpleXML threw an exception on ".$contents);
-								
-								// If we do have this in cache regardless of freshness, return it
-								if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
-									return $this->loadCache($path, $params, $cachePath);
-								
-								return null;
-							}
-
-							$error = (string) $xml->error;
-							if (!empty($error))
-							{
-								$code = $xml->error->attributes()->code;
-								$this->setApiError($code);
-
-								if ($this->debug)
-									$this->addMsg("API Error", $code." : ".$error);
-								else // Set PHP error reporting back to original value
-									error_reporting($errlevel);
-
-								// If we do have this in cache regardless of freshness, return it
-								if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
-									return $this->loadCache($path, $params, $cachePath);
-								
-								return null;
-							}
-							if(!$this->debug) // Set PHP error reporting back to original value
-								error_reporting($errlevel); 							
-							unset ($xml); // reduce memory footprint
-						}
-						
-						$this->setApiError(0); // We fetched successfully
-
-
-						if ($this->usecache && !$iscached)
-						{
-							$this->store($contents, $path, $params, $cachePath,$binary);
-						}
-
-						return $contents;
-					}
-					
-					if ($this->debug)
-					{
-						$this->addMsg("Error", "retrieveXml: Could not parse contents");
-					}
-					
-					return null;
-				}
-			}
-			else // We are to use a cache and the api results are still valid in cache
-			{
-				return $this->loadCache($path, $params, $cachePath,$binary);
-			}
-		}
-		elseif ($this->debug)
-		{
-			$this->addMsg("Error", "retrieveXml: path is empty");
+				$this->addMsg("Error","retrieveXml: Non-array value of params param, not supported");
+			throw new Exception('retrieveXml: Non-array value of params param, not supported');
 		}
 		
-		return null; //empty path, calling error
+		if (empty($path))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","retrieveXml: path must not be empty");
+			throw new Exception('retrieveXml: path must not be empty');
+		}
+
+		if (!is_array($params))
+			$params = array();
+
+		if ($this->userid != null && $this->apikey != null)
+		{
+			$params['userID'] = $this->userid;
+			$params['apiKey'] = $this->apikey;
+		}
+		
+		if ($this->charid != null)
+			$params['characterID'] = $this->charid;
+		
+		// Save ourselves some calls and figure caching status out once for this function
+		if ($this->usecache)
+			$iscached = $this->isCached($path,$params,$cachePath,$timeout,$binary);
+		// continue when not cached
+		if (!$this->usecache || !$iscached)
+		{
+			// Presumably, if it's not set to '&', they might have had a reason for that - be a good citizen
+			$sep = ini_get('arg_separator.output');
+			// Necessary so that http_build_query does not spaz and give us '&amp;' as a separator on certain hosting providers
+			ini_set('arg_separator.output','&');
+			// query string
+			if (count($params) > 0)
+			{
+				$query_string = http_build_query($params); // which has been forced to use '&' by ini_set, above. 5.2 notation being spurned to allow the code to run on 5.1
+				$query_string = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $query_string);
+				// http_build_query introduces array notation when it encounters multiple parameters of the same name, such as ?this=that&this=theother
+				// This is encountered when making EvE-Central API calls, which use that notation
+				// The preg_replace takes single dimension arrays and encodes them back the way we expect it
+				// This works because the '=' character can't appear non-urlencoded except for exactly where I expect it to appear (between key / value pairs)
+				// The above preg_replace will work  when a parameter has multiple "simple" values, resulting in single dimension arrays.
+				// It will likely mangle anything more complex than that.
+				// This preg_replace code is courtesy of donovan jimenez, taken from http://www.php.net/http_build_query
+				// Dustin "Eldstrom" Tinklin suggested similar code, that did not account for encountering [...] elsewhere in the string, however - unlikely as that is 
+				// Query strings can pretty much look like anything they want, but the square-bracket notation is not in widespread-use, as it goes against
+				// W3C recommendations for field-value pairs in query strings
+			} else {
+				$query_string = "";
+			}
+			// And set it back to whatever sensical or non-sensical value it was in the 1st place
+			ini_set('arg_separator.output',$sep);
+
+			// open connection to the api
+			// Note some free PHP5 servers block fsockopen() - in that case, find a different hosting provider, please
+			$fp = fsockopen($this->apisite, 80, $errno, $errstr, 30);
+
+			if (!$fp)
+			{
+				if ($this->debug)
+					$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
+				// If we do have this in cache regardless of freshness, return it
+				if ($this->usecache && $this->isCached($path,$params,$cachePath,0,$binary))
+					return $this->loadCache($path, $params, $cachePath,$binary);
+			}
+			else
+			{
+				// request the xml
+				fputs ($fp, "POST " . $path . " HTTP/1.0\r\n");
+				fputs ($fp, "Host: " . $this->apisite . "\r\n");
+				fputs ($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
+				fputs ($fp, "User-Agent: " . $this->useragent . "\r\n");
+				fputs ($fp, "Content-Length: " . strlen($query_string) . "\r\n");
+				fputs ($fp, "Connection: close\r\n\r\n");
+				if (strlen($query_string) > 0)
+					fputs ($fp, $query_string."\r\n");
+				
+				// retrieve contents
+				$contents = "";
+				while (!feof($fp))
+				{
+					$contents .= fgets($fp);
+				}
+				
+				// close connection
+				fclose($fp);
+				
+				$start = strpos($contents, "\r\n\r\n");
+				if ($start !== FALSE)
+				{
+					$contents = substr($contents, $start + strlen("\r\n\r\n"));
+		
+					if (!$binary)
+					{
+						if(!$this->debug) // turn off warnings that SimpleXML may throw
+							$errlevel = error_reporting(E_ERROR);
+
+						// check if there's an error or not
+						try {
+							$xml = new SimpleXMLElement($contents);
+						} catch (Exception $e) {
+							// If SimpleXML throws an Exception, there was likely a good reason - but as 0.2x doesn't "do" exceptions
+							// I'll stay with just returning null or from cache. A "proper" rewrite would throw exception here, and elsewhere in the library
+							if(!$this->debug) // Set PHP error reporting back to original value
+								$errlevel = error_reporting(E_ERROR);
+							else
+								$this->addMsg("Failure","SimpleXML threw an exception on ".$contents);
+							
+							// If we do have this in cache regardless of freshness, return it
+							if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
+								return $this->loadCache($path, $params, $cachePath);
+							
+							return null;
+						}
+
+						$error = (string) $xml->error;
+						if (!empty($error))
+						{
+							$code = $xml->error->attributes()->code;
+							$this->setApiError($code);
+
+							if ($this->debug)
+								$this->addMsg("API Error", $code." : ".$error);
+							else // Set PHP error reporting back to original value
+								error_reporting($errlevel);
+
+							// If we do have this in cache regardless of freshness, return it
+							if ($this->usecache && $this->isCached($path, $params, $cachePath, 0))
+								return $this->loadCache($path, $params, $cachePath);
+							
+							return null;
+						}
+						if(!$this->debug) // Set PHP error reporting back to original value
+							error_reporting($errlevel); 							
+						unset ($xml); // reduce memory footprint
+					}
+					
+					$this->setApiError(0); // We fetched successfully
+
+
+					if ($this->usecache && !$iscached)
+					{
+						$this->store($contents, $path, $params, $cachePath,$binary);
+					}
+
+					return $contents;
+				}
+				
+				if ($this->debug)
+				{
+					$this->addMsg("Error", "retrieveXml: Could not parse contents");
+				}
+				
+				return null;
+			}
+		}
+		else // We are to use a cache and the api results are still valid in cache
+			return $this->loadCache($path, $params, $cachePath,$binary);
 	}
 	
 	private function getCacheFile($path, $params, $cachePath, $binary = false)
@@ -719,19 +687,15 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getAccountBalance: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getAccountBalance: Non-numeric value of timeout param, not supported");
+			throw new Exception('getAccountBalance: Non-numeric value of timeout param, not supported');
 		}
 
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getAccountBalance: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getAccountBalance: Non-bool value of corp param, not supported");
+			throw new Exception('getAccountBalance: Non-bool value of corp param, not supported');
 		}
 
 		$cachePath = array();
@@ -755,10 +719,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillInTraining: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getSkillInTraining: Non-numeric value of timeout param, not supported");
+			throw new Exception('getAccountBalance: Non-numeric value of timeout param, not supported');
 		}
 
 		$cachePath = array();
@@ -775,10 +737,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterSheet: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getCharacterSheet: Non-numeric value of timeout param, not supported");
+			throw new Exception('getCharacterSheet: Non-numeric value of timeout param, not supported');
 		}
 
 		$cachePath = array();
@@ -795,10 +755,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacters: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getCharacters: Non-numeric value of timeout param, not supported");
+			throw new Exception('getAccountBalance: Non-numeric value of timeout param, not supported');
 		}
 
 		$cachePath = array();
@@ -814,10 +772,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getServerStatus: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getServerStatus: Non-numeric value of timeout param, not supported");
+			throw new Exception('getServerStatus: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/Server/ServerStatus.xml.aspx", $timeout);
@@ -830,10 +786,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getSkillTree: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getSkillTree: Non-numeric value of timeout param, not supported");
+			throw new Exception('getAccountBalance: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/eve/SkillTree.xml.aspx", $timeout);
@@ -846,10 +800,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getCertificateTree: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getCertificateTree: Non-numeric value of timeout param, not supported");
+			throw new Exception('getCertificateTree: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/eve/CertificateTree.xml.aspx", $timeout);
@@ -862,10 +814,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getRefTypes: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getRefTypes: Non-numeric value of timeout param, not supported");
+			throw new Exception('getRefTypes: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/eve/RefTypes.xml.aspx", $timeout);
@@ -878,10 +828,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMemberTracking: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMemberTracking: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMemberTracking: Non-numeric value of timeout param, not supported');
 		}
 
 		$cachePath = array();
@@ -898,10 +846,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseList: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getStarbaseList: Non-numeric value of timeout param, not supported");
+			throw new Exception('getStarbaseList: Non-numeric value of timeout param, not supported');
 		}
 
 		$cachePath = array();
@@ -918,34 +864,28 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of timeout param, not supported");
+			throw new Exception('getStarbaseDetail: Non-numeric value of timeout param, not supported');
 		}
 
-		if (is_numeric($id))
-		{
-			$params = array();
-			$params['itemID'] = $id;
-
-			$cachePath = array();
-			$cachePath[0] = 'userID';
-			$cachePath[1] = 'characterID';
-			$cachePath[2] = 'itemID';
-			
-			$contents = $this->retrieveXml("/corp/StarbaseDetail.xml.aspx", $timeout, $cachePath, $params);
-			
-			return $contents;
-		}
-		else
-		{
+		if (!is_numeric($id))
+		(
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of id param, returning null");
-			}
-			return null;
+				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of id param, not supported");
+			throw new Exception('getStarbaseDetail: Non-numeric value of id param, not supported');
 		}
+
+		$params = array();
+		$params['itemID'] = $id;
+
+		$cachePath = array();
+		$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+		$cachePath[2] = 'itemID';
+		
+		$contents = $this->retrieveXml("/corp/StarbaseDetail.xml.aspx", $timeout, $cachePath, $params);
+		
+		return $contents;
 	}
 	
 	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = 65)
@@ -954,43 +894,35 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = 65;
+				$this->addMsg("Error","getWalletTransactions: Non-numeric value of timeout param, not supported");
+			throw new Exception('getWalletTransactions: Non-numeric value of timeout param, not supported');
 		}
 
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getWalletTransactions: Non-bool value of corp param, not supported");
+			throw new Exception('getWalletTransactions: Non-bool value of corp param, not supported');
 		}
 		
 		if ($transid != null && !is_numeric($transid))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-numeric value of transid param, reverting to default value");
-			}
-			$transid = null;
+				$this->addMsg("Error","getWalletTransactions: Non-numeric value of transid param, not supported");
+			throw new Exception('getWalletTransactions: Non-numeric value of transid param, not supported');
 		}
+
+		if (!is_numeric($accountkey))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getWalletTransactions: Non-numeric value of accountkey param, not supported");
+			throw new Exception('getWalletTransactions: Non-numeric value of accountkey param, not supported');
+		)
 
 		$params = array();
 		
 		// accountKey
-		if (is_numeric($accountkey))
-			$params['accountKey'] = $accountkey;
-		else
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletTransactions: Non-numeric value of accountkey param, defaulting to '1000'");
-			}
-			$params['accountKey'] = 1000;
-		}
+		$params['accountKey'] = $accountkey;
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
@@ -998,7 +930,7 @@ class Api
 		$cachePath[2] = 'accountKey';
 		
 		// beforeTransID
-		if ($transid != null && is_numeric($transid))
+		if ($transid != null)
 		{
 			$params['beforeTransID'] = $transid;
 			$cachePath[3] = 'beforeTransID';
@@ -1022,43 +954,35 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = 65;
+				$this->addMsg("Error","getWalletJournal: Non-numeric value of timeout param, not supported");
+			throw new Exception('getWalletJournal: Non-numeric value of timeout param, not supported');
 		}
 
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getWalletJournal: Non-bool value of corp param, not supported");
+			throw new Exception('getWalletJournal: Non-bool value of corp param, not supported');
 		}
 		
 		if ($refid != null && !is_numeric($refid))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-numeric value of refid param, reverting to default value");
-			}
-			$refid = null;
+				$this->addMsg("Error","getWalletJournal: Non-numeric value of refid param, not supported");
+			throw new Exception('getWalletJournal: Non-numeric value of refid param, not supported');
 		}
+
+		if (!is_numeric($accountkey))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getWalletJournal: Non-numeric value of accountkey param, not supported");
+			throw new Exception('getWalletJournal: Non-numeric value of accountkey param, not supported');
+		)
 
 		$params = array();
 		
 		// accountKey
-		if (is_numeric($accountkey))
-			$params['accountKey'] = $accountkey;
-		else
-		{
-			if ($this->debug)
-			{
-				$this->addMsg("Error","getWalletJournal: Non-numeric value of accountkey param, defaulting to '1000'");
-			}
-			$params['accountKey'] = 1000;
-		}
+		$params['accountKey'] = $accountkey;
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
@@ -1089,19 +1013,15 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getCorporationSheet: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getCorporationSheet: Non-numeric value of timeout param, not supported");
+			throw new Exception('getCorporationSheet: Non-numeric value of timeout param, not supported');
 		}
 		
 		if ($corpid != null && !is_numeric($corpid))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getCorporationSheet: Non-numeric value of corpid param, reverting to default value");
-			}
-			$corpid = null;
+				$this->addMsg("Error","getCorporationSheet: Non-numeric value of corpid param, not supported");
+			throw new Exception('getCorporationSheet: Non-numeric value of corpid param, not supported');
 		}
 
 		$cachePath = array();
@@ -1125,10 +1045,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getAllianceList: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getAllianceList: Non-numeric value of timeout param, not supported");
+			throw new Exception('getAllianceList: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/eve/AllianceList.xml.aspx", $timeout);
@@ -1141,19 +1059,15 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getAssetList: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getAssetList: Non-numeric value of timeout param, not supported");
+			throw new Exception('getAssetList: Non-numeric value of timeout param, not supported');
 		}
 
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getAssetList: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getAssetList: Non-bool value of corp param, not supported");
+			throw new Exception('getAssetList: Non-bool value of corp param, not supported');
 		}
 	   
 		$cachePath = array();
@@ -1176,19 +1090,15 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getIndustryJobs: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getIndustryJobs: Non-numeric value of timeout param, not supported");
+			throw new Exception('getIndustryJobs: Non-numeric value of timeout param, not supported');
 		}
 
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getIndustryJobs: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getIndustryJobs: Non-bool value of corp param, not supported");
+			throw new Exception('getIndustryJobs: Non-bool value of corp param, not supported');
 		}
 		
 		$cachePath = array();
@@ -1211,10 +1121,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarSystems: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getFacWarSystems: Non-numeric value of timeout param, not supported");
+			throw new Exception('getFacWarSystems: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/map/FacWarSystems.xml.aspx", $timeout);
@@ -1227,19 +1135,15 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarStats: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getFacWarStats: Non-numeric value of timeout param, not supported");
+			throw new Exception('getFacWarStats: Non-numeric value of timeout param, not supported');
 		}
 
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarStats: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getFacWarStats: Non-bool value of corp param, not supported");
+			throw new Exception('getFacWarStats: Non-bool value of corp param, not supported');
 		}
 		$cachePath = array();
 		$cachePath[0] = 'userID';
@@ -1260,10 +1164,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getFacWarTopStats: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getFacWarTopStats: Non-numeric value of timeout param, not supported");
+			throw new Exception('getFacWarTopStats: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/eve/FacWarTopStats.xml.aspx", $timeout);
@@ -1276,10 +1178,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMapJumps: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getJumps: Non-numeric value of timeout param, not supported");
+			throw new Exception('getJumps: Non-numeric value of timeout param, not supported');
 		}
 
 		$contents = $this->retrieveXml("/map/Jumps.xml.aspx", $timeout);
@@ -1292,10 +1192,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMapSovereignty: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMapSovereignty: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMapSovereignty: Non-numeric value of timeout param, not supported');
 		}
 		$contents = $this->retrieveXml("/map/Sovereignty.xml.aspx", $timeout);
 		return $contents;
@@ -1306,10 +1204,8 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMapKills: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getKills: Non-numeric value of timeout param, not supported");
+			throw new Exception('getKills: Non-numeric value of timeout param, not supported');
 		}
 		$contents = $this->retrieveXml("/map/Kills.xml.aspx", $timeout);
 		return $contents;
@@ -1320,28 +1216,22 @@ class Api
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getKillLog: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getKillLog: Non-numeric value of timeout param, not supported");
+			throw new Exception('getKillLog: Non-numeric value of timeout param, not supported');
 		}
 	 
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getKillLog: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getKillLog: Non-bool value of corp param, not supported");
+			throw new Exception('getKillLog: Non-bool value of corp param, not supported');
 		}
 		
 		if ($killid != null && !is_numeric($killid))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getKillLog: Non-numeric value of killid param, reverting to default value");
-			}
-			$killid = null;
+				$this->addMsg("Error","getKillLog: Non-numeric value of killid param, not supported");
+			throw new Exception('getKillLog: Non-numeric value of killid param, not supported');
 		}
 		
 		$params = array();
@@ -1351,20 +1241,16 @@ class Api
 		$cachePath[1] = 'characterID';
 		
 		//beforeKillID
-		if ($killid != null && is_numeric($killid))
+		if ($killid != null)
 		{
 			$params['beforeKillID'] = $killid;
 			$cachePath[3] = 'beforeKillID';
 		}
 
 		if($corp == true)
-		{
 			$contents = $this->retrieveXml("/corp/Killlog.xml.aspx", $timeout, $cachePath,$params);
-		}
 		else
-		{
 			$contents = $this->retrieveXml("/char/KillLog.xml.aspx", $timeout, $cachePath,$params);
-		}
 		return $contents;
 	}
 
@@ -1373,10 +1259,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMedals: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMemberMedals: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMemberMedals: Non-numeric value of timeout param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1390,18 +1274,14 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMedals: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMedals: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMedals: Non-numeric value of timeout param, not supported');
 		}
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMedals: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getMedals: Non-bool value of corp param, not supported");
+			throw new Exception('getMedals: Non-bool value of corp param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1422,18 +1302,14 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMarketOrders: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMarketOrders: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMarketOrders: Non-numeric value of timeout param, not supported');
 		}
 		if (!is_bool($corp))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMarketOrders: Non-bool value of corp param, reverting to default value");
-			}
-			$corp = false;
+				$this->addMsg("Error","getMarketOrders: Non-bool value of corp param, not supported");
+			throw new Exception('getAccountBalance: Non-bool value of corp param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1454,10 +1330,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getConquerableStationList: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getConquerableStationList: Non-numeric value of timeout param, not supported");
+			throw new Exception('getConquerableStationList: Non-numeric value of timeout param, not supported');
 		}
 		$contents = $this->retrieveXml("/eve/ConquerableStationList.xml.aspx", $timeout);
 		
@@ -1470,22 +1344,16 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getStandings: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getStandings: Non-numeric value of timeout param, not supported");
+			throw new Exception('getStandings: Non-numeric value of timeout param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
 		$cachePath[1] = 'characterID';
 		if($corp == true)
-		{
 			$contents = $this->retrieveXml("/corp/Standings.xml.aspx", $timeout, $cachePath);
-		}
 		else 
-		{
 			$contents = $this->retrieveXml("/char/Standings.xml.aspx", $timeout, $cachePath);
-		}
 		return $contents;
 	}
 
@@ -1495,10 +1363,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getContainerLog: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getContainerLog: Non-numeric value of timeout param, not supported");
+			throw new Exception('getContainerLog: Non-numeric value of timeout param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1513,10 +1379,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getShareHolders: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getShareHolders: Non-numeric value of timeout param, not supported");
+			throw new Exception('getShareHolders: Non-numeric value of timeout param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1531,10 +1395,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMemberSecurity: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMemberSecurity: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMemberSecurity: Non-numeric value of timeout param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1549,10 +1411,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getMemberSecurityLog: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMemberSecurityLog: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMemberSecurityLog: Non-numeric value of timeout param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1566,10 +1426,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getTitles: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getTitles: Non-numeric value of timeout param, not supported");
+			throw new Exception('getTitles: Non-numeric value of timeout param, not supported');
 		}
 		$cachePath = array();
 	 	$cachePath[0] = 'userID';
@@ -1583,10 +1441,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getErrorList: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getErrorList: Non-numeric value of timeout param, not supported");
+			throw new Exception('getErrorList: Non-numeric value of timeout param, not supported');
 		}
 		$contents = $this->retrieveXml("/eve/ErrorList.xml.aspx", $timeout);
 		return $contents;
@@ -1597,10 +1453,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterName: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getCharacterName: Non-numeric value of timeout param, not supported");
+			throw new Exception('getCharacterName: Non-numeric value of timeout param, not supported');
 		}
 
 		if (is_numeric($ids))
@@ -1632,8 +1486,9 @@ public function getMemberMedals($timeout = null)
 		}
 		else
 		{
-				$this->addMsg("Error","getCharacterName: Non-string/non-numeric or empty value of ids param, returning null");
-				return null;
+			if ($this->debug)
+				$this->addMsg("Error","getCharacterName: Non-numeric/non-array or empty value of ids param, not supported");
+			throw new Exception('getCharacterName: Non-numeric/non-array or empty value of ids param, not supported');
 		}
 	}
 	
@@ -1641,11 +1496,9 @@ public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
-				if ($this->debug)
-				{
-					$this->addMsg("Error","getCharacterID: Non-numeric value of timeout param, reverting to default value");
-				}
-				$timeout = null;
+			if ($this->debug)
+				$this->addMsg("Error","getCharacterID: Non-numeric value of timeout param, not supported");
+			throw new Exception('getCharacterID: Non-numeric value of timeout param, not supported');		
 		}
 
 		if (is_string($names))
@@ -1677,8 +1530,9 @@ public function getMemberMedals($timeout = null)
 		}
 		else
 		{
-				$this->addMsg("Error","getCharacterID: Non-string or empty value of names param, returning null");
-				return null;
+			if ($this->debug)
+				$this->addMsg("Error","getCharacterID: Non-string/non-array or empty value of names param, not supported");
+			throw new Exception('getCharacterID: Non-string/non-array or empty value of names param, not supported');
 		}
 	}
 	
@@ -1686,15 +1540,21 @@ public function getMemberMedals($timeout = null)
 
 	public function getCharacterPortrait($id = null, $size = 64, $timeout = 1440)
 	{
+	
+		if ($timeout && !is_numeric($timeout))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getCharacterPortrait: Non-numeric value of timeout param, not supported");
+			throw new Exception('getCharacterPortrait: Non-numeric value of timeout param, not supported');		
+		}
 
 		if (!is_numeric($size)) // possible values are 64 and 256, but that's not checked, as CCP may change their mind
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getCharacterPortrait: Non-numeric value of size param, reverting to default value");
-			}
-			$size = 64;
+				$this->addMsg("Error","getCharacterPortrait: Non-numeric value of size param, not supported");
+			throw new Exception('getCharacterPortrait: Non-numeric value of size param, not supported');		
 		}
+
 		if (is_int($id))
 		{
 			$site = $this->getApiSite();
@@ -1726,9 +1586,9 @@ public function getMemberMedals($timeout = null)
 		}
 		else
 		{
-				if ($this->debug)
-					$this->addMsg("Error","getCharacterPortrait: Non-integer or empty value of id param, returning null");
-				return null;
+			if ($this->debug)
+				$this->addMsg("Error","getCharacterPortrait: Non-integer or empty value of id param, not supported");
+			throw new Exception('getCharacterPortrait: Non-integer or empty value of id param, not supported');		
 		}
 	}
 	
@@ -1744,10 +1604,8 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-			{
-				$this->addMsg("Error","getEveMon: Non-numeric value of timeout param, reverting to default value");
-			}
-			$timeout = null;
+				$this->addMsg("Error","getMinerals: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMinerals: Non-numeric value of timeout param, not supported');	
 		}
 		
 		$site = $this->getApiSite(); // current
@@ -1768,40 +1626,44 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-				$this->addMsg("Error","getQuickLook: Non-numeric value of timeout param, reverting to default value");
-			$timeout = 30;
+				$this->addMsg("Error","getQuickLook: Non-numeric value of timeout param, not supported");
+			throw new Exception('getQuickLook: Non-numeric value of timeout param, not supported');	
+		}
+
+		if (!is_numeric($typeid))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getQuickLook: Non-numeric or empty value of typeid param, not supported");
+			throw new Exception('getQuickLook: Non-numeric or empty value of typeid param, not supported');	
+		}
+		
+		if ($sethours && !is_numeric($sethours))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getQuickLook: Non-numeric value of sethours param, not supported");
+			throw new Exception('getQuickLook: Non-numeric value of sethours param, not supported');
+		}
+
+		if ($usesystem && !is_numeric($usesystem))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getQuickLook: Non-numeric value of usesystem param, not supported");
+			throw new Exception('getQuickLook: Non-numeric value of usesystem param, not supported');
+		}
+
+		if ($setminQ && !is_numeric($setminQ))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getQuickLook: Non-numeric value of setminQ param, not supported");
+			throw new Exception('getQuickLook: Non-numeric value of setminQ param, not supported');
 		}
 
 		$params = array();
 		$cachePath = array();
 
-		if (!is_numeric($typeid))
-		{
-				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric or empty value of typeid param, returning null");
-				return null;
-		}
-		else
-		{
-			$params['typeid'] = $typeid;
-			$cachePath[] = 'typeid';
-		}
+		$params['typeid'] = $typeid;
+		$cachePath[] = 'typeid';
 
-		if ($sethours)
-		{
-			if (is_numeric($sethours))
-			{
-				$params['sethours'] = $sethours;
-				$cachePath[] = 'sethours';
-			}
-			else
-			{
-				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric value of sethours param, returning null");
-				return null;
-			}
-		}
-		
 		if ($regionlimit)
 		{
 			if (is_numeric($regionlimit))
@@ -1818,39 +1680,27 @@ public function getMemberMedals($timeout = null)
 			else
 			{
 				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric and non-array value of regionlimit param, returning null");
-				return null;
+					$this->addMsg("Error","getQuickLook: Non-numeric and non-array value of regionlimit param, not supported");
+				throw new Exception('getQuickLook: Non-numeric and non-array value of regionlimit param, not supported');
 			}
 		}
-		
+
+		if ($sethours)
+		{
+			$params['sethours'] = $sethours;
+			$cachePath[] = 'sethours';
+		}
+
 		if	($usesystem)
 		{
-			if(is_numeric($usesystem))
-			{
-				$params['usesystem'] = $usesystem;
-				$cachePath[] = 'usesystem';
-			}
-			else
-			{
-				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric value of usesystem param, returning null");
-				return null;
-			}
+			$params['usesystem'] = $usesystem;
+			$cachePath[] = 'usesystem';
 		}
 
 		if	($setminQ)
 		{
-			if (is_numeric($setminQ))
-			{
-				$params['setminQ'] = $setminQ;
-				$cachePath[] = 'setminQ';
-			}
-			else
-			{
-				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric value of setminQ param, returning null");
-				return null;
-			}
+			$params['setminQ'] = $setminQ;
+			$cachePath[] = 'setminQ';
 		}
 		
 		$site = $this->getApiSite(); // current
@@ -1869,8 +1719,22 @@ public function getMemberMedals($timeout = null)
 		if ($timeout && !is_numeric($timeout))
 		{
 			if ($this->debug)
-				$this->addMsg("Error","getMarketStat: Non-numeric value of timeout param, reverting to default value");
-			$timeout = 30;
+				$this->addMsg("Error","getMarketStat: Non-numeric value of timeout param, not supported");
+			throw new Exception('getMarketStat: Non-numeric value of timeout param, not supported');	
+		}
+		
+		if ($sethours && !is_numeric($sethours))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getMarketStat: Non-numeric value of sethours param, not supported");
+			throw new Exception('getMarketStat: Non-numeric value of sethours param, not supported');
+		}
+
+		if ($setminQ && !is_numeric($setminQ))
+		{
+			if ($this->debug)
+				$this->addMsg("Error","getMarketStat: Non-numeric value of setminQ param, not supported");
+			throw new Exception('getMarketStat: Non-numeric value of setminQ param, not supported');
 		}
 
 		$params = array();
@@ -1890,25 +1754,10 @@ public function getMemberMedals($timeout = null)
 		else 
 		{
 			if ($this->debug)
-				$this->addMsg("Error","getQuickLook: Non-numeric or empty value of typeid param, returning null");
-			return null;
+				$this->addMsg("Error","getMarketStat: Non-numeric or empty value of typeid param, not supported");
+			throw new Exception('getMarketStat: Non-numeric or empty value of typeid param, not supported');
 		}
 
-		if ($sethours)
-		{
-			if (is_numeric($sethours))
-			{
-				$params['sethours'] = $sethours;
-				$cachePath[] = 'sethours';
-			}
-			else
-			{
-				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric value of sethours param, returning null");
-				return null;
-			}
-		}
-		
 		if ($regionlimit)
 		{
 			if (is_numeric($regionlimit))
@@ -1925,24 +1774,21 @@ public function getMemberMedals($timeout = null)
 			else
 			{
 				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric and non-array value of regionlimit param, returning null");
-				return null;
+					$this->addMsg("Error","getMarketStat: Non-numeric and non-array value of regionlimit param, not supported");
+				throw new Exception('getMarketStat: Non-numeric and non-array value of regionlimit param, not supported');
 			}
+		}
+
+		if ($sethours)
+		{
+			$params['sethours'] = $sethours;
+			$cachePath[] = 'sethours';
 		}
 		
 		if	($setminQ)
 		{
-			if (is_numeric($setminQ))
-			{
-				$params['setminQ'] = $setminQ;
-				$cachePath[] = 'setminQ';
-			}
-			else
-			{
-				if ($this->debug)
-					$this->addMsg("Error","getQuickLook: Non-numeric value of setminQ param, returning null");
-				return null;
-			}
+			$params['setminQ'] = $setminQ;
+			$cachePath[] = 'setminQ';
 		}
 
 		$site = $this->getApiSite(); // current
