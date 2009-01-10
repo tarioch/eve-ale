@@ -869,7 +869,7 @@ class Api
 		}
 
 		if (!is_numeric($id))
-		(
+		{
 			if ($this->debug)
 				$this->addMsg("Error","getStarbaseDetail: Non-numeric value of id param, not supported");
 			throw new Exception('getStarbaseDetail: Non-numeric value of id param, not supported');
@@ -917,7 +917,7 @@ class Api
 			if ($this->debug)
 				$this->addMsg("Error","getWalletTransactions: Non-numeric value of accountkey param, not supported");
 			throw new Exception('getWalletTransactions: Non-numeric value of accountkey param, not supported');
-		)
+		}
 
 		$params = array();
 		
@@ -977,7 +977,7 @@ class Api
 			if ($this->debug)
 				$this->addMsg("Error","getWalletJournal: Non-numeric value of accountkey param, not supported");
 			throw new Exception('getWalletJournal: Non-numeric value of accountkey param, not supported');
-		)
+		}
 
 		$params = array();
 		
