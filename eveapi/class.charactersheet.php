@@ -19,28 +19,17 @@
 	You should have received a copy of the GNU Lesser General Public License
 	along with PHP Api Lib.  If not, see <http://www.gnu.org/licenses/>.
 **************************************************************************/
+// SkillInTraining was moved to its own class file to be in line with new naming conventions - this include allows for legacy code to continue working
+require_once(dirname(__FILE__).'/class.skillintraining.php'); 
 
 class CharacterSheet
 {	
 	// legacy function - this should be in its own class, but is kept for legacy reasons
 	static function getSkillInTraining($contents)
 	{		
-		if (!empty($contents) && is_string($contents))
-		{
-			$xml = new SimpleXMLElement($contents);
-			
-			$output = array();
-			foreach ($xml->result->children() as $name => $value)
-			{
-				$output[(string) $name] = (string) $value;
-			}
-			unset ($xml); // manual garbage collection			
-			return $output;
-		}
-		else
-		{
-			return null;
-		}
+		$output = SkillInTraining::getSkillInTraining($contents);
+		
+		return $output;
 	}
 	
 	static function getCharacterSheet($contents)
@@ -108,17 +97,6 @@ class CharacterSheet
 		{
 			return null;
 		}
-	}
-}
-
-// Class to bring getSkillInTraining in line with how all other parsers work
-class SkillInTraining
-{
-	static function getSkillInTraining($contents)
-	{
-		$output = CharacterSheet::getSkillInTraining($contents);
-		
-		return $output;
 	}
 }
 ?>

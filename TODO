@@ -6,8 +6,16 @@ TODO list for next point release
 - Think about re-ordering parameters in class.api.php to be more consistent across functions in their order, as long as this does not impact the public interface
 
 TODO list for 0.23
-- Document added functions - Done can someone check nothing is missed? 
-- (Re)test API functions that have changed in Revelations 1.1
+- Document added functions
+	- Container Log
+	- Member Security
+	- Member Security Log
+	- Member Tracking
+	- Shareholders
+	- Standings
+	- Titles
+- Bring documented functions in some sort of order in the documentation - maybe follow the eve-dev format
+- (Re)test API functions that have changed since Revelations 1.0 - done, I think
 - Bug-report WalletJournal/Transaction, as it's clearly not fixed yet by the previous bugreport
 
 TODO list for 0.50

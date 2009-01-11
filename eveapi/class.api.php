@@ -1254,7 +1254,7 @@ class Api
 		return $contents;
 	}
 
-public function getMemberMedals($timeout = null)
+	public function getMemberMedals($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -1538,7 +1538,7 @@ public function getMemberMedals($timeout = null)
 	
 	// getCharacterPortrait works quite differently from anything else. It returns a path to a JPEG file in the cache dir, not the actual data. There is no XML parsing, since there's no XML
 
-	public function getCharacterPortrait($id = null, $size = 64, $timeout = 1440)
+	public function getCharacterPortrait($id, $size = 64, $timeout = 1440)
 	{
 	
 		if ($timeout && !is_numeric($timeout))
@@ -1555,41 +1555,41 @@ public function getMemberMedals($timeout = null)
 			throw new Exception('getCharacterPortrait: Non-numeric value of size param, not supported');		
 		}
 
-		if (is_int($id))
-		{
-			$site = $this->getApiSite();
-			$this->setApiSite('img.eve.is');
-			
-			$cachedir = $this->getCacheDir();
-			$this->setCacheDir($cachedir."/imgcache");
-
-			$params = array();
-			$params['s'] = $size;
-			$params['c'] = $id;
-
-			$cachePath = array();
-			$cachePath[0] = 'c';
-			$cachePath[1] = '-';
-			$cachePath[2] = 's';
-			$cachePath[3] = '.jpg';
-
-			$this->cachehint = false; // workaround, inheritance would resolve this
-			$this->retrieveXml("/serv.asp",$timeout,$cachePath,$params,TRUE); // optional "binary" parameter
-			$this->cachehint = true;
-
-			$result = $this->getCacheFile("/serv.asp", $params, $cachePath,TRUE);
-			
-			$this->setApiSite($site);
-			$this->setCacheDir($cachedir);
-
-			return $result;
-		}
-		else
+		if (!is_numeric($id))
 		{
 			if ($this->debug)
 				$this->addMsg("Error","getCharacterPortrait: Non-integer or empty value of id param, not supported");
 			throw new Exception('getCharacterPortrait: Non-integer or empty value of id param, not supported');		
 		}
+
+		// Change site and cache directory for this function
+		$site = $this->getApiSite();
+		$this->setApiSite('img.eve.is');
+		
+		$cachedir = $this->getCacheDir();
+		$this->setCacheDir($cachedir."/imgcache");
+
+		$params = array();
+		$params['s'] = $size;
+		$params['c'] = $id;
+
+		$cachePath = array();
+		$cachePath[0] = 'c';
+		$cachePath[1] = '-';
+		$cachePath[2] = 's';
+		$cachePath[3] = '.jpg';
+
+		$this->cachehint = false; // workaround, inheritance would resolve this
+		$this->retrieveXml("/serv.asp",$timeout,$cachePath,$params,TRUE); // optional "binary" parameter
+		$this->cachehint = true;
+
+		$result = $this->getCacheFile("/serv.asp", $params, $cachePath,TRUE);
+		
+		// Set site and cache directory back to what they were
+		$this->setApiSite($site);
+		$this->setCacheDir($cachedir);
+
+		return $result;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
