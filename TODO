@@ -14,6 +14,9 @@ TODO list for 0.23
 	- Shareholders
 	- Standings
 	- Titles
+	- Minerals
+	- QuickLook
+	- MarketStat
 - Bring documented functions in some sort of order in the documentation - maybe follow the eve-dev format
 - (Re)test API functions that have changed since Revelations 1.0 - done, I think
 - Bug-report WalletJournal/Transaction, as it's clearly not fixed yet by the previous bugreport
