@@ -6,6 +6,7 @@ TODO list for next point release
 - Think about re-ordering parameters in class.api.php to be more consistent across functions in their order, as long as this does not impact the public interface
 
 TODO list for 0.23
+- Change file headers to reference the new name of the library, once we've decided on a name
 - (Re)test API functions that have changed since Revelations 1.0 - done, I think
 - Bug-report WalletJournal/Transaction, as it's clearly not fixed yet by the previous bugreport
 
