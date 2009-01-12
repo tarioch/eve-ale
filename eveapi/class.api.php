@@ -1781,14 +1781,14 @@ class Api
 
 		if ($sethours)
 		{
-			$params['sethours'] = $sethours;
-			$cachePath[] = 'sethours';
+			$params['hours'] = $sethours;
+			$cachePath[] = 'hours';
 		}
 		
 		if	($setminQ)
 		{
-			$params['setminQ'] = $setminQ;
-			$cachePath[] = 'setminQ';
+			$params['minQ'] = $setminQ;
+			$cachePath[] = 'minQ';
 		}
 
 		$site = $this->getApiSite(); // current
