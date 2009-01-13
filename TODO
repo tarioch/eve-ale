@@ -8,7 +8,11 @@ TODO list for next point release
 TODO list for 0.23
 - Change file headers to reference the new name of the library, once we've decided on a name
 - (Re)test API functions that have changed since Revelations 1.0 - done, I think
-- Bug-report WalletJournal/Transaction, as it's clearly not fixed yet by the previous bugreport
+- Fix/finish the handling of 101/103 errors in WalletJournal/Transactions
+- Possibly change 103 handling if current refid not 0: Change cachedUntil of previous refID
+- Add 100 error to documentation as something that can happen on 2nd fetch
+- Add new utility functions and changed behavior of WalletJournal/Transactions to documentation
+- Add utility functions to retrieve the cachePath, which will also help with fixing the current code as it is now
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here

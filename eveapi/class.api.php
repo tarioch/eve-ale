@@ -38,6 +38,7 @@ class Api
 	private $usecache = true;
 	private $cachestatus = false;
 	private $apierror = 0; // API Error code, if any
+	private $apierrortext = ''; // API Error text, if any
 	private $cachehint = true; // A kludge to handle data without cachedUntil hint. Again, inheritance would make this go away 
 	private $timetolerance = 5; // minutes to wait after cachedUntil, to allow for the server's time being fast
 
@@ -278,6 +279,17 @@ class Api
 		return $this->apierror;
 	}
 
+	private function setApiErrorText($text)
+	{
+		$this->apierrortext = $text;
+	}
+
+	public function getApiErrorText()
+	{
+		return $this->apierrortext;
+	}
+
+
 	// add error message - both params are strings and are formatted as: "$type: $message"
 	private function addMsg($type, $message)
 	{
@@ -447,6 +459,7 @@ class Api
 						{
 							$code = $xml->error->attributes()->code;
 							$this->setApiError($code);
+							$this->setApiErrorText($error);
 
 							if ($this->debug)
 								$this->addMsg("API Error", $code." : ".$error);
@@ -465,6 +478,7 @@ class Api
 					}
 					
 					$this->setApiError(0); // We fetched successfully
+					$this->setApiErrorText('');
 
 
 					if ($this->usecache && !$iscached)
@@ -679,6 +693,20 @@ class Api
 		}
 	}
 	
+	private function changeCachedUntil($file,$newuntil)
+	{
+		$doc = new DOMDocument;
+		$doc->Load($file);
+
+		$xpath = new DOMXPath($doc);
+		$query = '//eveapi/cachedUntil';
+		$query = $xpath->query($query);
+		$until = $query->item(0);
+		$until->nodeValue = $newuntil;
+		
+		file_put_contents($file, $doc->saveXML());
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Functions to retrieve data
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -888,8 +916,8 @@ class Api
 		return $contents;
 	}
 	
-	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = 65)
-	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
+	public function getWalletTransactions($transid = null, $corp = false, $accountkey = 1000, $timeout = null)
+	// BUGBUG $timeout is hard-coded because we don't yet handle the EvE error code returned after cachedUntil correctly. CCP says "This is by design. It is to stop multiple people requesting the data and fighting for the data."
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -937,19 +965,38 @@ class Api
 		}
 
 		if ($corp == true)
-		{
-			$contents = $this->retrieveXml("/corp/WalletTransactions.xml.aspx", $timeout, $cachePath, $params);
-		}
+			$path = "/corp/WalletTransactions.xml.aspx";
 		else
-		{
-			$contents = $this->retrieveXml("/char/WalletTransactions.xml.aspx", $timeout, $cachePath, $params);
-		}
+			$path = "/char/WalletTransactions.xml.aspx";
+
+		$contents = $this->retrieveXml($path, $timeout, $cachePath, $params);
 		
+		if ($err = $this->getApiError())
+		{
+			switch ($err)
+			{
+				case 101: // Wallet exhausted
+				case 103: // Already returned one week of data
+					if ($contents) // The cache file exists - not always a given 
+					{
+						$text = $this->getApiErrorText();
+						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
+						// BUGBUG - won't work because params ain't complete here, I'm missing the userid and characterId that retrieveXML puts in
+						$file = $this->getCacheFile($path,$params,$cachePath);
+						$this->changeCachedUntil($file,$newuntil); // Use DOM to change the cachedUntil value in the cache file
+						print("Until the break of dawn or ".$newuntil." we screw around with ".$file);
+					}
+					break;
+				default:
+				// Do nothing at all
+			}
+		}
+
 		return $contents;
 	}
 	
-	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = 65)
-	// BUGBUG $timeout is hard-coded because of a bug in the EvE API, see http://myeve.eve-online.com/ingameboard.asp?a=topic&threadID=802053
+	public function getWalletJournal($refid = null, $corp = false, $accountkey = 1000, $timeout = null)
+	// BUGBUG $timeout is hard-coded because we don't yet handle the EvE error code returned after cachedUntil correctly. CCP says "This is by design. It is to stop multiple people requesting the data and fighting for the data."
 	{
 		if ($timeout && !is_numeric($timeout))
 		{
@@ -997,14 +1044,33 @@ class Api
 		}
 
 		if ($corp == true)
-		{
-			$contents = $this->retrieveXml("/corp/WalletJournal.xml.aspx", $timeout, $cachePath, $params);
-		}
+			$path = "/corp/WalletJournal.xml.aspx";
 		else
+			$path = "/char/WalletJournal.xml.aspx";
+
+		$contents = $this->retrieveXml($path, $timeout, $cachePath, $params);
+
+		if ($err = $this->getApiError())
 		{
-			$contents = $this->retrieveXml("/char/WalletJournal.xml.aspx", $timeout, $cachePath, $params);
-		}
-		
+			switch ($err)
+			{
+				case 101: // Wallet exhausted
+				case 103: // Already returned one week of data
+					if ($contents) // The cache file exists - not always a given 
+					{
+						$text = $this->getApiErrorText();
+						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
+						// BUGBUG - won't work because params ain't complete here, I'm missing the userid and characterId that retrieveXML puts in
+						$file = $this->getCacheFile($path,$params,$cachePath);
+						$this->changeCachedUntil($file,$newuntil); // Use DOM to change the cachedUntil value in the cache file
+						print("Until the break of dawn or ".$newuntil." we screw around with ".$file);
+					}
+					break;
+				default:
+				// Do nothing at all
+			}
+		}		
+
 		return $contents;
 	}
 
