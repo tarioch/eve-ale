@@ -13,6 +13,8 @@ TODO list for 0.23
 - Add 100 error to documentation as something that can happen on 2nd fetch
 - Add new utility functions and changed behavior of WalletJournal/Transactions to documentation
 - Add utility functions to retrieve the cachePath, which will also help with fixing the current code as it is now
+- Add utility functions to retrieve cachedUntil of the last fetch, also for cacheTime. Actually, change that to handle the hints regardless of
+  whether we are using caching; it'll be helpful to the user. Also change those functions to allow fetching in GMT or local time.
 
 TODO list for 0.50
 - Captured in branch; not duplicating it here

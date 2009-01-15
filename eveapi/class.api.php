@@ -38,6 +38,7 @@ class Api
 	private $usecache = true;
 	private $cachestatus = false; // Was the last fetch serviced from cache?
 	private $cachefile = ''; // Cache file name for the last fetch
+	private $cachedat = null; // timestamp (UNIX epoch) of last fetch's cacheTime, if any
 	private $cacheduntil = null; // timestamp (UNIX epoch) of last fetch's cachedUntil hint, if any
 	private $apierror = 0; // API Error code, if any
 	private $apierrortext = ''; // API Error text, if any
@@ -46,34 +47,29 @@ class Api
 
 	public function setCredentials($userid, $apikey, $charid = null)
 	{
-		// Allow wiping of credentials by passing "null" in
-		if ($userid === null && $apikey === null)
+		// Allow wiping of credentials by passing "null" for $userid
+		if ($userid === null)
 		{
 			$this->userid = null;
+			$this->apikey = null;
+			$this->charid = null;
 			return true;
 		}
+
 		if ($charid === null)
 			$this->charid = null;
 
 		if (empty($userid) || empty ($apikey))
-		{
 			throw new Exception('setCredentials: userid and apikey must not be empty');
-		}
 
 		if (!is_numeric($userid))
-		{
 			throw new Exception('setCredentials: userid must be a numeric value');
-		}
 		
 		if (!is_string($apikey))
-		{
 			throw new Exception('setCredentials: apikey must be a string value');
-		}
 		
 		if (!empty($charid) && !is_numeric($charid))
-		{
 			throw new Exception('setCredentials: charid must be a numeric value');
-		}
 	
 		$this->userid = $userid;
 		$this->apikey = $apikey;
@@ -96,15 +92,11 @@ class Api
 	
 	public function setDebug($bool)
 	{
-		if (is_bool($bool))
-		{
-			$this->debug = $bool;
-			return true;
-		}
-		else
-		{
+		if (!is_bool($bool))
 			throw new Exception('setDebug: parameter must be present and boolean');
-		}
+
+		$this->debug = $bool;
+		return true;
 	}
 
 	public function debug($bool)
@@ -120,15 +112,11 @@ class Api
 
 	public function setUseCache($bool)
 	{
-		if (is_bool($bool))
-		{
-			$this->usecache = $bool;
-			return true;
-		}
-		else
-		{
+		if (!is_bool($bool))
 			throw new Exception('setUseCache: parameter must be present and boolean');
-		}
+
+		$this->usecache = $bool;
+		return true;
 	}
 
 	public function cache($bool)
@@ -145,15 +133,11 @@ class Api
 
 	public function setCacheDir($dir)
 	{
-		if (is_string($dir))
-		{
-			$this->cachedir = $dir;
-			return true;
-		}
-		else
-		{
+		if (!is_string($dir))
 			throw new Exception('setCacheDir: parameter must be present and a string');
-		}
+
+		$this->cachedir = $dir;
+		return true;
 	}
 	
 	public function getCacheDir()
@@ -163,15 +147,11 @@ class Api
 
 	private function setCacheStatus($bool)
 	{
-		if (is_bool($bool))
-		{
-			$this->cachestatus = $bool;
-			return true;
-		}
-		else
-		{
+		if (!is_bool($bool))
 			throw new Exception('setCacheStatus: parameter must be present and boolean');
-		}
+
+		$this->cachestatus = $bool;
+		return true;
 	}
 
 	public function getCacheStatus()
@@ -181,52 +161,63 @@ class Api
 
 	private function setCacheFile($file)
 	{ // Record the cache file the last fetch created or used
-		if (is_string($file))
-		{
-			$this->cachefile = $file;
-			return true;
-		}
-		else
-		{
+		if (!is_string($file))
 			throw new Exception('setCacheFile: parameter must be present and a string');
-		}
+
+		$this->cachefile = $file;
+		return true;
 	}
 
 	public function getCacheFile()
 	{
 		return $this->cachefile;
 	}
-
-	private function setCachedUntil($time)
+	
+	private function setCacheTimes($contents)
 	{
-		if (is_numeric($time))
+		if ($contents === null)
 		{
-			$this->cacheduntil = $time;
-			return true;
+			$this->cachedat = null;
+			$this->cacheduntil = null;
 		}
-		else
-		{
-			throw new Exception('setCachedUntil: parameter must be present and numeric');
-		}
+
+		if (!is_string($contents)
+			throw new Exception('setCacheTime: parameter must be present and a string');
+	
+		$xml = new SimpleXMLElement($contents);
+
+		$cachetime = (string) $xml->currentTime;
+		$time = strtotime($cachetime);
+		
+		$expirytime = (string) $xml->cachedUntil;
+		$until = strtotime($expirytime);
+				
+		unset($contents); // Free us some memory
+		unset($xml); // and free memory for this one, too
+
+		$this->cachedat = $time;
+		$this->cacheduntil = $until;
 	}
 	
+	// Value of currentTime on last fetch; or null if last fetch did not use cache / cacheTime
+	public function getCacheTime()
+	{
+		return $this->cachedat;
+	}
+
 	// Value of cachedUntil on last fetch; or null if last fetch did not use cache / cachedUntil
-	public function getCachedUntil()
+	public function getExpiryTime()
 	{
 		return $this->cachedUntil;
 	}
-	
+
 	public function setUserAgent($agent)
 	{
-		if (is_string($agent))
-		{
-			$this->useragent = $agent;
-			return true;
-		}
-		else
-		{
+		if (!is_string($agent))
 			throw new Exception('setUserAgent: parameter must be present and a string');
-		}
+
+		$this->useragent = $agent;
+		return true;
 	}
 	
 	public function getUserAgent()
@@ -236,14 +227,11 @@ class Api
 
 	public function setTimeTolerance($tolerance)
 	{
-		if (is_int($tolerance))
-		{
-			$this->timetolerance = $tolerance;
-			return true;
-		} else {
+		if (!is_int($tolerance))
 			throw new Exception('setTimeTolerance: parameter must be present and an integer');
-		}
 
+		$this->timetolerance = $tolerance;
+		return true;
 	}
 
 
@@ -254,13 +242,11 @@ class Api
 	
 	public function setApiSite($site)
 	{
-		if (is_string($site))
-		{
-			$this->apisite = $site;
-			return true;
-		} else {
+		if (!is_string($site))
 			throw new Exception('setApiSite: parameter must be present and a string');
-		}
+
+		$this->apisite = $site;
+		return true;
 	}
 	
 	public function getApiSite()
@@ -270,13 +256,11 @@ class Api
 	
 	public function setApiSiteEvEC($site)
 	{
-		if (is_string($site))
-		{
-			$this->apisiteevec = $site;
-			return true;
-		} else {
+		if (!is_string($site))
 			throw new Exception('setApiSiteEvEC: parameter must be present and a string');
-		}
+
+		$this->apisiteevec = $site;
+		return true;
 	}
 	
 	public function getApiSiteEvEC()
@@ -286,13 +270,11 @@ class Api
 	
 	private function setApiError($code)
 	{
-		if (is_numeric($code))
-		{
-			$this->apierror = $code;
-			return true;
-		} else {
+		if (!is_numeric($code))
 			throw new Exception('setApiError: parameter must be present and numeric');
-		}
+
+		$this->apierror = $code;
+		return true;
 	}
 
 	public function getApiError()
@@ -302,13 +284,11 @@ class Api
 
 	private function setApiErrorText($text)
 	{
-		if (is_string($text))
-		{
-			$this->apierrortext = $text;
-			return true;
-		} else {
+		if (!is_string($text))
 			throw new Exception('setApiErrorText: parameter must be present and a string');
-		}
+
+		$this->apierrortext = $text;
+		return true;
 	}
 
 	public function getApiErrorText()
@@ -320,18 +300,17 @@ class Api
 	// add error message - both params are strings and are formatted as: "$type: $message"
 	private function addMsg($type, $message)
 	{
-		if (!empty($type) && !empty($message))
-		{
-			$index = count($this->msg);
-			
-			$this->msg[$index]['type'] = $type;
-			$this->msg[$index]['msg'] = $message;
-			return true;
-		}
-		else
-		{
+		if (empty($type) || empty($message))
 			throw new Exception('addMsg: type and message must not be empty');
-		}
+
+// BUGBUG - save us some lines, see that it still works
+//		$index = count($this->msg);
+		
+		// $this->msg[$index]['type'] = $type;
+		// $this->msg[$index]['msg'] = $message;
+		$this->msg[]['type'] = $type;
+		$this->msg[]['msg'] = $message;
+		return true;
 	}
 
 	public function printErrors()
@@ -353,6 +332,9 @@ class Api
 	public function retrieveXml($path, $timeout = null, $cachePath = null, $params = null, $binary = false)
 	{
 		$this->setCacheStatus(false);
+		$this->setCacheTimes(null);
+		$this->setCacheFile('');
+
 		if ($cachePath != null && !is_array($cachePath))
 			throw new Exception('retrieveXml: Non-array value of cachePath param, not supported');
 		
@@ -379,10 +361,6 @@ class Api
 		{
 			$cachefile = $this->getCacheFileName($path,$cachePath,$params,$binary);
 			$iscached = $this->isCached($cachefile,$timeout);
-		}
-		else
-		{
-			$this->setCacheFile(''); // Empty, no cache file on this iteration
 		}
 
 		// continue if not cached
@@ -492,25 +470,26 @@ class Api
 
 							return null;
 						}
+
 						if(!$this->debug) // Set PHP error reporting back to original value
 							error_reporting($errlevel); 							
 						unset ($xml); // reduce memory footprint
+						
+						if ($this->cachehint)
+							$this->setCacheTimes($contents); // Record cache time and expiry time as given by CCP
 					}
 					
 					$this->setApiError(0); // We fetched successfully
 					$this->setApiErrorText('');
 
-
 					if ($this->usecache && !$iscached)
-						$this->storeCache($cachefile);
+						$this->storeCache($cachefile,$contents);
 
 					return $contents;
-				}
+				} // if (start != FALSE)
 				
 				if ($this->debug)
-				{
 					$this->addMsg("Error", "retrieveXml: Could not parse contents, unexpected API response");
-				}
 				
 				return null;
 			}
@@ -569,13 +548,13 @@ class Api
 		return $realpath;
 	}
 	
-	private function storeCache($file)
+	private function storeCache($file,$contents)
 	{
 		if (!file_exists(dirname($file)))
 		{
 			mkdir(dirname($file), 0777, true);
 		}
-		
+		// BUGBUG - change this to not use fopen()
 		$fp = fopen($file, "w");
 		
 		if ($fp)
@@ -598,21 +577,17 @@ class Api
 	private function loadCache($file)
 	{
 		// its cached, open it and use it
-		
-		$fp = fopen($file, "r");
-		if ($fp)
-		{
-			$contents = fread($fp, filesize($file));
-			fclose($fp);
-			$this->setCacheStatus(true);
-			$this->setCacheFile($file);
-			if ($this->debug)
-				$this->addMsg("Info","loadCache: Fetched cache file:" . $file);
-		}
-		else
-		{
-			throw new Exception("loadCache: Could not open cache file for reading: " . $file);
-		}
+
+		$contents = file_get_contents($file);
+// BUGBUG - check whether this was successful and throw Exception if not		
+		$this->setCacheStatus(true);
+		$this->setCacheFile($file);
+		if ($this->cachehint)
+			$this->setCacheTimes($contents); // Record cache time and expiry time as given by CCP
+
+		if ($this->debug)
+			$this->addMsg("Info","loadCache: Fetched cache file:" . $file);
+//		throw new Exception("loadCache: Could not open cache file for reading: " . $file);
 
 		return $contents;
 	}
