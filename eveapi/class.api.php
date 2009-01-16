@@ -179,10 +179,11 @@ class Api
 		{
 			$this->cachedat = null;
 			$this->cacheduntil = null;
+			return true;
 		}
 
-		if (!is_string($contents)
-			throw new Exception('setCacheTime: parameter must be present and a string');
+		if (!is_string($contents))
+			throw new Exception('setCacheTimes: parameter must be present and a string');
 	
 		$xml = new SimpleXMLElement($contents);
 
@@ -303,13 +304,10 @@ class Api
 		if (empty($type) || empty($message))
 			throw new Exception('addMsg: type and message must not be empty');
 
-// BUGBUG - save us some lines, see that it still works
-//		$index = count($this->msg);
+		$index = count($this->msg);
 		
-		// $this->msg[$index]['type'] = $type;
-		// $this->msg[$index]['msg'] = $message;
-		$this->msg[]['type'] = $type;
-		$this->msg[]['msg'] = $message;
+		$this->msg[$index]['type'] = $type;
+		$this->msg[$index]['msg'] = $message;
 		return true;
 	}
 
@@ -456,7 +454,8 @@ class Api
 						$error = (string) $xml->error;
 						if (!empty($error))
 						{
-							$this->setApiError($xml->error->attributes()->code);
+							$code = (int) $xml->error->attributes()->code;
+							$this->setApiError($code);
 							$this->setApiErrorText($error);
 
 							if ($this->debug)
@@ -668,12 +667,12 @@ class Api
 		else
 		{
 			if ($this->debug)
-				$this->addMsg("Info", "isCached: Cache file does not (yet?) exist: " . $file);			}
+				$this->addMsg("Info", "isCached: Cache file does not (yet?) exist: " . $file);			
 			return false;
 		}
 	}
 	
-	private function changeCachedUntil($file,$newuntil)
+	private function changeCachedUntil($file, $newuntil)
 	{
 		$doc = new DOMDocument;
 		$doc->Load($file);
