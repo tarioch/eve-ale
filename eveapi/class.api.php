@@ -201,15 +201,25 @@ class Api
 	}
 	
 	// Value of currentTime on last fetch; or null if last fetch did not use cache / cacheTime
-	public function getCacheTime()
+	public function getCacheTime($localtime)
 	{
-		return $this->cachedat;
+		if (!$localtime) // return as GMT time
+			return $this->cachedat;
+		else
+//		{ // return as local time
+// BUGBUG - clean up if this works; and if not, use $timenow again
+				//$timenow = time();
+				return $this->cachedat + date('Z', time());
+//		}
 	}
 
 	// Value of cachedUntil on last fetch; or null if last fetch did not use cache / cachedUntil
-	public function getExpiryTime()
+	public function getExpiryTime($localtime)
 	{
-		return $this->cachedUntil;
+		if (!$localtime) // return as GMT time
+			return $this->cacheduntil;
+		else
+			return $this->cacheduntil + date('Z', time()); 
 	}
 
 	public function setUserAgent($agent)
@@ -355,14 +365,14 @@ class Api
 			$params['characterID'] = $this->charid;
 		
 		// Save ourselves some calls and figure caching status out once for this function
-		if ($this->usecache)
+		if ($this->getUseCache())
 		{
 			$cachefile = $this->getCacheFileName($path,$cachePath,$params,$binary);
 			$iscached = $this->isCached($cachefile,$timeout);
 		}
 
 		// continue if not cached
-		if (!$this->usecache || !$iscached)
+		if (!$this->getUseCache() || !$iscached)
 		{
 			// Presumably, if it's not set to '&', they might have had a reason for that - be a good citizen
 			$sep = ini_get('arg_separator.output');
@@ -398,7 +408,7 @@ class Api
 				if ($this->debug)
 					$this->addMsg("Error", "retrieveXml: Could not connect to API URL at $this->apisite, error $errstr ($errno)");
 				// If we do have this in cache regardless of freshness, return it
-				if ($this->usecache && $this->isCached($cachefile,0)) // Special timeout 0 means "just check whether the file exists"
+				if ($this->getUseCache() && $this->isCached($cachefile,0)) // Special timeout 0 means "just check whether the file exists"
 					return $this->loadCache($cachefile);
 			}
 			else
@@ -445,7 +455,7 @@ class Api
 								$this->addMsg("Failure","SimpleXML threw an exception on ".$contents);
 							
 							// If we do have this in cache regardless of freshness, return it
-							if ($this->usecache && $this->isCached($cachefile, 0)) // special timeout 0 means "just check whether the file exists"
+							if ($this->getUseCache() && $this->isCached($cachefile, 0)) // special timeout 0 means "just check whether the file exists"
 								return $this->loadCache($cachefile);
 
 							return null;
@@ -464,7 +474,7 @@ class Api
 								error_reporting($errlevel);
 
 							// If we do have this in cache regardless of freshness, return it
-							if ($this->usecache && $this->isCached($cachefile, 0)) // special timeout 0 means "just check whether the file exists"
+							if ($this->getUseCache() && $this->isCached($cachefile, 0)) // special timeout 0 means "just check whether the file exists"
 								return $this->loadCache($cachefile);
 
 							return null;
@@ -481,7 +491,7 @@ class Api
 					$this->setApiError(0); // We fetched successfully
 					$this->setApiErrorText('');
 
-					if ($this->usecache && !$iscached)
+					if ($this->getUseCache() && !$iscached)
 						$this->storeCache($cachefile,$contents);
 
 					return $contents;
@@ -881,7 +891,7 @@ class Api
 
 		$contents = $this->retrieveXml($path, $timeout, $cachePath, $params);
 		
-		if ($err = $this->getApiError())
+		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 101/103 "extension" errors
 		{
 			switch ($err)
 			{
@@ -942,7 +952,7 @@ class Api
 
 		$contents = $this->retrieveXml($path, $timeout, $cachePath, $params);
 
-		if ($err = $this->getApiError())
+		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 101/103 "extension" errors
 		{
 			switch ($err)
 			{
@@ -953,6 +963,7 @@ class Api
 						$text = $this->getApiErrorText();
 						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
 						$file = $this->getCacheFile();
+						// BUGBUG - the below should act on all cached copies, including the ones in subdirs. Might just change the function, maybe with a recursive option to it as parameter, defaulting to true
 						$this->changeCachedUntil($file,$newuntil); // Use DOM to change the cachedUntil value in the cache file
 						print("Until the break of dawn or ".$newuntil." we screw around with ".$file);
 					}
@@ -961,6 +972,12 @@ class Api
 				// Do nothing at all
 			}
 		}		
+
+		if ($this->getUseCache() && !$this->getCacheStatus() && !$refid) // we are using cache, and this did not come from cache, and it's the first fetch in a series
+		{
+			// Delete all cached copies in subdirectories, and the subdirs themselves if that leaves them empty. Don't touch main ("0") cached copy
+			// use private deleteCache() and getCacheFile(). Should have a $recursive (def true) parameter, and a $deleteroot (def false) parameter
+		}
 
 		return $contents;
 	}
