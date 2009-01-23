@@ -25,8 +25,8 @@ require_once('./classes/eveapi/class.certificatetree.php');
 require_once('./print-as-html.php');
 
 $api = new Api();
-$api->debug(true);
-$api->cache(true); // that's the default, done for testing purposes
+$api->setDebug(true);
+$api->setUseCache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
 
 print ("<P>Raw CertificateTree output</P>");

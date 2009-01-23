@@ -5,14 +5,7 @@ TODO list for next point release
 - Function to clean up the cache - maybe on a few levels: All by freshness, all by userid regardless of freshness, all by charid regardless of freshness
 
 TODO list for 0.23
-- Fix/finish the handling of 101/103 errors in WalletJournal/Transactions
-- Possibly change 103 handling if current refid not 0: Change cachedUntil of previous refID
-- Add 100 error to documentation as something that can happen on 2nd fetch
-- Add new utility functions and changed behavior of WalletJournal/Transactions to documentation
-- Add tests for utility functions, particularly the ones that aren't crucial to the functioning of the lib, such as the ones to retrieve cache
-- Add handling of 115, 116, 117, 119 to assets, industry jobs, market orders, kill logs
-- Document changed handling of assets, industry jobs, market orders, kill logs
-- Change current code to only do the special handling if timeour is NULL, indicating that the user wishes the library to follow cachedUntil as best it may
+- Nothing left to do
 
 
 TODO list for 0.50

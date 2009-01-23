@@ -27,8 +27,8 @@ require_once('./print-as-html.php');
 require_once('./config.php');
 
 $api = new Api();
-$api->debug(true);
-$api->cache(true); // that's the default, done for testing purposes
+$api->setDebug(true);
+$api->setUseCache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
 $api->setCredentials($apiuser,$apipass);
 
@@ -63,6 +63,9 @@ do
 		break;
 	}
 
+	print("<P>This was cached at ".date("r",$api->getCacheTime())." which is in local: ".date("r",$api->getCacheTime(true)));
+	print("<P>This will expire at ".date("r",$api->getExpiryTime())." which is in local: ".date("r",$api->getExpiryTime(true)));
+
 	print("<P>Run $i yields the following wallet journal data</P>");
 	print_as_html(print_r($data,TRUE));
 
@@ -87,6 +90,9 @@ do
 		print("<P>Received empty wallet data on run $i</P>");
 		break;
 	}
+
+	print("<P>This was cached at ".date("r",$api->getCacheTime())." which is in local: ".date("r",$api->getCacheTime(true)));
+	print("<P>This will expire at ".date("r",$api->getExpiryTime())." which is in local: ".date("r",$api->getExpiryTime(true)));
 
 	print("<P>Run $i yields the following wallet journal data</P>");
 	print_as_html(print_r($data,TRUE));

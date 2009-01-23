@@ -21,8 +21,8 @@
 require_once('./classes/eveapi/class.api.php');
 
 $api = new Api();
-$api->debug(true);
-$api->cache(true); // that's the default, done for testing purposes
+$api->setDebug(true);
+$api->setUseCache(true); // that's the default, done for testing purposes
 $api->setTimeTolerance(5); // also the default value
 
 print ("<P>Character Portrait in JPG format</P>");

@@ -1,6 +1,6 @@
 <?php
 /**************************************************************************
-	Ale API Library for EvE, v0.23, 2009-01-15
+	Ale API Library for EvE, v0.23, 2009-01-23
 
 	Portions Copyright (C) 2007 Kw4h
 	Portions Copyright (C) 2008 Pavol Kovalik
@@ -37,7 +37,7 @@ class Api
 	private $msg = array();
 	private $usecache = true;
 	private $cachestatus = false; // Was the last fetch serviced from cache?
-	private $cachefile = ''; // Cache file name for the last fetch
+	private $cachefile = null; // Cache file name for the last fetch
 	private $cachedat = null; // timestamp (UNIX epoch) of last fetch's cacheTime, if any
 	private $cacheduntil = null; // timestamp (UNIX epoch) of last fetch's cachedUntil hint, if any
 	private $apierror = 0; // API Error code, if any
@@ -161,10 +161,11 @@ class Api
 
 	private function setCacheFile($file)
 	{ // Record the cache file the last fetch created or used
-		if (!is_string($file))
+		if ($file != null && !is_string($file))
 			throw new Exception('setCacheFile: parameter must be present and a string');
 
 		$this->cachefile = $file;
+
 		return true;
 	}
 
@@ -173,6 +174,8 @@ class Api
 		return $this->cachefile;
 	}
 	
+	// Set the cache times for retrieval, using the returned XML content
+	// Stores cache time and expiry time in timestamp format
 	private function setCacheTimes($contents)
 	{
 		if ($contents === null)
@@ -201,24 +204,22 @@ class Api
 	}
 	
 	// Value of currentTime on last fetch; or null if last fetch did not use cache / cacheTime
-	public function getCacheTime($localtime)
+	// Returns timestamp format
+	public function getCacheTime($localtime = false)
 	{
 		if (!$localtime) // return as GMT time
 			return $this->cachedat;
-		else
-//		{ // return as local time
-// BUGBUG - clean up if this works; and if not, use $timenow again
-				//$timenow = time();
+		else // return as local time
 				return $this->cachedat + date('Z', time());
-//		}
 	}
 
 	// Value of cachedUntil on last fetch; or null if last fetch did not use cache / cachedUntil
-	public function getExpiryTime($localtime)
+	// Returns timestamp format
+	public function getExpiryTime($localtime = false)
 	{
 		if (!$localtime) // return as GMT time
 			return $this->cacheduntil;
-		else
+		else // return as local time
 			return $this->cacheduntil + date('Z', time()); 
 	}
 
@@ -307,7 +308,6 @@ class Api
 		return $this->apierrortext;
 	}
 
-
 	// add error message - both params are strings and are formatted as: "$type: $message"
 	private function addMsg($type, $message)
 	{
@@ -341,7 +341,7 @@ class Api
 	{
 		$this->setCacheStatus(false);
 		$this->setCacheTimes(null);
-		$this->setCacheFile('');
+		$this->setCacheFile(null);
 
 		if ($cachePath != null && !is_array($cachePath))
 			throw new Exception('retrieveXml: Non-array value of cachePath param, not supported');
@@ -504,7 +504,11 @@ class Api
 			}
 		}
 		else // We are to use a cache and the api results are still valid in cache
+		{
+			$this->setApiError(0); // Clear API errors that may still be hanging around
+			$this->setApiErrorText('');
 			return $this->loadCache($cachefile);
+		}
 	}
 
 	// Get the name of the cache file - actually the path to it and the name
@@ -563,24 +567,16 @@ class Api
 		{
 			mkdir(dirname($file), 0777, true);
 		}
-		// BUGBUG - change this to not use fopen()
-		$fp = fopen($file, "w");
-		
-		if ($fp)
+		if(file_put_contents($file,$contents))
 		{
-			fwrite($fp, $contents);
-			fclose($fp);
-			
 			$this->setCacheFile($file);
 			
 			if ($this->debug)
 				$this->addMsg("Info","storeCache: Created cache file:" . $file);
+			return true;
 		}
 		else
-		{
 			throw new Exception("storeCache: Could not open cache file for writing: " . $file);
-		}
-		
 	}
 	
 	private function loadCache($file)
@@ -588,7 +584,9 @@ class Api
 		// its cached, open it and use it
 
 		$contents = file_get_contents($file);
-// BUGBUG - check whether this was successful and throw Exception if not		
+		if (!$contents) // Cache is empty or does not exist
+			throw new Exception("loadCache: Cache file ".$file." did not load");
+
 		$this->setCacheStatus(true);
 		$this->setCacheFile($file);
 		if ($this->cachehint)
@@ -596,7 +594,6 @@ class Api
 
 		if ($this->debug)
 			$this->addMsg("Info","loadCache: Fetched cache file:" . $file);
-//		throw new Exception("loadCache: Could not open cache file for reading: " . $file);
 
 		return $contents;
 	}
@@ -681,11 +678,68 @@ class Api
 			return false;
 		}
 	}
-	
-	private function changeCachedUntil($file, $newuntil)
+
+	// Delete file(s) in the cache directory, and empty cache directories as well
+	// $path gives the file to be deleted, including its path
+	// $recursive instructs on whether to find files of the same name in subdirectories and delete them
+	// $deleteroot instructs on whether to also delete the file given explicitly in $path, if $recursive is true
+	private function deleteCache($path,$recursive=true,$deleteroot=false)
+	{
+		if (!is_string($path))
+			throw new Exception('deleteCache: Parameter $path must be present and a string');
+
+		if (!$recursive)
+		{
+			if (unlink($path))
+			{
+				if ($this->getDebug())
+					$this->addMsg("info","Deleted stale cache file $path");
+				return true;
+			}
+		}
+		// recursive processing from here
+		if ($deleteroot)
+		{
+			if (unlink($path))
+				if ($this->getDebug())
+					$this->addMsg("info","Deleted stale cache file $path");
+		}
+
+		$name = basename($path);
+		$dir = dirname($path);
+
+		$entries = scandir($dir);
+
+		$i = 0; // Keep track of directory entries so we can figure out whether it's now empty and we ought to delete it
+		foreach ($entries as $entry)
+		{
+			if ($entry == '.' || $entry == '..') // skip over this dir and higher dir entries - I want to recurse down, not up
+				continue;
+
+			$i++;
+			$file = $dir.'/'.$entry; // Full path to this directory entry
+			if (is_dir($file) && file_exists($file.'/'.$name)) // We found another one of these in a sub-directory - go after it!
+				$this->deleteCache($file.'/'.$name,true,true); // Recurse down, and delete the file itself, too
+		}
+
+		if (!$i) // current directory is (now) empty, delete it
+		{
+			if (rmdir($dir))
+				if ($this->getDebug())
+					$this->addMsg("info","Deleted empty cache directory $dir");
+		}
+
+		return true;
+	}
+
+	// Change the 'cachedUntil' value in XML, in response to a request to do so by CCP's API response
+	// $path - path to the cache file, including file name
+	// $newuntil - new value to write, in text form
+	// $recursive - whether to change the value in subdirectories containing the same filename, as well
+	private function changeCachedUntil($path, $newuntil, $recursive=true)
 	{
 		$doc = new DOMDocument;
-		$doc->Load($file);
+		$doc->Load($path);
 
 		$xpath = new DOMXPath($doc);
 		$query = '//eveapi/cachedUntil';
@@ -693,8 +747,35 @@ class Api
 		$until = $query->item(0);
 		$until->nodeValue = $newuntil;
 		
-		file_put_contents($file, $doc->saveXML());
+		if (!file_put_contents($path, $doc->saveXML()))
+			throw new Exception ("changeCachedUntil: Failed to write cache file: ".$path);
+
+		unset ($doc,$xpath,$query); // Manual garbage collection
+
+		if ($this->getDebug())
+			$this->addMsg("info","changeCachedUntil: Change cachedUntil for ".$path." to ".$newuntil);
+		
+		if ($recursive)
+		{
+			$name = basename($path);
+			$dir = dirname($path);
+
+			$entries = scandir($dir);
+
+			foreach ($entries as $entry)
+			{
+				if ($entry == '.' || $entry == '..') // skip over this dir and higher dir entries - I want to recurse down, not up
+					continue;
+
+				$file = $dir.'/'.$entry; // Full path to this directory entry
+				if (is_dir($file) && file_exists($file.'/'.$name)) // We found another one of these in a sub-directory - go after it!
+					$this->changeCachedUntil($file.'/'.$name,$newuntil); // Recurse down
+			}
+		}
+
+		return true;
 	}
+
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Functions to retrieve data
@@ -890,7 +971,10 @@ class Api
 			$path = "/char/WalletTransactions.xml.aspx";
 
 		$contents = $this->retrieveXml($path, $timeout, $cachePath, $params);
-		
+
+		if (!$contents) // If this fails and doesn't return anything, don't run through the adjustment procedures
+			return $contents;
+
 		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 101/103 "extension" errors
 		{
 			switch ($err)
@@ -901,15 +985,18 @@ class Api
 					{
 						$text = $this->getApiErrorText();
 						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
-						$file = $this->getCacheFile(); // last cache file we used
+						$file = $this->getCacheFile();
 						$this->changeCachedUntil($file,$newuntil); // Use DOM to change the cachedUntil value in the cache file
-						print("Until the break of dawn or ".$newuntil." we screw around with ".$file);
+						$contents = $this->loadCache($file); // So that we return the changed cache, and the cache times are set correctly
 					}
 					break;
 				default:
 				// Do nothing at all
 			}
 		}
+
+		if ($this->getUseCache() && !$this->getCacheStatus() && !$transid) // we are using cache, and this did not come from cache, and it's the first fetch in a series
+			$this->deleteCache($this->getCacheFile()); // Delete all cached copies in subdirectories, and the subdirs themselves if that leaves them empty. Don't touch main (transid "0") cached copy
 
 		return $contents;
 	}
@@ -952,6 +1039,9 @@ class Api
 
 		$contents = $this->retrieveXml($path, $timeout, $cachePath, $params);
 
+		if (!$contents) // If this fails and doesn't return anything, don't run through the adjustment procedures
+			return $contents;
+
 		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 101/103 "extension" errors
 		{
 			switch ($err)
@@ -963,9 +1053,8 @@ class Api
 						$text = $this->getApiErrorText();
 						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
 						$file = $this->getCacheFile();
-						// BUGBUG - the below should act on all cached copies, including the ones in subdirs. Might just change the function, maybe with a recursive option to it as parameter, defaulting to true
 						$this->changeCachedUntil($file,$newuntil); // Use DOM to change the cachedUntil value in the cache file
-						print("Until the break of dawn or ".$newuntil." we screw around with ".$file);
+						$contents = $this->loadCache($file); // So that we return the changed cache, and the cache times are set correctly
 					}
 					break;
 				default:
@@ -974,10 +1063,7 @@ class Api
 		}		
 
 		if ($this->getUseCache() && !$this->getCacheStatus() && !$refid) // we are using cache, and this did not come from cache, and it's the first fetch in a series
-		{
-			// Delete all cached copies in subdirectories, and the subdirs themselves if that leaves them empty. Don't touch main ("0") cached copy
-			// use private deleteCache() and getCacheFile(). Should have a $recursive (def true) parameter, and a $deleteroot (def false) parameter
-		}
+			$this->deleteCache($this->getCacheFile()); // Delete all cached copies in subdirectories, and the subdirs themselves if that leaves them empty. Don't touch main (refid "0") cached copy
 
 		return $contents;
 	}
@@ -1029,13 +1115,32 @@ class Api
 		$cachePath[1] = 'characterID';
 
 		if ($corp == true)
-		{
 			$contents = $this->retrieveXml("/corp/AssetList.xml.aspx", $timeout, $cachePath);
-		}
 		else
-		{
 			$contents = $this->retrieveXml("/char/AssetList.xml.aspx", $timeout, $cachePath);
+	
+		if (!$contents) // If this fails and doesn't return anything, don't run through the adjustment procedures
+			return $contents;
+	
+		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 115 "extension" error
+		{
+			switch ($err)
+			{
+				case 115: // Assets already downloaded
+					if ($this->getCacheStatus()) // The cache file exists - not always a given -- works only because I know retrieveXML tries to fetch from cache on API error
+					{
+						$text = $this->getApiErrorText();
+						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
+						$file = $this->getCacheFile();
+						$this->changeCachedUntil($file,$newuntil,false); // Use DOM to change the cachedUntil value in the cache file, but not recursively
+						$contents = $this->loadCache($file); // So that we return the changed cache, and the cache times are set correctly
+					}
+					break;
+				default:
+				// Do nothing at all
+			}
 		}
+
 		return $contents;
 	}
 	
@@ -1052,13 +1157,32 @@ class Api
 		$cachePath[1] = 'characterID';
 
 		if ($corp == true)
-		{
 			$contents = $this->retrieveXml("/corp/IndustryJobs.xml.aspx", $timeout, $cachePath);
-		}
 		else
-		{
 			$contents = $this->retrieveXml("/char/IndustryJobs.xml.aspx", $timeout, $cachePath);
+
+		if (!$contents) // If this fails and doesn't return anything, don't run through the adjustment procedures
+			return $contents;
+
+		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 116 "extension" error
+		{
+			switch ($err)
+			{
+				case 116: // Industry jobs already downloaded
+					if ($this->getCacheStatus()) // The cache file exists - not always a given -- works only because I know retrieveXML tries to fetch from cache on API error
+					{
+						$text = $this->getApiErrorText();
+						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
+						$file = $this->getCacheFile();
+						$this->changeCachedUntil($file,$newuntil,false); // Use DOM to change the cachedUntil value in the cache file, but not recursively
+						$contents = $this->loadCache($file); // So that we return the changed cache, and the cache times are set correctly
+					}
+					break;
+				default:
+				// Do nothing at all
+			}
 		}
+
 		return $contents;
 	}
 
@@ -1163,6 +1287,31 @@ class Api
 		else
 			$contents = $this->retrieveXml("/char/KillLog.xml.aspx", $timeout, $cachePath,$params);
 
+		if (!$contents) // If this fails and doesn't return anything, don't run through the adjustment procedures
+			return $contents;
+
+		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 119 "extension" error
+		{
+			switch ($err)
+			{
+				case 119: // Kills exhausted
+					if ($this->getCacheStatus()) // The cache file exists - not always a given -- works only because I know retrieveXML tries to fetch from cache on API error
+					{
+						$text = $this->getApiErrorText();
+						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
+						$file = $this->getCacheFile();
+						$this->changeCachedUntil($file,$newuntil); // Use DOM to change the cachedUntil value in the cache file
+						$contents = $this->loadCache($file); // So that we return the changed cache, and the cache times are set correctly
+					}
+					break;
+				default:
+				// Do nothing at all
+			}
+		}
+
+		if ($this->getUseCache() && !$this->getCacheStatus() && !$killid) // we are using cache, and this did not come from cache, and it's the first fetch in a series
+			$this->deleteCache($this->getCacheFile()); // Delete all cached copies in subdirectories, and the subdirs themselves if that leaves them empty. Don't touch main (killid "0") cached copy
+
 		return $contents;
 	}
 
@@ -1217,12 +1366,27 @@ class Api
 		$cachePath[1] = 'characterID';
 
 		if($corp == true)
-		{
 			$contents = $this->retrieveXml("/corp/MarketOrders.xml.aspx", $timeout, $cachePath);
-		}
 		else
-		{
 			$contents = $this->retrieveXml("/char/MarketOrders.xml.aspx", $timeout, $cachePath);
+
+		if ($timeout === NULL && $err = $this->getApiError()) // we are to follow CCP's cachedUntil hints - handle 117 "extension" error
+		{
+			switch ($err)
+			{
+				case 117: // Market orders already downloaded
+					if ($this->getCacheStatus()) // The cache file exists - not always a given -- works only because I know retrieveXML tries to fetch from cache on API error
+					{
+						$text = $this->getApiErrorText();
+						$newuntil = substr($text,stripos($text,"retry after ")+12,19); // Grab the date in "yyyy-mm-dd hh:mm:ss" format. 19 long, and comes right after "retry after"
+						$file = $this->getCacheFile();
+						$this->changeCachedUntil($file,$newuntil,false); // Use DOM to change the cachedUntil value in the cache file, but not recursively
+						$contents = $this->loadCache($file); // So that we return the changed cache, and the cache times are set correctly
+					}
+					break;
+				default:
+				// Do nothing at all
+			}
 		}
 
 		return $contents;
