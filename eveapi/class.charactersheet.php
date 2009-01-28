@@ -81,13 +81,14 @@ class CharacterSheet
 			{
 				$rsatts = $rs->attributes();
 				$rsname = $rsatts[(string) "name"];
+				$index = 0;
 				foreach ($rs->row as $row)
-				{
-					$index = count($output[(string) $rsname]);
+				{	
 					foreach ($row->attributes() as $name => $value)
 					{
 						$output[(string) $rsname][$index][(string) $name] = (string) $value;
 					}
+				$index++;
 				}
 			}
 			unset ($xml); // manual garbage collection			
