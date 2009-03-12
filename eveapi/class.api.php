@@ -6,7 +6,7 @@
 	Portions Copyright (C) 2008 Pavol Kovalik
 	Portions Copyright (C) 2008 Gordon Pettey
 	Portions Copyright (C) 2008 Thorsten Behrens
-	Portions Copyright (C) 2008 Dustin Tinklin
+	Portions Copyright (C) 2009 Dustin Tinklin
 
 	This file is part of Ale API Library for EvE.
 
@@ -807,7 +807,7 @@ class Api
 	public function getSkillInTraining($timeout = null)
 	{
 		if ($timeout && !is_numeric($timeout))
-			throw new Exception('getAccountBalance: Non-numeric value of timeout param, not supported');
+			throw new Exception('getSkillInTraining: Non-numeric value of timeout param, not supported');
 
 		$cachePath = array();
 		$cachePath[0] = 'userID';
@@ -817,6 +817,21 @@ class Api
 		
 		return $contents;
 	}
+
+public function getSkillQueue($timeout = null)
+	{
+		if ($timeout && !is_numeric($timeout))
+			throw new Exception('getSkillQueue: Non-numeric value of timeout param, not supported');
+
+		$cachePath = array();
+		$cachePath[0] = 'userID';
+		$cachePath[1] = 'characterID';
+
+		$contents = $this->retrieveXml("/char/SkillQueue.xml.aspx", $timeout, $cachePath);
+		
+		return $contents;
+	}
+
 	
 	public function getCharacterSheet($timeout = null)
 	{
