@@ -37,6 +37,7 @@ class SkillQueue
 				{
 				$output[$i][(string) $name] = (string) $value;
 				}
+			$i++;
 			}
 			unset ($xml); // manual garbage collection			
 			return $output;
