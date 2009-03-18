@@ -31,9 +31,9 @@ class SkillQueue
 			
 			$output = array();
 			$i = 0;
-			foreach ($xml->result->children() as $skill)
+			foreach ($xml->result->rowset->row as $skill)
 			{
-				foreach ($skill->children() as $name => $value)
+				foreach ($skill->attributes() as $name => $value)
 				{
 				$output[$i][(string) $name] = (string) $value;
 				}
