@@ -35,7 +35,7 @@ class AleRequestFsock implements AleInterfaceRequest  {
 	 */
 	public function __construct(array $config = array()) {
 		$this->config['timeout'] = isset($config['timeout']) ? (int) $config['timeout'] : 30;
-		
+		$this->config['flattenParams'] = isset($config['flattenParams']) ? (bool) $config['flattenParams'] : false;
 	}
 	
 	public function query($url, array $params = array()) {
@@ -44,7 +44,24 @@ class AleRequestFsock implements AleInterfaceRequest  {
 		if (!isset($parsed['scheme']) || $parsed['scheme'] != 'http') throw new AleExceptionRequest('Unknown request protocol, use http:// only');
 		if (!isset($parsed['path'])) $parsed['path'] = '/';
 		
-		$poststring = http_build_query($params, '', '&');
+		if ($this->config['flattenParams']) {
+			//this will allow to add multiple parameters with same key
+			$tmp = array();
+			foreach ($params as $key => $value) {
+				if (is_array($value)) {
+					//using iterators is less itense then recursion, at least so they say
+					foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($value)) as $val) {
+						$tmp[] = rawurlencode($key) . '=' . rawurlencode($val);
+					}
+				} else {
+					$tmp[] = rawurlencode($key) . '=' . rawurlencode($value);
+				}
+			}
+			$poststring = implode('&', $tmp);
+		} else {
+			$poststring = http_build_query($params, '', '&');
+		}
+		
 		
 		$fp = fsockopen($parsed['host'], $parsed['port'], $errno, $errstr, $this->config['timeout']);
 		

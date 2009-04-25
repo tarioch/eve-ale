@@ -33,7 +33,7 @@ class AleExceptionEVEAuthentication extends AleExceptionEVE {
 	
 }
 
-class AleExceptionEVEServer extends AleExceptionEVE {
+class AleExceptionEVEServerError extends AleExceptionEVE {
 	
 }
 

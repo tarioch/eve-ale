@@ -161,6 +161,23 @@ class AleFactory {
 	}
 	
 	/**
+	 * Loads configuration file and returns instance of AleBase class
+	 *
+	 * @param string $name
+	 * @param array $params
+	 * @return AleBase
+	 */
+	public function __callStatic($name, $params) {
+		if (substr($name, 0, 3) != 'get') {
+			throw new BadMethodCallException("Method has to have 'get' prefix");
+		}
+		$name = substr($name, 3);
+		$config = self::_default($params, 0, array());
+		$newInstance = self::_default($params, 1, false);
+		return self::get($name, $config, $newInstance);
+	}
+	
+	/**
 	 * Loads configuration file and returns instance of AleEVEOnline class
 	 *
 	 * @param array $config
@@ -168,6 +185,16 @@ class AleFactory {
 	 */
 	public function getEVEOnline(array $config = array(), $newInstance = false) {
 		return self::get('EVEOnline', $config, $newInstance);
+	}
+	
+	/**
+	 * Loads configuration file and returns instance of AleEVECentral class
+	 *
+	 * @param array $config
+	 * @return AleEVEOnline
+	 */
+	public function getEVECentral(array $config = array(), $newInstance = false) {
+		return self::get('EVECentral', $config, $newInstance);
 	}
 	
 }
