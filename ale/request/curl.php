@@ -35,7 +35,7 @@ class AleRequestCurl implements AleInterfaceRequest  {
 	 */
 	public function __construct(array $config = array()) {
 		if (!function_exists('curl_init')) {
-			throw new LogicException('Curl extension is missing');
+			throw new LogicException('Curl extension is missing. Try to intall it or use "request.class = \'Fsock\'" option.');
 		}
 		$this->config['timeout'] = isset($config['timeout']) ? (int) $config['timeout'] : 30;
 		$this->config['flattenParams'] = isset($config['flattenParams']) ? (bool) $config['flattenParams'] : false;

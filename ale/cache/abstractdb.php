@@ -32,11 +32,13 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	protected $path;
 	protected $paramsRaw;
 	protected $params;
+	protected $maxDataSize;
 	
 	protected $row;
 	
 	function __construct(array $config = array()) {
 		$this->table = $this->_($config, 'table', 'alecache');
+		$this->maxDataSize = $this->_($config, 'maxDataSize', null);
 	}
 	
 	abstract protected function escape($string);
@@ -92,7 +94,9 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	 * @return null
 	 */
 	public function store($content, $cachedUntil) {
-		
+		if ($this->maxDataSize && strlen($content) > $this->maxDataSize) {
+			return;
+		}
 		if ($this->row) {
 			$this->row['content'] = $content;
 			$this->row['cachedUntil'] = $cachedUntil;
