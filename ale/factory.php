@@ -152,7 +152,7 @@ class AleFactory {
 	 * @param array $config
 	 * @return AleBase AleBase object or its descendant
 	 */
-	public function get($name, array $config = array(), $newInstance = false) {
+	public static function get($name, array $config = array(), $newInstance = false) {
 		$_name = strtolower($name);
 		if ($newInstance || !isset(self::$instances[$_name])) {
 			self::init($name, $config);
@@ -167,7 +167,7 @@ class AleFactory {
 	 * @param array $params
 	 * @return AleBase
 	 */
-	public function __callStatic($name, $params) {
+	public static function __callStatic($name, $params) {
 		if (substr($name, 0, 3) != 'get') {
 			throw new BadMethodCallException("Method has to have 'get' prefix");
 		}
@@ -183,7 +183,7 @@ class AleFactory {
 	 * @param array $config
 	 * @return AleEVEOnline
 	 */
-	public function getEVEOnline(array $config = array(), $newInstance = false) {
+	public static function getEVEOnline(array $config = array(), $newInstance = false) {
 		return self::get('EVEOnline', $config, $newInstance);
 	}
 	
@@ -193,7 +193,7 @@ class AleFactory {
 	 * @param array $config
 	 * @return AleEVEOnline
 	 */
-	public function getEVECentral(array $config = array(), $newInstance = false) {
+	public static function getEVECentral(array $config = array(), $newInstance = false) {
 		return self::get('EVECentral', $config, $newInstance);
 	}
 	
