@@ -36,7 +36,7 @@ class AleCacheMySQL extends AleCacheAbstractDB {
 			$config['new_link'] = (bool) $this->_($config, 'new_link', false);
 			$config['client_flags'] = $this->_($config, 'client_flags', 0);
 			if ($this->_($config, 'persistent')) {
-				$this->db = mysql_pconnect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
+				$this->db = mysql_pconnect($config['host'], $config['user'], $config['password'], $config['client_flags']);
 			} else {
 				$this->db = mysql_connect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
 			}
