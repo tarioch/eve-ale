@@ -36,7 +36,7 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	
 	protected $row;
 	
-	function __construct(array $config = array()) {
+	public function __construct(array $config = array()) {
 		$this->table = $this->_($config, 'table', 'alecache');
 		$this->maxDataSize = $this->_($config, 'maxDataSize', null);
 	}
@@ -171,5 +171,24 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 		return ALE_CACHE_CACHED;
 		
 	}
+	
+	/**
+	 * Remove old data from cache
+	 *
+	 * @param bool $all
+	 */
+	public function purge($all = false) {
+		if ($all) {
+			$query = sprintf("DELETE FROM %s WHERE host='%s'", $this->table, $this->escape($this->host));
+		} else {
+			$tz = new DateTimeZone('UTC');
+			$now = new DateTime(null, $tz);
+			$query = sprintf("DELETE FROM %s WHERE host='%s' AND cachedUntil<'%s'", 
+				$this->table, $this->escape($this->host), $now->format(''));
+		}
+		$this->execute($query);
+		
+	}
+	
 	
 }

@@ -79,4 +79,11 @@ interface AleInterfaceCache {
 	 */
 	public function isCached();
 	
+	/**
+	 * Remove old data from cache
+	 *
+	 * @param bool $all
+	 */
+	public function purge($all = false);
+	
 }

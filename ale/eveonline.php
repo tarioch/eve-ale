@@ -48,7 +48,7 @@ class AleEVEOnline extends AleBase {
 		'cacheUpdateError' => array(103, 115, 116, 117, 119, ), 
 		);
 	
-	function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
+	public function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
 		if (isset($config['cacheUpdateError']) && !is_array($config['cacheUpdateError'])) {
 			$tmp = explode(',', $config['cacheUpdateError']);
 			$config['cacheUpdateError'] = array();

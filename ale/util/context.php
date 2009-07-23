@@ -48,8 +48,26 @@ class AleUtilContext {
 		return $this;
 	}
 	
+	/**
+	 * Add path segment and retrieve xml
+	 *
+	 * @param string $name
+	 * @param array $arguments
+	 * @return mixed
+	 */
 	public function __call($name, $arguments) {
 		$this->context[] = $name;
+		return $this->object->_retrieveXml($this->context, $arguments);
+	}
+	
+	/**
+	 * Retrieve xml
+	 * for PHP 5.3
+	 *
+	 * @return mixed
+	 */
+	public function __invoke() {
+		$arguments = func_get_args();
 		return $this->object->_retrieveXml($this->context, $arguments);
 	}
 

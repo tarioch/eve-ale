@@ -25,7 +25,7 @@ require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractd
 
 class AleCacheJoomla extends AleCacheAbstractDB {
 	
-	function __construct(array $config = array()) {
+	public function __construct(array $config = array()) {
 		parent::__construct($config);
 		if (isset($config['db']) && is_resource($config['db'])) {
 			$this->db = $config['db'];
@@ -51,6 +51,7 @@ class AleCacheJoomla extends AleCacheAbstractDB {
 	}
 	
 	protected function freeResult(&$result) {
+		//joomla does it immediately
 	}
 
 	/**

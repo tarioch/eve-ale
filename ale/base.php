@@ -49,7 +49,7 @@ class AleBase {
 	
 	protected $fromCache;
 	
-	function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache, array $config = array()) {
+	public function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache, array $config = array()) {
 		$this->request = $request;
 		$this->cache = $cache;
 		$this->config = array();
@@ -180,7 +180,7 @@ class AleBase {
 	 * @param string $name
 	 * @return AleUtilContext
 	 */
-	function __get($name) {
+	public function __get($name) {
 		return new AleUtilContext($this, $name);
 	}
 	
@@ -216,7 +216,7 @@ class AleBase {
 	 *
 	 * @return bool
 	 */
-	function isFromCache() {
+	public function isFromCache() {
 		return (bool) $this->fromCache;
 	}
 	
@@ -225,11 +225,16 @@ class AleBase {
 	 *
 	 * @return mixed
 	 */
-	function getCached() {
+	public function getCached() {
 		$content = $this->cache->retrieve();
 		$useCache = false;
 		$result = $this->handleContent($content, $useCache);
 		return $result;
 	}
+	
+	public function purgeCache($all = false) {
+		$this->cache->purge($all);
+	}
+	
 	
 }

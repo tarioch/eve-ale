@@ -32,7 +32,7 @@ class AleEVECentral extends AleBase {
 		'cacheTime' => 300, 
 		);
 	
-	function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
+	public function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
 		parent::__construct($request, $cache, $config);
 	}
 	

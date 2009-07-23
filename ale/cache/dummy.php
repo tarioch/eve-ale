@@ -96,4 +96,8 @@ class AleCacheDummy implements AleInterfaceCache {
 		return ALE_CACHE_MISSING;
 	}
 	
+	public function purge($all = false) {
+		//pass
+	}
+	
 }

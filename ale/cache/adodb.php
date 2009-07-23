@@ -25,7 +25,7 @@ require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractd
 
 class AleCacheADOdb extends AleCacheAbstractDB {
 	
-	function __construct(array $config = array()) {
+	public function __construct(array $config = array()) {
 		parent::__construct($config);
 		if (isset($config['adodb_dir'])) {
 			require_once $config['adodb_dir'].DIRECTORY_SEPARATOR.'adodb.inc.php';
