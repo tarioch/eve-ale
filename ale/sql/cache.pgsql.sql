@@ -3,6 +3,6 @@ CREATE TABLE alecache (
   path varchar(64) NOT NULL,
   params varchar(64) NOT NULL,
   content text NOT NULL,
-  cachedUntil timestamp with time zone default NULL,
+  "cachedUntil" TIMESTAMP WITH TIME ZONE DEFAULT NULL,
   PRIMARY KEY  (host,path,params)
 );
