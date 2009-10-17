@@ -118,13 +118,13 @@ class AleEVEOnline extends AleBase {
 				case 'throwException':
 				default:
 					if (100 <= $errorCode && $errorCode < 200) {
-						throw new AleExceptionEVEUserInput($errorText, $errorCode);
+						throw new AleExceptionEVEUserInput($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					} elseif (200 <= $errorCode && $errorCode < 300) {
-						throw new AleExceptionEVEAuthentication($errorText, $errorCode);
+						throw new AleExceptionEVEAuthentication($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					} elseif (500 <= $errorCode && $errorCode < 600) {
-						throw new AleExceptionEVEServerError($errorText, $errorCode);
+						throw new AleExceptionEVEServerError($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					} else {
-						throw new AleExceptionEVEMiscellaneous($errorText, $errorCode);
+						throw new AleExceptionEVEMiscellaneous($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					}
 			}
 		}

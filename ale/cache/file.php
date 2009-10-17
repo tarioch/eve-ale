@@ -155,9 +155,9 @@ class AleCacheFile implements AleInterfaceCache {
 		
 		$tz = new DateTimeZone('UTC');
 		$now = new DateTime(null, $tz);
-		$cachedUntlil = new DateTime($this->cachedUntil, $tz);
+		$cachedUntil = new DateTime($this->cachedUntil, $tz);
 		
-		if ((int) $cachedUntlil->format('U') < (int) $now->format('U')) {
+		if ((int) $cachedUntil->format('U') < (int) $now->format('U')) {
 			return ALE_CACHE_EXPIRED;
 		}
 		

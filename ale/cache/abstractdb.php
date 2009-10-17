@@ -134,7 +134,7 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 			$cachedUntil = $time ? "'".$this->escape($time)."'" : 'NULL';
 			$query = sprintf('UPDATE %s SET cachedUntil = %s  WHERE %s', 
 				$this->table, $cachedUntil, $this->getWhere());
-			$this->execute($sql);
+			$this->execute($query);
 		}
 			
 	}
@@ -162,9 +162,9 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 		
 		$tz = new DateTimeZone('UTC');
 		$now = new DateTime(null, $tz);
-		$cachedUntlil = new DateTime($this->row['cachedUntil'], $tz);
+		$cachedUntil = new DateTime($this->row['cachedUntil'], $tz);
 		
-		if ((int) $cachedUntlil->format('U') < (int) $now->format('U')) {
+		if ((int) $cachedUntil->format('U') < (int) $now->format('U')) {
 			return ALE_CACHE_EXPIRED;
 		}
 		
