@@ -24,6 +24,7 @@ require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractd
 
 
 class AleCacheMySQL extends AleCacheAbstractDB {
+	protected $nameQuote = '`';
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);

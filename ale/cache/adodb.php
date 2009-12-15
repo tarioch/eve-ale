@@ -48,10 +48,15 @@ class AleCacheADOdb extends AleCacheAbstractDB {
 				throw new AleExceptionCache('ADODb connection failed');
 			}
 		}
+		$this->nameQuote = $this->db->nameQuote; 
 	}
 	
 	protected function escape($string) {
 		return $this->db->escape($string);
+	}
+	
+	protected function quote($value) {
+		return $this->db->quote($value);
 	}
 	
 	protected function &execute($query) {

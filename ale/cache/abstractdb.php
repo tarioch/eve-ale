@@ -26,6 +26,9 @@ require_once ALE_BASE.DIRECTORY_SEPARATOR.'exception'.DIRECTORY_SEPARATOR.'cache
 
 
 abstract class AleCacheAbstractDB implements AleInterfaceCache {
+	protected $quote = "'";
+	protected $nameQuote = '"';
+	
 	protected $db;
 	protected $table;
 	protected $host;
@@ -42,6 +45,14 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	}
 	
 	abstract protected function escape($string);
+		
+	protected function quote($value) {
+		return $this->quote.$this->escape($value).$this->quote;;
+	}
+	
+	protected function quoteName($name) {
+		return $this->nameQuote.$name.$this->nameQuote;;
+	}
 	
 	abstract protected function &execute($query);
 	
@@ -59,7 +70,7 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 			if ($result) {
 				$result .= ' AND ';
 			}
-			$result .= sprintf("%s = '%s'", $field, $this->escape($this->$field));
+			$result .= sprintf("%s = %s", $this->quoteName($field), $this->quote($this->$field));
 		}
 		return $result;
 		
@@ -80,7 +91,7 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 		$this->paramsRaw = $params;
 		$this->params = sha1(http_build_query($params, '', '&'));
 		
-		$query = sprintf("SELECT * FROM %s WHERE %s", $this->table, $this->getWhere());
+		$query = sprintf("SELECT * FROM %s WHERE %s", $this->quoteName($this->table), $this->getWhere());
 		$result = $this->execute($query);
 		$this->row = $this->fetchRow($result);
 		$this->freeResult($result);
@@ -100,10 +111,9 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 		if ($this->row) {
 			$this->row['content'] = $content;
 			$this->row['cachedUntil'] = $cachedUntil;
-			$content = "'".$this->escape($content)."'";
-			$cachedUntil = $cachedUntil ? "'".$this->escape($cachedUntil)."'" : 'NULL';
-			$query = sprintf('UPDATE %s SET content = %s, cachedUntil =  %s  WHERE %s', 
-				$this->table, $content, $cachedUntil, $this->getWhere());
+			$cachedUntil = $cachedUntil ? $this->quote($cachedUntil) : 'NULL';
+			$query = sprintf('UPDATE %s SET %s = %s, %s = %s WHERE %s', 
+				$this->quoteName($this->table), $this->quoteName('content'), $this->quote($content), $this->quoteName('cachedUntil'), $cachedUntil, $this->getWhere());
 		} else {
 			$this->row = array();
 			$this->row['content'] = $content;
@@ -114,11 +124,11 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 			$fields = array();
 			$values = array();
 			foreach ($this->row as $field => $value) {
-				$fields[] = $field;
-				$values[] = $value ? "'".$this->escape($value)."'" : 'NULL';
+				$fields[] = $this->quoteName($field);
+				$values[] = $value ? $this->quote($value): 'NULL';
 			}
 			$query = sprintf('INSERT INTO %s (%s) VALUES (%s);', 
-				$this->table, implode(', ', $fields), implode(', ', $values));
+				$this->quoteName($this->table), implode(', ', $fields), implode(', ', $values));
 		}
 		$this->execute($query);
 	}
@@ -131,12 +141,11 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	public function updateCachedUntil($time) {
 		if ($this->row) {
 			$this->row['cachedUntil'] = $time;
-			$cachedUntil = $time ? "'".$this->escape($time)."'" : 'NULL';
-			$query = sprintf('UPDATE %s SET cachedUntil = %s  WHERE %s', 
-				$this->table, $cachedUntil, $this->getWhere());
+			$cachedUntil = $time ? $this->quote($time) : 'NULL';
+			$query = sprintf('UPDATE %s SET %s = %s WHERE %s', 
+				$this->quoteName($this->table), $this->quoteName('cachedUntil'), $cachedUntil, $this->getWhere());
 			$this->execute($query);
 		}
-			
 	}
 	
 	/**
@@ -169,7 +178,6 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 		}
 		
 		return ALE_CACHE_CACHED;
-		
 	}
 	
 	/**
@@ -179,16 +187,14 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	 */
 	public function purge($all = false) {
 		if ($all) {
-			$query = sprintf("DELETE FROM %s WHERE host='%s'", $this->table, $this->escape($this->host));
+			$query = sprintf("DELETE FROM %s WHERE %s = %s", $this->table, $this->quoteName('host'), $this->quote($this->host));
 		} else {
 			$tz = new DateTimeZone('UTC');
 			$now = new DateTime(null, $tz);
-			$query = sprintf("DELETE FROM %s WHERE host='%s' AND cachedUntil<'%s'", 
-				$this->table, $this->escape($this->host), $now->format(''));
+			$query = sprintf("DELETE FROM %s WHERE %s = %s AND %s < %s", 
+				$this->quoteName($this->table), $this->quoteName('host'), $this->quote($this->host), $this->quoteName('cachedUntil'), $this->quote($now->format('')));
 		}
 		$this->execute($query);
-		
 	}
-	
 	
 }

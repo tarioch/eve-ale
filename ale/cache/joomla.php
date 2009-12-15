@@ -38,6 +38,14 @@ class AleCacheJoomla extends AleCacheAbstractDB {
 		return $this->db->getEscaped($string);
 	}
 	
+	protected function quote($value) {
+		return $this->db->quote($value);
+	}
+	
+	protected function quoteName($name) {
+		return $this->db->nameQuote($name);
+	}
+	
 	protected function &execute($query) {
 		$result = $this->db->Execute($query);
 		if ($result === false) {
