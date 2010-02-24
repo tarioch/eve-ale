@@ -66,7 +66,7 @@ class AleRequestFsock implements AleInterfaceRequest  {
 		$fp = fsockopen($parsed['host'], $parsed['port'], $errno, $errstr, $this->config['timeout']);
 		
 		if (!$fp) {
-			throw new AleExceptionCache($errstr, $errno);
+			throw new AleExceptionRequest($errstr, $errno);
 		}
 		
 		fputs ($fp, "POST " . $parsed['path'] . " HTTP/1.0\r\n");

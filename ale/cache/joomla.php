@@ -27,7 +27,7 @@ class AleCacheJoomla extends AleCacheAbstractDB {
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);
-		if (isset($config['db']) && is_resource($config['db'])) {
+		if (isset($config['db']) && is_object($config['db'])) {
 			$this->db = $config['db'];
 		} else {
 			$this->db = JFactory::getDBO();
@@ -49,7 +49,7 @@ class AleCacheJoomla extends AleCacheAbstractDB {
 	protected function &execute($query) {
 		$result = $this->db->Execute($query);
 		if ($result === false) {
-			throw new AleExceptionCache($this->db->getErrorMsg(), $this->db-getErrorNum());
+			throw new AleExceptionCache($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 		return $result;
 	}

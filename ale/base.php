@@ -110,7 +110,7 @@ class AleBase {
 	 * @param array $arguments variable retrieved by __call method
 	 * @return unknown
 	 */
-	protected function _retrieveXml(array $context, array $arguments) {
+	public function _retrieveXml(array $context, array $arguments) {
 		$path = implode('/', $context);
 		$params = isset($arguments[0]) && is_array($arguments[0]) ? $arguments[0] : array();
 		return $this->retrieveXml($path, $params);
