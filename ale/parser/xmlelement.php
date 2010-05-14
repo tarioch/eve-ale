@@ -264,6 +264,17 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	}
 	
 	/**
+	 * Node isset checker
+	 *
+	 * @param string $name
+	 * @return AleParserXMLElement
+	 */
+	public function __isset($name) {
+		$this->prepareChildren();
+		return isset($this->children[$name]);
+	}
+	
+	/**
 	 * Implements ArrayAccess::offsetExists()
 	 *
 	 * @param mixed $i
