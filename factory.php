@@ -40,7 +40,7 @@ class AleFactory {
 	 * @return string
 	 */
 	private static function _class($name, $type = '') {
-		$class = 'Ale'.ucfirst($type).$name;
+		$class = ucfirst($type).$name;
 		if (class_exists($class)) {
 			return $class;
 		}
@@ -185,13 +185,13 @@ class AleFactory {
 	}
 	
 	/**
-	 * Loads configuration file and returns instance of AleEVECentral class
+	 * Loads configuration file and returns instance of EveCentral class
 	 *
 	 * @param array $config
-	 * @return AleEVEOnline
+	 * @return EveCentral
 	 */
 	public static function getEVECentral(array $config = array(), $newInstance = false) {
-		return self::get('EVECentral', $config, $newInstance);
+		return self::get('EveCentral', $config, $newInstance);
 	}
 	
 }
