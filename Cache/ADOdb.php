@@ -20,55 +20,57 @@
 
 namespace Ale\Cache;
 
-class AleCacheMySQL extends AleCacheAbstractDB {
-	protected $nameQuote = '`';
+class ADOdb extends AbstractDb {
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);
+		if (isset($config['adodb_dir'])) {
+			require_once $config['adodb_dir'].DIRECTORY_SEPARATOR.'adodb.inc.php';
+		}
+		if ($config['adodb_error'] == 'exception') {
+			require_once ADODB_DIR.DIRECTORY_SEPARATOR.'adodb-exceptions.inc.php';
+		}		
+		if (!defined('_ADODB_LAYER')) {
+			throw new AleExceptionCache('ADOdb layer not defined');
+		}
 		if (isset($config['db']) && is_resource($config['db'])) {
 			$this->db = $config['db'];
 		} else {
-			$config['host'] = $this->_($config, 'host', null);
-			$config['user'] = $this->_($config, 'user', null);
-			$config['password'] = $this->_($config, 'password', null);
-			$config['new_link'] = (bool) $this->_($config, 'new_link', false);
-			$config['client_flags'] = $this->_($config, 'client_flags', 0);
-			if ($this->_($config, 'persistent')) {
-				$this->db = mysql_pconnect($config['host'], $config['user'], $config['password'], $config['client_flags']);
-			} else {
-				$this->db = mysql_connect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
+			if (!isset($config['dsn'])) {
+				throw new AleExceptionCache('ADOdb dsn (Data Source Name) config missing');
 			}
+			$this->db = ADONewConnection($config['dsn']);
+			
 			if ($this->db == false) {
-				throw new AleExceptionCache(mysql_error(), mysql_errno());
-			}
-			if (isset($config['database'])) {
-				$result = mysql_select_db($config['database'], $this->db);
-				if ($result === false) {
-					throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
-				}
+				throw new AleExceptionCache('ADODb connection failed');
 			}
 		}
+		$this->nameQuote = $this->db->nameQuote; 
 	}
 	
 	protected function escape($string) {
-		return mysql_real_escape_string($string);
+		return $this->db->escape($string);
+	}
+	
+	protected function quote($value) {
+		return $this->db->quote($value);
 	}
 	
 	protected function &execute($query) {
-		$result = mysql_query($query, $this->db);
+		$result = $this->db->Execute($query);
 		if ($result === false) {
-			throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
+			throw new AleExceptionCache($this->db->ErrorMsg(), $this->db->ErrorNo());
 		}
 		return $result;
 	}
 	
 	protected function &fetchRow(&$result) {
-		$row = mysql_fetch_assoc($result);
+		$row = $result->GetRowAssoc(2);
 		return $row;
 	}
 	
 	protected function freeResult(&$result) {
-		mysql_free_result($result);
+		unset($result);
 	}
 			
 }

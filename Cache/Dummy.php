@@ -22,7 +22,7 @@ namespace Ale\Cache;
 
 use Ale\Interface\Cache;
 
-class AleCacheDummy implements Cache {
+class Dummy implements Cache {
 	private $host = '';
 	private $path = '';
 	private $params = array();

@@ -27,7 +27,7 @@ if (!defined('ALE_CACHE_ROOTDIR')) {
 }
 
 
-class AleCacheFile implements Cache {
+class File implements Cache {
 	private $host = '';
 	private $path = '';
 	private $paramsRaw = array();

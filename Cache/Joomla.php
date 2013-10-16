@@ -20,7 +20,7 @@
 
 namespace Ale\Cache;
 
-class AleCacheJoomla extends AleCacheAbstractDB {
+class Joomla extends AbstractDb {
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);

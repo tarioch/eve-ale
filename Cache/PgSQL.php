@@ -20,7 +20,7 @@
 
 namespace Ale\Cache;
 
-class AleCachePgSQL extends AleCacheAbstractDB {
+class PgSQL extends AbstractDb {
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);
