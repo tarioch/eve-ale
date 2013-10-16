@@ -33,7 +33,7 @@ namespace Ale\Parser;
  * @example 
  * <?php
  * $data = $api->char->CharacterSheet(); //get character sheet
- * $xml = new AleParserXMLElement($data);
+ * $xml = new XmlElement($data);
  * $cachedUntil = $xml->cachedUntil; //direct acces to node by node name
  * $skills = $xml->result->skills; //direct access to rowset node by attribute name
  * foreach ($xml->result->skills as $skill) {} //iteration
@@ -41,7 +41,7 @@ namespace Ale\Parser;
  * $skillArray = $skills->toArray(); //convert node to array
  * $skills[3413]->skillpoints; //array-like access to rowset node, 'skillpoinsts' is attribute of row 
  */
-class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  {
+class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 	
 	private $name = null;
 	private $data = null;
@@ -129,7 +129,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	 * Return instance of same class as "$this"
 	 *
 	 * @param SimpleXMLElement|string $node
-	 * @return AleParserXMLElement
+	 * @return XmlElement
 	 */
 	protected function transformNode($node) {
 		$classname = get_class($this);
@@ -237,7 +237,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	}
 	
 	/**
-	 * The xpath method searches the AleParserXMLElement node for children matching the XPath path.
+	 * The xpath method searches the XmlElement node for children matching the XPath path.
 	 *
 	 * @param string $path
 	 * @return array
@@ -255,7 +255,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	 * Node accessor
 	 *
 	 * @param string $name
-	 * @return AleParserXMLElement
+	 * @return XmlElement
 	 */
 	public function __get($name) {
 		$this->prepareChildren();
@@ -269,7 +269,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	 * Node isset checker
 	 *
 	 * @param string $name
-	 * @return AleParserXMLElement
+	 * @return XmlElement
 	 */
 	public function __isset($name) {
 		$this->prepareChildren();
@@ -291,7 +291,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	 * Implements ArrayAccess::offsetGet()
 	 *
 	 * @param mixed $i
-	 * @return AleParserXMLElement
+	 * @return XmlElement
 	 */
 	public function offsetGet($i) {
 		$this->prepareRows();
