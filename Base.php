@@ -22,6 +22,7 @@ namespace Ale;
 
 use Ale\Interface\Cache;
 use Ale\Interface\Request;
+use Ale\Util\Context;
 
 class Base {
 	
@@ -104,7 +105,7 @@ class Base {
 	}
 	
 	/**
-	 * Available only for this class or AleUtilContext object
+	 * Available only for this class or Ale\Util\Context object
 	 *
 	 * @param array $context segments of URI path
 	 * @param array $arguments variable retrieved by __call method
@@ -178,10 +179,10 @@ class Base {
 	 * Getter method
 	 *
 	 * @param string $name
-	 * @return AleUtilContext
+	 * @return Context
 	 */
 	public function __get($name) {
-		return new AleUtilContext($this, $name);
+		return new Context($this, $name);
 	}
 	
 	/**

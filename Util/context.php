@@ -22,7 +22,7 @@ namespace Ale\Util;
 
 use Ale\Base;
 
-class AleUtilContext {
+class Context {
 	
 	private $object;
 	private $context = array();
@@ -42,7 +42,7 @@ class AleUtilContext {
 	 * Add path segment
 	 *
 	 * @param string $name
-	 * @return AleUtilContext $this
+	 * @return Context $this
 	 */
 	public function __get($name) {
 		$this->context[] = $name;
