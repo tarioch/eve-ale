@@ -36,7 +36,7 @@ class EveOnline extends Base {
 	private $xml;
 	
 	protected $default = array(
-		'host' => 'http://api.eve-online.com/',
+		'host' => 'https://api.eve-online.com/',
 		'suffix' => '.xml.aspx',
 		'parserClass' => 'SimpleXMLElement' ,
 		'serverError' => 'throwException',
