@@ -175,13 +175,13 @@ class AleFactory {
 	}
 	
 	/**
-	 * Loads configuration file and returns instance of AleEVEOnline class
+	 * Loads configuration file and returns instance of EveOnline class
 	 *
 	 * @param array $config
-	 * @return AleEVEOnline
+	 * @return EveOnline
 	 */
 	public static function getEVEOnline(array $config = array(), $newInstance = false) {
-		return self::get('EVEOnline', $config, $newInstance);
+		return self::get('EveOnline', $config, $newInstance);
 	}
 	
 	/**

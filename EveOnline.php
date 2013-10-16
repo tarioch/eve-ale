@@ -27,7 +27,7 @@ define('ALE_AUTH_CHARACTER', 3);
 define('ALE_AUTH_AVAILABLE', 4);
 
 
-class AleEVEOnline extends Base {
+class EveOnline extends Base {
 	
 	private $userID;
 	private $apiKey;
