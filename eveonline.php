@@ -18,11 +18,7 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or define('ALE_BASE', dirname(__FILE__));
-
-require_once ALE_BASE.DIRECTORY_SEPARATOR.'base.php';
-
-require_once ALE_BASE.DIRECTORY_SEPARATOR.'exception'.DIRECTORY_SEPARATOR.'eveonline.php';
+namespace Ale;
 
 define('ALE_AUTH_DEFAULT', 0);
 define('ALE_AUTH_NONE', 1);

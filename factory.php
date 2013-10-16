@@ -18,14 +18,11 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('ALE_BASE')) {
-	define('ALE_BASE', dirname(__FILE__));
-}
+namespace Ale;
 
 if (!defined('ALE_CONFIG_DIR')) {
 	define('ALE_CONFIG_DIR', ALE_BASE);
 }
-
 
 class AleFactory {
 	/**

@@ -18,6 +18,8 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Ale\Parser;
+
 /**
  * Wrapper for SimpleXMLElement providing most features of SimpleXML (read only)
  * Provides features speciffic for EVE API xml format, namely

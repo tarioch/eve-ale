@@ -18,9 +18,7 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or define('ALE_BASE', dirname(__FILE__));
-
-require_once ALE_BASE.DIRECTORY_SEPARATOR.'base.php';
+namespace Ale;
 
 class AleEVECentral extends AleBase {
 	

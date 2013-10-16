@@ -18,12 +18,10 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or die('Restricted access');
+namespace Ale\Cache;
 
-require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractdb.php';
-
-
-class AleCachePgSQL extends AleCacheAbstractDB {
+class AleCacheMySQL extends AleCacheAbstractDB {
+	protected $nameQuote = '`';
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);
@@ -31,49 +29,46 @@ class AleCachePgSQL extends AleCacheAbstractDB {
 			$this->db = $config['db'];
 		} else {
 			$config['host'] = $this->_($config, 'host', null);
-                        $config['port'] = $this->_($config, 'port', null);
-                        $config['database'] = $this->_($config, 'database', null);
 			$config['user'] = $this->_($config, 'user', null);
 			$config['password'] = $this->_($config, 'password', null);
 			$config['new_link'] = (bool) $this->_($config, 'new_link', false);
-
-                        $connection_string = "host='".$config['host']."' ".
-                                             "port='".$config['port']."' ".
-                                             "dbname='".$config['database']."' ".
-                                             "user='".$config['user']."' ".
-                                             "password='".$config['password']."' ";
-                        
+			$config['client_flags'] = $this->_($config, 'client_flags', 0);
 			if ($this->_($config, 'persistent')) {
-				$this->db = pg_pconnect($connection_string, $config['new_link']);
+				$this->db = mysql_pconnect($config['host'], $config['user'], $config['password'], $config['client_flags']);
 			} else {
-				$this->db = pg_connect($connection_string, $config['new_link']);
+				$this->db = mysql_connect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
 			}
-
 			if ($this->db == false) {
-				throw new AleExceptionCache(pg_last_error(), pg_connection_status());
+				throw new AleExceptionCache(mysql_error(), mysql_errno());
+			}
+			if (isset($config['database'])) {
+				$result = mysql_select_db($config['database'], $this->db);
+				if ($result === false) {
+					throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
+				}
 			}
 		}
 	}
 	
 	protected function escape($string) {
-		return pg_escape_string($string);
+		return mysql_real_escape_string($string);
 	}
 	
 	protected function &execute($query) {
-		$result = pg_query($this->db, $query);
+		$result = mysql_query($query, $this->db);
 		if ($result === false) {
-			throw new AleExceptionCache(pg_last_error($this->db), pg_result_status($result));
+			throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
 		}
 		return $result;
 	}
 	
 	protected function &fetchRow(&$result) {
-		$row = pg_fetch_assoc($result);
+		$row = mysql_fetch_assoc($result);
 		return $row;
 	}
 	
 	protected function freeResult(&$result) {
-		pg_free_result($result);
+		mysql_free_result($result);
 	}
 			
 }

@@ -18,12 +18,7 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or die('Restricted access');
-
-require_once ALE_BASE.DIRECTORY_SEPARATOR.'interface'.DIRECTORY_SEPARATOR.'request.php';
-
-require_once ALE_BASE.DIRECTORY_SEPARATOR.'exception'.DIRECTORY_SEPARATOR.'request.php';
-
+namespace Ale\Request;
 
 class AleRequestCurl implements AleInterfaceRequest  {
 	protected $config = array();

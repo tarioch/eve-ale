@@ -18,9 +18,23 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or die('Restricted access');
+namespace Ale\Interface;
 
-
-class AleExceptionCache extends RuntimeException {
+interface AleInterfaceRequest {
+	
+	/**
+	 * Constructor
+	 *
+	 * @param array $config
+	 */
+	public function __construct(array $config = array());
+	
+	/**
+	 * Fetch respone from target URL
+	 *
+	 * @param string $url
+	 * @param array $params
+	 */
+	public function query($url, array $params = null);
 	
 }

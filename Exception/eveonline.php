@@ -18,24 +18,34 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or die('Restricted access');
+namespace Ale\Exception;
 
+class AleExceptionEVE extends RuntimeException {
+	private $_cachedUntil;
+	
+	function __construct($message, $code, $cachedUntil) {
+		parent::__construct($message, $code);
+		$this->_cachedUntil = $cachedUntil;
+	}
+	
+	function getCachedUntil() {
+		return $this->_cachedUntil;
+	}
+	
+}
 
-interface AleInterfaceRequest {
+class AleExceptionEVEUserInput extends AleExceptionEVE {
 	
-	/**
-	 * Constructor
-	 *
-	 * @param array $config
-	 */
-	public function __construct(array $config = array());
+}
+
+class AleExceptionEVEAuthentication extends AleExceptionEVE {
 	
-	/**
-	 * Fetch respone from target URL
-	 *
-	 * @param string $url
-	 * @param array $params
-	 */
-	public function query($url, array $params = null);
+}
+
+class AleExceptionEVEServerError extends AleExceptionEVE {
+	
+}
+
+class AleExceptionEVEMiscellaneous extends AleExceptionEVE {
 	
 }

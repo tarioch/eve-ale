@@ -18,8 +18,7 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or die('Restricted access');
-
+namespace Ale\Util;
 
 class AleUtilContext {
 	

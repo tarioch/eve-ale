@@ -18,62 +18,62 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('ALE_BASE') or die('Restricted access');
+namespace Ale\Cache;
 
-require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractdb.php';
-
-
-class AleCacheADOdb extends AleCacheAbstractDB {
+class AleCacheJoomla extends AleCacheAbstractDB {
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);
-		if (isset($config['adodb_dir'])) {
-			require_once $config['adodb_dir'].DIRECTORY_SEPARATOR.'adodb.inc.php';
-		}
-		if ($config['adodb_error'] == 'exception') {
-			require_once ADODB_DIR.DIRECTORY_SEPARATOR.'adodb-exceptions.inc.php';
-		}		
-		if (!defined('_ADODB_LAYER')) {
-			throw new AleExceptionCache('ADOdb layer not defined');
-		}
-		if (isset($config['db']) && is_resource($config['db'])) {
+		if (isset($config['db']) && is_object($config['db'])) {
 			$this->db = $config['db'];
 		} else {
-			if (!isset($config['dsn'])) {
-				throw new AleExceptionCache('ADOdb dsn (Data Source Name) config missing');
-			}
-			$this->db = ADONewConnection($config['dsn']);
-			
-			if ($this->db == false) {
-				throw new AleExceptionCache('ADODb connection failed');
-			}
+			$this->db = JFactory::getDBO();
 		}
-		$this->nameQuote = $this->db->nameQuote; 
 	}
 	
 	protected function escape($string) {
-		return $this->db->escape($string);
+		return $this->db->getEscaped($string);
 	}
 	
 	protected function quote($value) {
 		return $this->db->quote($value);
 	}
 	
+	protected function quoteName($name) {
+		return $this->db->nameQuote($name);
+	}
+	
 	protected function &execute($query) {
 		$result = $this->db->Execute($query);
 		if ($result === false) {
-			throw new AleExceptionCache($this->db->ErrorMsg(), $this->db->ErrorNo());
+			throw new AleExceptionCache($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 		return $result;
 	}
 	
 	protected function &fetchRow(&$result) {
-		$row = $result->GetRowAssoc(2);
-		return $row;
+		return $result;
 	}
 	
 	protected function freeResult(&$result) {
-		unset($result);
+		//joomla does it immediately
 	}
-			
+
+	/**
+	 * Set call parameters
+	 *
+	 * @param string $path
+	 * @param array $params
+	 */
+	public function setCall($path, array $params = array()) {
+		$this->path = $path;
+		$this->paramsRaw = $params;
+		$this->params = sha1(http_build_query($params, '', '&'));
+		
+		$query = sprintf("SELECT * FROM %s WHERE %s", $this->table, $this->getWhere());
+		$result = $this->db->setQuery($query);
+		$this->row = $this->db->loadAssoc();
+		$this->freeResult($result);
+	}
+	
 }
