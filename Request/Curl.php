@@ -22,7 +22,7 @@ namespace Ale\Request;
 
 use Ale\Interface\Request;
 
-class AleRequestCurl implements Request  {
+class Curl implements Request  {
 	protected $config = array();
 	
 	/**
