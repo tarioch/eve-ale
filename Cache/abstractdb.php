@@ -20,8 +20,9 @@
 
 namespace Ale\Cache;
 
+use Ale\Interface\Cache;
 
-abstract class AleCacheAbstractDB implements AleInterfaceCache {
+abstract class AleCacheAbstractDB implements Cache {
 	protected $quote = "'";
 	protected $nameQuote = '"';
 	

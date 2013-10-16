@@ -20,7 +20,9 @@
 
 namespace Ale\Cache;
 
-class AleCacheDummy implements AleInterfaceCache {
+use Ale\Interface\Cache;
+
+class AleCacheDummy implements Cache {
 	private $host = '';
 	private $path = '';
 	private $params = array();

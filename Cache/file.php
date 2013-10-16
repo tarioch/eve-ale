@@ -20,12 +20,14 @@
 
 namespace Ale\Cache;
 
+use Ale\Interface\Cache;
+
 if (!defined('ALE_CACHE_ROOTDIR')) {
 	define('ALE_CACHE_ROOTDIR', './cachedir');
 }
 
 
-class AleCacheFile implements AleInterfaceCache {
+class AleCacheFile implements Cache {
 	private $host = '';
 	private $path = '';
 	private $paramsRaw = array();

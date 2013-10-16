@@ -20,6 +20,9 @@
 
 namespace Ale;
 
+use Ale\Interface\Cache;
+use Ale\Interface\Request;
+
 define('ALE_AUTH_DEFAULT', 0);
 define('ALE_AUTH_NONE', 1);
 define('ALE_AUTH_USER', 2);
@@ -44,7 +47,7 @@ class EveOnline extends Base {
 		'cacheUpdateError' => array(103, 115, 116, 117, 119, ), 
 		);
 	
-	public function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
+	public function __construct(Request $request, Cache $cache = null, array $config = array()) {
 		if (isset($config['cacheUpdateError']) && !is_array($config['cacheUpdateError'])) {
 			$tmp = explode(',', $config['cacheUpdateError']);
 			$config['cacheUpdateError'] = array();

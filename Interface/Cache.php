@@ -26,7 +26,7 @@ define('ALE_CACHE_CACHED',  1);
 define('ALE_CACHE_FORCED',  2);
 
 
-interface AleInterfaceCache {
+interface Cache {
 	
 	/**
 	 * Constructor

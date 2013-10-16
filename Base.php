@@ -20,14 +20,17 @@
 
 namespace Ale;
 
+use Ale\Interface\Cache;
+use Ale\Interface\Request;
+
 class Base {
 	
 	/** 
-	 * @var AleInterfaceRequest 
+	 * @var Request 
 	 */
 	protected $request;
 	/** 
-	 * @var AleInterfaceCache
+	 * @var Cache
 	 */
 	protected $cache;
 	/** 
@@ -46,7 +49,7 @@ class Base {
 	
 	protected $fromCache;
 	
-	public function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache, array $config = array()) {
+	public function __construct(Request $request, Cache $cache, array $config = array()) {
 		$this->request = $request;
 		$this->cache = $cache;
 		$this->config = array();

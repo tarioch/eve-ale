@@ -20,7 +20,9 @@
 
 namespace Ale\Request;
 
-class AleRequestCurl implements AleInterfaceRequest  {
+use Ale\Interface\Request;
+
+class AleRequestCurl implements Request  {
 	protected $config = array();
 	
 	/**

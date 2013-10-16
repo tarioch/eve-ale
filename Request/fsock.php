@@ -20,7 +20,9 @@
 
 namespace Ale\Request;
 
-class AleRequestFsock implements AleInterfaceRequest  {
+use Ale\Interface\Request;
+
+class AleRequestFsock implements Request  {
 	protected $config = array();
 	
 	/**

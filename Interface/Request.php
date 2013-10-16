@@ -20,7 +20,7 @@
 
 namespace Ale\Interface;
 
-interface AleInterfaceRequest {
+interface Request {
 	
 	/**
 	 * Constructor

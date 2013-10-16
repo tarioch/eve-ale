@@ -20,6 +20,9 @@
 
 namespace Ale;
 
+use Ale\Interface\Cache;
+use Ale\Interface\Request;
+
 class EveCentral extends Base {
 	
 	protected $default = array(
@@ -30,7 +33,7 @@ class EveCentral extends Base {
 		'cacheTime' => 300, 
 		);
 	
-	public function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
+	public function __construct(Request $request, Cache $cache = null, array $config = array()) {
 		parent::__construct($request, $cache, $config);
 	}
 	
