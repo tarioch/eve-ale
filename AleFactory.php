@@ -33,33 +33,6 @@ class AleFactory {
 	private static $instances = array();
 	
 	/**
-	 * Look for class within Ale directory
-	 *
-	 * @param string $name
-	 * @param string $type
-	 * @return string
-	 */
-	private static function _class($name, $type = '') {
-		$class = ucfirst($type).$name;
-		if (class_exists($class)) {
-			return $class;
-		}
-		$path = ALE_BASE.DIRECTORY_SEPARATOR;
-		if ($type) {
-			$path .= strtolower($type).DIRECTORY_SEPARATOR; 
-		}
-		$path .= strtolower($name).'.php';
-		if (!file_exists($path)) {
-			throw new LogicException(sprintf('Cannot find class [%s] in file \'%s\'', $class, $path));
-		}
-		require_once $path;
-		if (!class_exists($class)) {
-			throw new LogicException(sprintf('Cannot find class [%s] in file \'%s\'', $class, $path));
-		}
-		return $class;
-	}
-	
-	/**
 	 * Get value from array if exists, or return default
 	 *
 	 * @param array $array
@@ -124,13 +97,13 @@ class AleFactory {
 			}
 		}
 		
-		$mainName 		= self::_default($mainConfig, 'class', $name);
-		$cacheName 		= self::_default($cacheConfig, 'class', 'Dummy');
+		$mainName 	= self::_default($mainConfig, 'class', $name);
+		$cacheName 	= self::_default($cacheConfig, 'class', 'Dummy');
 		$requestName 	= self::_default($requestConfig, 'class', 'Curl');
 		
-		$mainClass 		= self::_class($mainName);
-		$cacheClass 	= self::_class($cacheName, 'cache');
-		$requestClass 	= self::_class($requestName, 'request');
+		$mainClass 	= $mainName;
+		$cacheClass 	= 'Ale\\Cache\\'.$cacheName;
+		$requestClass 	= 'Ale\\Request\\'.$requestName;
 		
 		$request 		= new $requestClass($requestConfig);
 		$cache 			= new $cacheClass($cacheConfig); 
