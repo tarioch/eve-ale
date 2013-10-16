@@ -27,7 +27,7 @@ define('ALE_AUTH_CHARACTER', 3);
 define('ALE_AUTH_AVAILABLE', 4);
 
 
-class AleEVEOnline extends AleBase {
+class AleEVEOnline extends Base {
 	
 	private $userID;
 	private $apiKey;

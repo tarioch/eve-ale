@@ -20,6 +20,8 @@
 
 namespace Ale\Util;
 
+use Ale\Base;
+
 class AleUtilContext {
 	
 	private $object;
@@ -28,10 +30,10 @@ class AleUtilContext {
 	/**
 	 * Enter description here...
 	 *
-	 * @param AleBase $object
+	 * @param Base $object
 	 * @param string $context
 	 */
-	public function __construct($object, $context) {
+	public function __construct(Base $object, $context) {
 		$this->object = $object;
 		$this->context[] = $context;
 	}

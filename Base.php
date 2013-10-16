@@ -20,7 +20,7 @@
 
 namespace Ale;
 
-class AleBase {
+class Base {
 	
 	/** 
 	 * @var AleInterfaceRequest 

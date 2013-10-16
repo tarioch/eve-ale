@@ -147,7 +147,7 @@ class AleFactory {
 	 *
 	 * @param string $name file name
 	 * @param array $config
-	 * @return AleBase AleBase object or its descendant
+	 * @return Base Base object or its descendant
 	 */
 	public static function get($name, array $config = array(), $newInstance = false) {
 		$_name = strtolower($name);
@@ -158,11 +158,11 @@ class AleFactory {
 	}
 	
 	/**
-	 * Loads configuration file and returns instance of AleBase class
+	 * Loads configuration file and returns instance of Base class
 	 *
 	 * @param string $name
 	 * @param array $params
-	 * @return AleBase
+	 * @return Base
 	 */
 	public static function __callStatic($name, $params) {
 		if (substr($name, 0, 3) != 'get') {

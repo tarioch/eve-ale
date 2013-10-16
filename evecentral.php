@@ -20,7 +20,7 @@
 
 namespace Ale;
 
-class AleEVECentral extends AleBase {
+class AleEVECentral extends Base {
 	
 	protected $default = array(
 		'host' => 'http://api.eve-central.com/api/',
