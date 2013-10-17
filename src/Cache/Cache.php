@@ -18,7 +18,7 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Ale\Interface;
+namespace Ale\Cache;
 
 define('ALE_CACHE_MISSING', null);
 define('ALE_CACHE_EXPIRED', 0);

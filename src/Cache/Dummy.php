@@ -20,8 +20,6 @@
 
 namespace Ale\Cache;
 
-use Ale\Interface\Cache;
-
 class Dummy implements Cache {
 	private $host = '';
 	private $path = '';

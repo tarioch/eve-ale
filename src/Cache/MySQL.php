@@ -30,12 +30,12 @@ class MySQL extends AbstractDb {
 		if (isset($config['db']) && is_resource($config['db'])) {
 			$this->db = $config['db'];
 		} else {
-			$config['host'] = $this->_($config, 'host', null);
-			$config['user'] = $this->_($config, 'user', null);
-			$config['password'] = $this->_($config, 'password', null);
-			$config['new_link'] = (bool) $this->_($config, 'new_link', false);
-			$config['client_flags'] = $this->_($config, 'client_flags', 0);
-			if ($this->_($config, 'persistent')) {
+			$config['host'] = $this->getWithDefault($config, 'host', null);
+			$config['user'] = $this->getWithDefault($config, 'user', null);
+			$config['password'] = $this->getWithDefault($config, 'password', null);
+			$config['new_link'] = (bool) $this->getWithDefault($config, 'new_link', false);
+			$config['client_flags'] = $this->getWithDefault($config, 'client_flags', 0);
+			if ($this->getWithDefault($config, 'persistent')) {
 				$this->db = mysql_pconnect($config['host'], $config['user'], $config['password'], $config['client_flags']);
 			} else {
 				$this->db = mysql_connect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);

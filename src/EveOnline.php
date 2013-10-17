@@ -20,8 +20,8 @@
 
 namespace Ale;
 
-use Ale\Interface\Cache;
-use Ale\Interface\Request;
+use Ale\Cache\Cache;
+use Ale\Request\Request;
 
 define('ALE_AUTH_DEFAULT', 0);
 define('ALE_AUTH_NONE', 1);

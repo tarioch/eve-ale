@@ -29,12 +29,12 @@ class PgSQL extends AbstractDb {
 		if (isset($config['db']) && is_resource($config['db'])) {
 			$this->db = $config['db'];
 		} else {
-			$config['host'] = $this->_($config, 'host', null);
-                        $config['port'] = $this->_($config, 'port', null);
-                        $config['database'] = $this->_($config, 'database', null);
-			$config['user'] = $this->_($config, 'user', null);
-			$config['password'] = $this->_($config, 'password', null);
-			$config['new_link'] = (bool) $this->_($config, 'new_link', false);
+			$config['host'] = $this->getWithDefault($config, 'host', null);
+                        $config['port'] = $this->getWithDefault($config, 'port', null);
+                        $config['database'] = $this->getWithDefault($config, 'database', null);
+			$config['user'] = $this->getWithDefault($config, 'user', null);
+			$config['password'] = $this->getWithDefault($config, 'password', null);
+			$config['new_link'] = (bool) $this->getWithDefault($config, 'new_link', false);
 
                         $connection_string = "host='".$config['host']."' ".
                                              "port='".$config['port']."' ".
@@ -42,7 +42,7 @@ class PgSQL extends AbstractDb {
                                              "user='".$config['user']."' ".
                                              "password='".$config['password']."' ";
                         
-			if ($this->_($config, 'persistent')) {
+			if ($this->getWithDefault($config, 'persistent')) {
 				$this->db = pg_pconnect($connection_string, $config['new_link']);
 			} else {
 				$this->db = pg_connect($connection_string, $config['new_link']);

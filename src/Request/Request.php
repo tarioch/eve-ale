@@ -18,7 +18,7 @@
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Ale\Interface;
+namespace Ale\Request;
 
 interface Request {
 	

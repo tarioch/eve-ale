@@ -20,8 +20,7 @@
 
 namespace Ale\Request;
 
-use Ale\Interface\Request;
-use use Ale\Exception\RequestException;
+use Ale\Exception\RequestException;
 
 class Fsock implements Request  {
 	protected $config = array();

@@ -20,7 +20,6 @@
 
 namespace Ale\Request;
 
-use Ale\Interface\Request;
 use Ale\Exception\RequestException;
 
 class Curl implements Request  {

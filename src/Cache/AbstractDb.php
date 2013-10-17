@@ -20,8 +20,6 @@
 
 namespace Ale\Cache;
 
-use Ale\Interface\Cache;
-
 abstract class AbstractDb implements Cache {
 	protected $quote = "'";
 	protected $nameQuote = '"';
@@ -37,8 +35,8 @@ abstract class AbstractDb implements Cache {
 	protected $row;
 	
 	public function __construct(array $config = array()) {
-		$this->table = $this->_($config, 'table', 'alecache');
-		$this->maxDataSize = $this->_($config, 'maxDataSize', null);
+		$this->table = $this->getWithDefault($config, 'table', 'alecache');
+		$this->maxDataSize = $this->getWithDefault($config, 'maxDataSize', null);
 	}
 	
 	abstract protected function escape($string);
@@ -57,7 +55,7 @@ abstract class AbstractDb implements Cache {
 	
 	abstract protected function freeResult(&$result);
 	
-	protected function _(&$array, $name, $default = null) {
+	protected function getWithDefault(&$array, $name, $default = null) {
 		return isset($array[$name]) ? $array[$name] : $default;
 	}
 	

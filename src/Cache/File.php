@@ -20,7 +20,6 @@
 
 namespace Ale\Cache;
 
-use Ale\Interface\Cache;
 use Ale\Exception\CacheException;
 
 if (!defined('ALE_CACHE_ROOTDIR')) {

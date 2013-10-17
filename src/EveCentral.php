@@ -20,8 +20,8 @@
 
 namespace Ale;
 
-use Ale\Interface\Cache;
-use Ale\Interface\Request;
+use Ale\Cache\Cache;
+use Ale\Request\Request;
 
 class EveCentral extends Base {
 	

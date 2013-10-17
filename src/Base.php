@@ -20,8 +20,8 @@
 
 namespace Ale;
 
-use Ale\Interface\Cache;
-use Ale\Interface\Request;
+use Ale\Cache\Cache;
+use Ale\Request\Request;
 use Ale\Util\Context;
 use Ale\Exception\EveAuthenticationException;
 use Ale\Exception\EveMiscellaneousException;
