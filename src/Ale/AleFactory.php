@@ -101,7 +101,7 @@ class AleFactory {
 		$cacheName 	= self::_default($cacheConfig, 'class', 'Dummy');
 		$requestName 	= self::_default($requestConfig, 'class', 'Curl');
 		
-		$mainClass 	= $mainName;
+		$mainClass 	= 'Ale\\'.$mainName;
 		$cacheClass 	= 'Ale\\Cache\\'.$cacheName;
 		$requestClass 	= 'Ale\\Request\\'.$requestName;
 		
@@ -131,29 +131,12 @@ class AleFactory {
 	}
 	
 	/**
-	 * Loads configuration file and returns instance of Base class
-	 *
-	 * @param string $name
-	 * @param array $params
-	 * @return Base
-	 */
-	public static function __callStatic($name, $params) {
-		if (substr($name, 0, 3) != 'get') {
-			throw new BadMethodCallException("Method has to have 'get' prefix");
-		}
-		$name = substr($name, 3);
-		$config = self::_default($params, 0, array());
-		$newInstance = self::_default($params, 1, false);
-		return self::get($name, $config, $newInstance);
-	}
-	
-	/**
 	 * Loads configuration file and returns instance of EveOnline class
 	 *
 	 * @param array $config
 	 * @return EveOnline
 	 */
-	public static function getEVEOnline(array $config = array(), $newInstance = false) {
+	public static function getEveOnline(array $config = array(), $newInstance = false) {
 		return self::get('EveOnline', $config, $newInstance);
 	}
 	
@@ -163,7 +146,7 @@ class AleFactory {
 	 * @param array $config
 	 * @return EveCentral
 	 */
-	public static function getEVECentral(array $config = array(), $newInstance = false) {
+	public static function getEveCentral(array $config = array(), $newInstance = false) {
 		return self::get('EveCentral', $config, $newInstance);
 	}
 	

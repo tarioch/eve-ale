@@ -20,6 +20,12 @@
 
 namespace Ale\Parser;
 
+use \Countable;
+use \ArrayAccess;
+use \ArrayIterator;
+use \IteratorAggregate;
+use \SimpleXMLElement;
+
 /**
  * Wrapper for SimpleXMLElement providing most features of SimpleXML (read only)
  * Provides features speciffic for EVE API xml format, namely

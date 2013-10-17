@@ -28,7 +28,7 @@ class EveCentral extends Base {
 	protected $default = array(
 		'host' => 'http://api.eve-central.com/api/',
 		'suffix' => '',
-		'parserClass' => 'SimpleXMLElement',
+		'parserClass' => 'Ale/Parser/XmlElement',
 		'requestError' => 'throwException',
 		'cacheTime' => 300, 
 		);

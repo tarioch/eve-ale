@@ -22,6 +22,7 @@ namespace Ale;
 
 use Ale\Cache\Cache;
 use Ale\Request\Request;
+use \SimpleXMLElement;
 
 define('ALE_AUTH_DEFAULT', 0);
 define('ALE_AUTH_NONE', 1);
@@ -39,9 +40,9 @@ class EveOnline extends Base {
 	private $xml;
 	
 	protected $default = array(
-		'host' => 'https://api.eve-online.com/',
+		'host' => 'https://api.eveonline.com/',
 		'suffix' => '.xml.aspx',
-		'parserClass' => 'SimpleXMLElement' ,
+		'parserClass' => 'Ale\Parser\XmlElement' ,
 		'serverError' => 'throwException',
 		'requestError' => 'throwException',
 		'cacheUpdateError' => array(103, 115, 116, 117, 119, ), 

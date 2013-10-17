@@ -28,6 +28,7 @@ use Ale\Exception\EveMiscellaneousException;
 use Ale\Exception\EveServerErrorException;
 use Ale\Exception\EveUserInputException;
 use Ale\Exception\RequestException;
+use \LogicException;
 
 class Base {
 	

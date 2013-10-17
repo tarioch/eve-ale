@@ -20,6 +20,8 @@
 
 namespace Ale\Exception;
 
+use \RuntimeException;
+
 class CacheException extends RuntimeException {
 	
 }
