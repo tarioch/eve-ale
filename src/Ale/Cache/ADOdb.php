@@ -35,7 +35,7 @@ class ADOdb extends AbstractDb {
 		if (!defined('_ADODB_LAYER')) {
 			throw new CacheException('ADOdb layer not defined');
 		}
-		if (isset($config['db']) && is_resource($config['db'])) {
+		if (isset($config['db']) && ($config['db']) instanceof ADOConnection) {
 			$this->db = $config['db'];
 		} else {
 			if (!isset($config['dsn'])) {
