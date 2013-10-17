@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset name="Symfony2Tario">
+	<description>Use PSR1 standard</description>
+
+	<rule ref="PSR1">
+	</rule>
+</ruleset>
+
