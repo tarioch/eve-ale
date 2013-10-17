@@ -17,7 +17,9 @@
 
 	"require-dev": {
 		"squizlabs/php_codesniffer": "1.5.0RC4",
-		"phpmd/phpmd": "1.4.*"
+		"phpmd/phpmd": "1.4.*",
+		"phpunit/phpunit" : "3.7.*",
+		"mockery/mockery" : "dev-master@dev"
 	},
 
 	"autoload": {

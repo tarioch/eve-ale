@@ -1,4 +1,7 @@
-verify: checkstyle detectmess
+verify: checkstyle detectmess test
+
+test:
+	@./vendor/bin/phpunit || exit 4
 
 checkstyle:
 	@./vendor/bin/phpcs -s -p --standard=phpcs_rules.xml --extensions=php src || exit 2
@@ -13,4 +16,7 @@ composer_update:
 	@./composer.phar self-update || exit 1
 	@./composer.phar update || exit 1
 
-.PHONY: verify checkstyle detectmess composer_update
+composer_install:
+	@./composer.phar install || exit 1
+
+.PHONY: verify test checkstyle detectmess composer_update
