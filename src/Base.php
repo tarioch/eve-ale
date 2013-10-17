@@ -213,7 +213,7 @@ class Base {
 			throw new InvalidArgumentException('setConfig: key is not valid');  
 		}
 		$result = $this->config[$key]; 
-		$this->config[$key] = isset($vale) ? $this->default[$key] : $value;
+		$this->config[$key] = isset($value) ? $this->default[$key] : $value;
 		return $result;
 	}
 	
