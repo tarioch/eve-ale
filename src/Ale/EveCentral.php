@@ -22,13 +22,15 @@ namespace Ale;
 
 use Ale\Cache\Cache;
 use Ale\Request\Request;
+use \DateTimeZone;
+use \DateTime;
 
 class EveCentral extends Base {
 	
 	protected $default = array(
 		'host' => 'http://api.eve-central.com/api/',
 		'suffix' => '',
-		'parserClass' => 'Ale/Parser/XmlElement',
+		'parserClass' => '\SimpleXMLElement',
 		'requestError' => 'throwException',
 		'cacheTime' => 300, 
 		);

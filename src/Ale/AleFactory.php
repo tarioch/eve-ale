@@ -20,6 +20,8 @@
 
 namespace Ale;
 
+use \LogicException;
+
 if (!defined('ALE_CONFIG_DIR')) {
 	define('ALE_CONFIG_DIR', __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
 }
