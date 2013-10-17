@@ -33,7 +33,7 @@ class EveCentral extends Base {
 		'parserClass' => '\SimpleXMLElement',
 		'requestError' => 'throwException',
 		'cacheTime' => 300,
-		);
+	);
 
 	public function __construct(Request $request, Cache $cache = null, array $config = array()) {
 		parent::__construct($request, $cache, $config);

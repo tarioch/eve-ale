@@ -42,7 +42,7 @@ class AleFactory {
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	private static function _default(&$array, $key, $default) {
+	private static function _default($array, $key, $default) {
 		return isset($array[$key]) ? $array[$key] : $default;
 	}
 

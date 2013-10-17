@@ -48,7 +48,7 @@ class Base {
 		'suffix' => '',
 		'parserClass' => 'Ale/Parser/XmlElement',
 		'requestError' => 'throwException',
-		);
+	);
 	/**
 	 * @var array
 	 */
