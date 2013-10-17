@@ -45,7 +45,7 @@ class Base {
 	protected $default = array(
 		'host' => '',
 		'suffix' => '',
-		'parserClass' => 'SimpleXMLElement', 
+		'parserClass' => 'Ale/Parser/XmlElement', 
 		'requestError' => 'throwException',
 		);
 	/** 
@@ -66,14 +66,8 @@ class Base {
 		
 		if ($this->config['parserClass'] != 'string' && !class_exists($this->config['parserClass'])) {
 			//let's try to load internal class
-			$file = preg_replace('/^AleParser/', '', $this->config['parserClass']);
-			$path = ALE_BASE.DIRECTORY_SEPARATOR.'parser'.DIRECTORY_SEPARATOR.strtolower($file).'.php';
-			if (!file_exists($path)) {
-				throw new LogicException(sprintf('Cannot find Parser class [%s] in file \'%s\'', $this->config['parserClass'], $path));
-			}
-			require_once $path;
 			if (!class_exists($this->config['parserClass'])) {
-				throw new LogicException(sprintf('Cannot find Parser class [%s] in file \'%s\'', $this->config['parserClass'], $path));
+				throw new LogicException(sprintf('Cannot find Parser class [%s]', $this->config['parserClass']));
 			}
 		}
 		$this->cache->setHost($this->config['host']);
