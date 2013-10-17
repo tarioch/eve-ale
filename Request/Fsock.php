@@ -21,6 +21,7 @@
 namespace Ale\Request;
 
 use Ale\Interface\Request;
+use use Ale\Exception\RequestException;
 
 class Fsock implements Request  {
 	protected $config = array();
@@ -38,7 +39,7 @@ class Fsock implements Request  {
 	public function query($url, array $params = array()) {
 		$parsed = parse_url($url);
 		if (!isset($parsed['port'])) $parsed['port'] = 80;
-		if (!isset($parsed['scheme']) || $parsed['scheme'] != 'http') throw new AleExceptionRequest('Unknown request protocol, use http:// only');
+		if (!isset($parsed['scheme']) || $parsed['scheme'] != 'http') throw new RequestException('Unknown request protocol, use http:// only');
 		if (!isset($parsed['path'])) $parsed['path'] = '/';
 		
 		if ($this->config['flattenParams']) {
@@ -63,7 +64,7 @@ class Fsock implements Request  {
 		$fp = fsockopen($parsed['host'], $parsed['port'], $errno, $errstr, $this->config['timeout']);
 		
 		if (!$fp) {
-			throw new AleExceptionRequest($errstr, $errno);
+			throw new RequestException($errstr, $errno);
 		}
 		
 		fputs ($fp, "POST " . $parsed['path'] . " HTTP/1.0\r\n");
@@ -89,7 +90,7 @@ class Fsock implements Request  {
 		$matches = array();
 		if (preg_match('#^HTTP/[0-9]\\.[0-9] +([0-9]+) +(.*)#', $contents, $matches)) {
 			if ($matches[1] >= 400) {
-				throw new AleExceptionRequest('Server Response Error::'. $matches[2], $matches[1]);
+				throw new RequestException('Server Response Error::'. $matches[2], $matches[1]);
 			}
 		}
 		

@@ -20,6 +20,8 @@
 
 namespace Ale\Cache;
 
+use Ale\Exception\CacheException;
+
 class ADOdb extends AbstractDb {
 	
 	public function __construct(array $config = array()) {
@@ -31,18 +33,18 @@ class ADOdb extends AbstractDb {
 			require_once ADODB_DIR.DIRECTORY_SEPARATOR.'adodb-exceptions.inc.php';
 		}		
 		if (!defined('_ADODB_LAYER')) {
-			throw new AleExceptionCache('ADOdb layer not defined');
+			throw new CacheException('ADOdb layer not defined');
 		}
 		if (isset($config['db']) && is_resource($config['db'])) {
 			$this->db = $config['db'];
 		} else {
 			if (!isset($config['dsn'])) {
-				throw new AleExceptionCache('ADOdb dsn (Data Source Name) config missing');
+				throw new CacheException('ADOdb dsn (Data Source Name) config missing');
 			}
 			$this->db = ADONewConnection($config['dsn']);
 			
 			if ($this->db == false) {
-				throw new AleExceptionCache('ADODb connection failed');
+				throw new CacheException('ADODb connection failed');
 			}
 		}
 		$this->nameQuote = $this->db->nameQuote; 
@@ -59,7 +61,7 @@ class ADOdb extends AbstractDb {
 	protected function &execute($query) {
 		$result = $this->db->Execute($query);
 		if ($result === false) {
-			throw new AleExceptionCache($this->db->ErrorMsg(), $this->db->ErrorNo());
+			throw new CacheException($this->db->ErrorMsg(), $this->db->ErrorNo());
 		}
 		return $result;
 	}

@@ -21,6 +21,7 @@
 namespace Ale\Cache;
 
 use Ale\Interface\Cache;
+use Ale\Exception\CacheException;
 
 if (!defined('ALE_CACHE_ROOTDIR')) {
 	define('ALE_CACHE_ROOTDIR', './cachedir');
@@ -71,14 +72,14 @@ class File implements Cache {
 			
 		if (!is_dir($this->dir)) {
 			if (!mkdir($this->dir, $this->config['permissions'], true)) {
-				throw new AleExceptionCache('Failed to create directory: '.$this->dir);
+				throw new CacheException('Failed to create directory: '.$this->dir);
 			}
 		}
 		$filename = $this->dir . DIRECTORY_SEPARATOR . $this->params;
 		if (file_exists($filename)) {
 			$content = file_get_contents($filename);
 			if ($content === false) {
-				throw new AleExceptionCache('Failed to open file: '.$filename);				
+				throw new CacheException('Failed to open file: '.$filename);				
 			}
 			$chunks = explode("\n", $content, 2);
 			$this->cachedUntil = $chunks[0];
@@ -104,7 +105,7 @@ class File implements Cache {
 		
 		$file = fopen($filename, 'w');
 		if ($file === false) {
-			throw new AleExceptionCache('Failed to open file: '.$filename);
+			throw new CacheException('Failed to open file: '.$filename);
 		}
 		$this->cachedUntil = $cachedUntil;
 		$this->content = $content;
@@ -125,7 +126,7 @@ class File implements Cache {
 		$filename = $this->dir . DIRECTORY_SEPARATOR . $this->params;
 		$file = fopen($filename, 'w');
 		if ($file === false) {
-			throw new AleExceptionCache('Failed to open file: '.$filename);
+			throw new CacheException('Failed to open file: '.$filename);
 		}
 		$this->cachedUntil = $time;
 		fwrite($file, $this->cachedUntil."\n".$this->content);

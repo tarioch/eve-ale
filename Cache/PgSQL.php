@@ -20,6 +20,8 @@
 
 namespace Ale\Cache;
 
+use Ale\Exception\CacheException;
+
 class PgSQL extends AbstractDb {
 	
 	public function __construct(array $config = array()) {
@@ -47,7 +49,7 @@ class PgSQL extends AbstractDb {
 			}
 
 			if ($this->db == false) {
-				throw new AleExceptionCache(pg_last_error(), pg_connection_status());
+				throw new CacheException(pg_last_error(), pg_connection_status());
 			}
 		}
 	}
@@ -59,7 +61,7 @@ class PgSQL extends AbstractDb {
 	protected function &execute($query) {
 		$result = pg_query($this->db, $query);
 		if ($result === false) {
-			throw new AleExceptionCache(pg_last_error($this->db), pg_result_status($result));
+			throw new CacheException(pg_last_error($this->db), pg_result_status($result));
 		}
 		return $result;
 	}

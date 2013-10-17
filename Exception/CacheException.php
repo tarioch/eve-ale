@@ -20,32 +20,6 @@
 
 namespace Ale\Exception;
 
-class AleExceptionEVE extends RuntimeException {
-	private $_cachedUntil;
-	
-	function __construct($message, $code, $cachedUntil) {
-		parent::__construct($message, $code);
-		$this->_cachedUntil = $cachedUntil;
-	}
-	
-	function getCachedUntil() {
-		return $this->_cachedUntil;
-	}
-	
-}
-
-class AleExceptionEVEUserInput extends AleExceptionEVE {
-	
-}
-
-class AleExceptionEVEAuthentication extends AleExceptionEVE {
-	
-}
-
-class AleExceptionEVEServerError extends AleExceptionEVE {
-	
-}
-
-class AleExceptionEVEMiscellaneous extends AleExceptionEVE {
+class CacheException extends RuntimeException {
 	
 }

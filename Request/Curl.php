@@ -21,6 +21,7 @@
 namespace Ale\Request;
 
 use Ale\Interface\Request;
+use Ale\Exception\RequestException;
 
 class Curl implements Request  {
 	protected $config = array();
@@ -54,7 +55,7 @@ class Curl implements Request  {
 		if ($matches[1] >= 400) {
 			$url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 			curl_close($ch);
-			throw new AleExceptionRequest('['.$url.'] Server Response Error::'. $matches[2], $matches[1]);
+			throw new RequestException('['.$url.'] Server Response Error::'. $matches[2], $matches[1]);
 		}
 		return strlen($header);
 	}
@@ -102,7 +103,7 @@ class Curl implements Request  {
 		if ($errno > 0) {
 			$errstr = curl_error($ch);
 			curl_close ($ch);
-			throw new AleExceptionRequest('['.$url.'] '.$errstr, $errno);
+			throw new RequestException('['.$url.'] '.$errstr, $errno);
 		}
 		
 		curl_close ($ch);

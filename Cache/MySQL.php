@@ -20,6 +20,8 @@
 
 namespace Ale\Cache;
 
+use Ale\Exception\CacheException;
+
 class MySQL extends AbstractDb {
 	protected $nameQuote = '`';
 	
@@ -39,12 +41,12 @@ class MySQL extends AbstractDb {
 				$this->db = mysql_connect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
 			}
 			if ($this->db == false) {
-				throw new AleExceptionCache(mysql_error(), mysql_errno());
+				throw new CacheException(mysql_error(), mysql_errno());
 			}
 			if (isset($config['database'])) {
 				$result = mysql_select_db($config['database'], $this->db);
 				if ($result === false) {
-					throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
+					throw new CacheException(mysql_error($this->db), mysql_errno($this->db));
 				}
 			}
 		}
@@ -57,7 +59,7 @@ class MySQL extends AbstractDb {
 	protected function &execute($query) {
 		$result = mysql_query($query, $this->db);
 		if ($result === false) {
-			throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
+			throw new CacheException(mysql_error($this->db), mysql_errno($this->db));
 		}
 		return $result;
 	}

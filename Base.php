@@ -23,6 +23,11 @@ namespace Ale;
 use Ale\Interface\Cache;
 use Ale\Interface\Request;
 use Ale\Util\Context;
+use Ale\Exception\EveAuthenticationException;
+use Ale\Exception\EveMiscellaneousException;
+use Ale\Exception\EveServerErrorException;
+use Ale\Exception\EveUserInputException;
+use Ale\Exception\RequestException;
 
 class Base {
 	
@@ -143,7 +148,7 @@ class Base {
 					try {
 						$content = $this->request->query($host.$path.$suffix, $params);
 					}
-					catch (AleExceptionRequest $e) {
+					catch (RequestException $e) {
 						$content = $this->cache->retrieve();
 						$this->fromCache = ALE_CACHE_FORCED;
 						$useCache = false;
@@ -153,7 +158,7 @@ class Base {
 					try {
 						$content = $this->request->query($host.$path.$suffix, $params);
 					}
-					catch (AleExceptionRequest $e) {
+					catch (RequestException $e) {
 						return null;
 					}
 					break;

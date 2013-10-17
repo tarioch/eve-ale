@@ -20,6 +20,8 @@
 
 namespace Ale\Cache;
 
+use Ale\Exception\CacheException;
+
 class Joomla extends AbstractDb {
 	
 	public function __construct(array $config = array()) {
@@ -46,7 +48,7 @@ class Joomla extends AbstractDb {
 	protected function &execute($query) {
 		$result = $this->db->Execute($query);
 		if ($result === false) {
-			throw new AleExceptionCache($this->db->getErrorMsg(), $this->db->getErrorNum());
+			throw new CacheException($this->db->getErrorMsg(), $this->db->getErrorNum());
 		}
 		return $result;
 	}

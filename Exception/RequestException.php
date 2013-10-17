@@ -20,6 +20,6 @@
 
 namespace Ale\Exception;
 
-class AleExceptionCache extends RuntimeException {
+class RequestException extends RuntimeException {
 	
 }
