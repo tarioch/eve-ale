@@ -21,7 +21,7 @@
 namespace Ale;
 
 if (!defined('ALE_CONFIG_DIR')) {
-	define('ALE_CONFIG_DIR', ALE_BASE);
+	define('ALE_CONFIG_DIR', __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
 }
 
 class AleFactory {
