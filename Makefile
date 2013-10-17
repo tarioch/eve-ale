@@ -6,4 +6,11 @@ checkstyle:
 detectmess:
 	@./vendor/bin/phpmd src text phpmd_rules.xml || exit 3
 
-.PHONY: verify checkstyle detectmess
+composer_get:
+	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
+
+composer_update:
+	@./composer.phar self-update || exit 1
+	@./composer.phar update || exit 1
+
+.PHONY: verify checkstyle detectmess composer_update
