@@ -3,17 +3,17 @@
  * @version $Id$
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -31,40 +31,40 @@ use Ale\Exception\RequestException;
 use \LogicException;
 
 class Base {
-	
-	/** 
-	 * @var Request 
+
+	/**
+	 * @var Request
 	 */
 	protected $request;
-	/** 
+	/**
 	 * @var Cache
 	 */
 	protected $cache;
-	/** 
+	/**
 	 * @var array
 	 */
 	protected $default = array(
 		'host' => '',
 		'suffix' => '',
-		'parserClass' => 'Ale/Parser/XmlElement', 
+		'parserClass' => 'Ale/Parser/XmlElement',
 		'requestError' => 'throwException',
 		);
-	/** 
+	/**
 	 * @var array
 	 */
 	protected $config;
-	
+
 	protected $fromCache;
-	
+
 	public function __construct(Request $request, Cache $cache, array $config = array()) {
 		$this->request = $request;
 		$this->cache = $cache;
 		$this->config = array();
-		
+
 		foreach ($this->default as $key => $value) {
 			$this->config[$key] = isset($config[$key]) ? $config[$key] : $value;
 		}
-		
+
 		if ($this->config['parserClass'] != 'string' && !class_exists($this->config['parserClass'])) {
 			//let's try to load internal class
 			if (!class_exists($this->config['parserClass'])) {
@@ -73,7 +73,7 @@ class Base {
 		}
 		$this->cache->setHost($this->config['host']);
 	}
-	
+
 	/**
 	 * Extract cached until time
 	 *
@@ -83,13 +83,13 @@ class Base {
 	protected function getCachedUntil($content) {
 		return null;
 	}
-	
+
 	/**
 	 * Return string or parsed XML as object, based on configuration
 	 *
 	 * @param string $content
 	 * @param bool $useCache
-	 * @return mixed 
+	 * @return mixed
 	 */
 	protected function handleContent($content, &$useCache = true) {
 		if (is_null($content)) {
@@ -98,12 +98,12 @@ class Base {
 		if ($this->config['parserClass'] == 'string') {
 			return $content;
 		}
-		
+
 		$parserClass = $this->config['parserClass'];
 		$content = new $parserClass($content);
-		return $content; 
+		return $content;
 	}
-	
+
 	/**
 	 * Available only for this class or Ale\Util\Context object
 	 *
@@ -116,7 +116,7 @@ class Base {
 		$params = isset($arguments[0]) && is_array($arguments[0]) ? $arguments[0] : array();
 		return $this->retrieveXml($path, $params);
 	}
-	
+
 	/**
 	 * Retrieves XML document
 	 *
@@ -128,12 +128,12 @@ class Base {
 	public function retrieveXml($path, array $params) {
 		//params should always have the same order
 		ksort($params);
-		
+
 		$host = $this->config['host'];
 		$suffix = $this->config['suffix'];
 		$this->cache->setCall($path, $params);
 		$this->fromCache = $this->cache->isCached();
-		
+
 		$useCache = true;
 		if ($this->fromCache == ALE_CACHE_CACHED) {
 			$content = $this->cache->retrieve();
@@ -163,18 +163,18 @@ class Base {
 					break;
 			}
 		}
-		
+
 		$result = $this->handleContent($content, $useCache);
-		
+
 		if (($this->fromCache != ALE_CACHE_CACHED) && $useCache) {
 			$cachedUntil = $this->getCachedUntil($content);
 			$this->cache->store($content, $cachedUntil);
 		}
-		
+
 		return $result;
-		
+
 	}
-	
+
 	/**
 	 * Getter method
 	 *
@@ -184,7 +184,7 @@ class Base {
 	public function __get($name) {
 		return new Context($this, $name);
 	}
-	
+
 	/**
 	 * Overload method
 	 *
@@ -195,7 +195,7 @@ class Base {
 	public function  __call($name, array $arguments) {
 		return $this->_retrieveXml(array($name), $arguments);
 	}
-	
+
 	/**
 	 * Set configuration value
 	 *
@@ -205,13 +205,13 @@ class Base {
 	 */
 	public function setConfig($key, $value = null) {
 		if (!isset($this->default[$key])) {
-			throw new InvalidArgumentException('setConfig: key is not valid');  
+			throw new InvalidArgumentException('setConfig: key is not valid');
 		}
-		$result = $this->config[$key]; 
+		$result = $this->config[$key];
 		$this->config[$key] = isset($value) ? $this->default[$key] : $value;
 		return $result;
 	}
-	
+
 	/**
 	 * Check if last result was fetched from cache;
 	 *
@@ -220,7 +220,7 @@ class Base {
 	public function isFromCache() {
 		return (bool) $this->fromCache;
 	}
-	
+
 	/**
 	 * Force result of last call from cache
 	 *
@@ -232,10 +232,10 @@ class Base {
 		$result = $this->handleContent($content, $useCache);
 		return $result;
 	}
-	
+
 	public function purgeCache($all = false) {
 		$this->cache->purge($all);
 	}
-	
-	
+
+
 }

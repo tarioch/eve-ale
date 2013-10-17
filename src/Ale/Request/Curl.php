@@ -3,17 +3,17 @@
  * @version $Id$
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,7 +24,7 @@ use Ale\Exception\RequestException;
 
 class Curl implements Request  {
 	protected $config = array();
-	
+
 	/**
 	 * Constructor
 	 *
@@ -37,7 +37,7 @@ class Curl implements Request  {
 		$this->config['timeout'] = isset($config['timeout']) ? (int) $config['timeout'] : 30;
 		$this->config['flattenParams'] = isset($config['flattenParams']) ? (bool) $config['flattenParams'] : false;
 	}
-	
+
 	/**
 	 * Read response header
 	 * Throws exception on 4** and 5** responses
@@ -58,7 +58,7 @@ class Curl implements Request  {
 		}
 		return strlen($header);
 	}
-	
+
 	/**
 	 * Fetch respone from target URL
 	 *
@@ -68,7 +68,7 @@ class Curl implements Request  {
 	public function query($url, array $params = null) {
 		//curl magic
 		$ch = curl_init();
-		
+
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $this->config['timeout']);
 		if ($params) {
@@ -90,13 +90,13 @@ class Curl implements Request  {
 			} else {
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 			}
-			
+
 		}
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);		
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, 'readHeader'));
 		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 		$contents = trim(@curl_exec($ch));
-		
+
 		//chceck for connection errors
 		$errno = curl_errno($ch);
 		if ($errno > 0) {
@@ -104,9 +104,9 @@ class Curl implements Request  {
 			curl_close ($ch);
 			throw new RequestException('['.$url.'] '.$errstr, $errno);
 		}
-		
+
 		curl_close ($ch);
-		
+
 		return $contents;
 	}
 

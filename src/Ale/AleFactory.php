@@ -3,17 +3,17 @@
  * @version $Id$
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,7 +33,7 @@ class AleFactory {
 	 * @var array
 	 */
 	private static $instances = array();
-	
+
 	/**
 	 * Get value from array if exists, or return default
 	 *
@@ -45,7 +45,7 @@ class AleFactory {
 	private static function _default(&$array, $key, $default) {
 		return isset($array[$key]) ? $array[$key] : $default;
 	}
-	
+
 	/**
 	 * Initialise new instance of Ale class
 	 *
@@ -67,11 +67,11 @@ class AleFactory {
 		} else {
 			$tmp = array();
 		}
-		
+
 		$mainConfig 	= self::_default($tmp, 'main', array());
 		$cacheConfig 	= self::_default($tmp, 'cache', array());
 		$requestConfig 	= self::_default($tmp, 'request', array());
-		
+
 		foreach($config as $key => $value) {
 			$split = explode('.', $key, 2);
 			if (count($split) == 2) {
@@ -98,23 +98,23 @@ class AleFactory {
 				$mainConfig[$key] = $value;
 			}
 		}
-		
+
 		$mainName 	= self::_default($mainConfig, 'class', $name);
 		$cacheName 	= self::_default($cacheConfig, 'class', 'Dummy');
 		$requestName 	= self::_default($requestConfig, 'class', 'Curl');
-		
+
 		$mainClass 	= 'Ale\\'.$mainName;
 		$cacheClass 	= 'Ale\\Cache\\'.$cacheName;
 		$requestClass 	= 'Ale\\Request\\'.$requestName;
-		
+
 		$request 		= new $requestClass($requestConfig);
-		$cache 			= new $cacheClass($cacheConfig); 
+		$cache 			= new $cacheClass($cacheConfig);
 		$main 			= new $mainClass($request, $cache, $mainConfig);
 
 		self::$instances[$_name] = $main;
-		
+
 	}
-	
+
 	/**
 	 * Loads configuration file and returns instance of Ale class
 	 * If object already exists and no new config is provided,
@@ -131,7 +131,7 @@ class AleFactory {
 		}
 		return self::$instances[$_name];
 	}
-	
+
 	/**
 	 * Loads configuration file and returns instance of EveOnline class
 	 *
@@ -141,7 +141,7 @@ class AleFactory {
 	public static function getEveOnline(array $config = array(), $newInstance = false) {
 		return self::get('EveOnline', $config, $newInstance);
 	}
-	
+
 	/**
 	 * Loads configuration file and returns instance of EveCentral class
 	 *
@@ -151,5 +151,5 @@ class AleFactory {
 	public static function getEveCentral(array $config = array(), $newInstance = false) {
 		return self::get('EveCentral', $config, $newInstance);
 	}
-	
+
 }

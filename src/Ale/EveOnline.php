@@ -3,17 +3,17 @@
  * @version $Id$
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,22 +32,22 @@ define('ALE_AUTH_AVAILABLE', 4);
 
 
 class EveOnline extends Base {
-	
+
 	private $userID;
 	private $apiKey;
 	private $characterID;
-	
+
 	private $xml;
-	
+
 	protected $default = array(
 		'host' => 'https://api.eveonline.com/',
 		'suffix' => '.xml.aspx',
 		'parserClass' => 'Ale\Parser\XmlElement' ,
 		'serverError' => 'throwException',
 		'requestError' => 'throwException',
-		'cacheUpdateError' => array(103, 115, 116, 117, 119, ), 
+		'cacheUpdateError' => array(103, 115, 116, 117, 119, ),
 		);
-	
+
 	public function __construct(Request $request, Cache $cache = null, array $config = array()) {
 		if (isset($config['cacheUpdateError']) && !is_array($config['cacheUpdateError'])) {
 			$tmp = explode(',', $config['cacheUpdateError']);
@@ -60,7 +60,7 @@ class EveOnline extends Base {
 		}
 		parent::__construct($request, $cache, $config);
 	}
-	
+
 	/**
 	 * Extract cached until time
 	 *
@@ -73,13 +73,13 @@ class EveOnline extends Base {
 		}
 		return (string) $this->xml->cachedUntil;
 	}
-	
+
 	/**
 	 * Check for server error. Return null, string or object, based on configuration
 	 *
 	 * @param string $content
 	 * @param bool $useCache
-	 * @return mixed 
+	 * @return mixed
 	 */
 	protected function handleContent($content, &$useCache = true) {
 		if (is_null($content)) {
@@ -87,7 +87,7 @@ class EveOnline extends Base {
 		}
 		$errorCode = 0;
 		$errorText = '';
-		
+
 		//get error code and error mesage first, I'm using xpath because I could pull it from config later
 		$this->xml = new SimpleXMLElement($content);
 		if ($this->config['serverError'] != 'ignore') {
@@ -100,11 +100,11 @@ class EveOnline extends Base {
 				$errorText = (string) $xerrorText[0];
 			}
 		}
-		
+
 		if (in_array($errorCode, $this->config['cacheUpdateError'])) {
 			$this->cache->updateCachedUntil((string) $this->xml->cachedUntil);
 		}
-		
+
 		//if we found an error
 		if ($errorCode || $errorText) {
 			//we do not want to cache error, right?
@@ -128,15 +128,15 @@ class EveOnline extends Base {
 					}
 			}
 		}
-		
+
 		$parserClass = $this->config['parserClass'];
 		//check if we have result we want
 		if (strtolower($parserClass) == strtolower('SimpleXMLElement') && isset($this->xml)) {
-			return $this->xml; 
+			return $this->xml;
 		}
 		return parent::handleContent($content, $useCache);
 	}
-		
+
 	/**
 	 * Resolves ALE_AUTH_DEFAULT credentials setting
 	 *
@@ -164,7 +164,7 @@ class EveOnline extends Base {
 		}
 		return $auth;
 	}
-	
+
 	/**
 	 * Add Credentials to parameters
 	 *
@@ -201,21 +201,21 @@ class EveOnline extends Base {
 				throw new InvalidArgumentException('Unknown credentials level');
 		}
 	}
-	
+
 	public function  _retrieveXml(array $context, array $arguments) {
 		$params = isset($arguments[0]) && is_array($arguments[0]) ? $arguments[0] : array();
 		$auth = isset($arguments[1]) ? $arguments[1] : ALE_AUTH_DEFAULT;
-		
+
 		$auth = $this->getAuth(reset($context), $auth);
 		//let's add credentials first, remember kids: ALE_AUTH_DEFAULT is invalid
 		$this->addCredentials($params, $auth);
 		$arguments[0] = $params;
-				
+
 		return parent::_retrieveXml($context, $arguments);
-		
-	}	
+
+	}
 	/**
-	 * Set userID 
+	 * Set userID
 	 *
 	 * @param int $userID
 	 */
@@ -227,11 +227,11 @@ class EveOnline extends Base {
 			// ERROR: User ID is not numeric.
 			throw new UnexpectedValueException("setUserID: userID must be a numeric value.");
 		}
-		
+
 		// Validation checks out, set the User ID
 		$this->userID = $userID;
-	}	
-	
+	}
+
 	/**
 	 * Set apiKey
 	 *
@@ -245,11 +245,11 @@ class EveOnline extends Base {
 			// ERROR: Api Key is not a string!!
 			throw new UnexpectedValueException("setApiKey: apiKey must be a string value. It is " . getType($apiKey));
 		}
-		
+
 		// Validation checks out, set the Api Key
 		$this->apiKey = $apiKey;
 	}
-	
+
 	/**
 	 * Set CharacterID
 	 *
@@ -262,14 +262,14 @@ class EveOnline extends Base {
 			// ERROR: User ID is not numeric.
 			throw new UnexpectedValueException("setCharacterID: characterID must be a numeric value.");
 		}
-		
+
 		// Validation checks out, set the User ID, if it's empty, set to null.
 		if (!empty($characterID))
 			$this->characterID = $characterID;
-		else 
+		else
 			$this->characterID = null;
 	}
-	
+
 	/**
 	 * Set API credentials
 	 *

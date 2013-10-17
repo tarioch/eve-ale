@@ -3,17 +3,17 @@
  * @version $Id$
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -23,7 +23,7 @@ namespace Ale\Cache;
 abstract class AbstractDb implements Cache {
 	protected $quote = "'";
 	protected $nameQuote = '"';
-	
+
 	protected $db;
 	protected $table;
 	protected $host;
@@ -31,34 +31,34 @@ abstract class AbstractDb implements Cache {
 	protected $paramsRaw;
 	protected $params;
 	protected $maxDataSize;
-	
+
 	protected $row;
-	
+
 	public function __construct(array $config = array()) {
 		$this->table = $this->getWithDefault($config, 'table', 'alecache');
 		$this->maxDataSize = $this->getWithDefault($config, 'maxDataSize', null);
 	}
-	
+
 	abstract protected function escape($string);
-		
+
 	protected function quote($value) {
 		return $this->quote.$this->escape($value).$this->quote;;
 	}
-	
+
 	protected function quoteName($name) {
 		return $this->nameQuote.$name.$this->nameQuote;;
 	}
-	
+
 	abstract protected function &execute($query);
-	
+
 	abstract protected function &fetchRow(&$result);
-	
+
 	abstract protected function freeResult(&$result);
-	
+
 	protected function getWithDefault(&$array, $name, $default = null) {
 		return isset($array[$name]) ? $array[$name] : $default;
 	}
-	
+
 	protected function getWhere() {
 		$result = '';
 		foreach (array('host', 'path', 'params') as $field) {
@@ -68,13 +68,13 @@ abstract class AbstractDb implements Cache {
 			$result .= sprintf("%s = %s", $this->quoteName($field), $this->quote($this->$field));
 		}
 		return $result;
-		
+
 	}
-	
+
 	public function setHost($host) {
 		$this->host = $host;
 	}
-	
+
 	/**
 	 * Set call parameters
 	 *
@@ -85,13 +85,13 @@ abstract class AbstractDb implements Cache {
 		$this->path = $path;
 		$this->paramsRaw = $params;
 		$this->params = sha1(http_build_query($params, '', '&'));
-		
+
 		$query = sprintf("SELECT * FROM %s WHERE %s", $this->quoteName($this->table), $this->getWhere());
 		$result = $this->execute($query);
 		$this->row = $this->fetchRow($result);
 		$this->freeResult($result);
 	}
-	
+
 	/**
 	 * Store content
 	 *
@@ -107,7 +107,7 @@ abstract class AbstractDb implements Cache {
 			$this->row['content'] = $content;
 			$this->row['cachedUntil'] = $cachedUntil;
 			$cachedUntil = $cachedUntil ? $this->quote($cachedUntil) : 'NULL';
-			$query = sprintf('UPDATE %s SET %s = %s, %s = %s WHERE %s', 
+			$query = sprintf('UPDATE %s SET %s = %s, %s = %s WHERE %s',
 				$this->quoteName($this->table), $this->quoteName('content'), $this->quote($content), $this->quoteName('cachedUntil'), $cachedUntil, $this->getWhere());
 		} else {
 			$this->row = array();
@@ -122,12 +122,12 @@ abstract class AbstractDb implements Cache {
 				$fields[] = $this->quoteName($field);
 				$values[] = $value ? $this->quote($value): 'NULL';
 			}
-			$query = sprintf('INSERT INTO %s (%s) VALUES (%s);', 
+			$query = sprintf('INSERT INTO %s (%s) VALUES (%s);',
 				$this->quoteName($this->table), implode(', ', $fields), implode(', ', $values));
 		}
 		$this->execute($query);
 	}
-	
+
 	/**
 	 * Update cachedUntil value of recent call
 	 *
@@ -137,12 +137,12 @@ abstract class AbstractDb implements Cache {
 		if ($this->row) {
 			$this->row['cachedUntil'] = $time;
 			$cachedUntil = $time ? $this->quote($time) : 'NULL';
-			$query = sprintf('UPDATE %s SET %s = %s WHERE %s', 
+			$query = sprintf('UPDATE %s SET %s = %s WHERE %s',
 				$this->quoteName($this->table), $this->quoteName('cachedUntil'), $cachedUntil, $this->getWhere());
 			$this->execute($query);
 		}
 	}
-	
+
 	/**
 	 * Retrieve content as string
 	 *
@@ -153,28 +153,28 @@ abstract class AbstractDb implements Cache {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Check if target is stored  
+	 * Check if target is stored
 	 *
 	 * @return int|null
 	 */
 	public function isCached() {
 		if ($this->row == false) {
-			return ALE_CACHE_MISSING;	
+			return ALE_CACHE_MISSING;
 		}
-		
+
 		$tz = new DateTimeZone('UTC');
 		$now = new DateTime(null, $tz);
 		$cachedUntil = new DateTime($this->row['cachedUntil'], $tz);
-		
+
 		if ((int) $cachedUntil->format('U') < (int) $now->format('U')) {
 			return ALE_CACHE_EXPIRED;
 		}
-		
+
 		return ALE_CACHE_CACHED;
 	}
-	
+
 	/**
 	 * Remove old data from cache
 	 *
@@ -186,10 +186,10 @@ abstract class AbstractDb implements Cache {
 		} else {
 			$tz = new DateTimeZone('UTC');
 			$now = new DateTime(null, $tz);
-			$query = sprintf("DELETE FROM %s WHERE %s = %s AND %s < %s", 
+			$query = sprintf("DELETE FROM %s WHERE %s = %s AND %s < %s",
 				$this->quoteName($this->table), $this->quoteName('host'), $this->quote($this->host), $this->quoteName('cachedUntil'), $this->quote($now->format('')));
 		}
 		$this->execute($query);
 	}
-	
+
 }
