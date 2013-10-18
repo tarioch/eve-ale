@@ -23,7 +23,7 @@ namespace Ale;
 use \LogicException;
 
 if (!defined('ALE_CONFIG_DIR')) {
-	define('ALE_CONFIG_DIR', __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
+	define('ALE_CONFIG_DIR', __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'config');
 }
 
 class AleFactory {
@@ -112,7 +112,6 @@ class AleFactory {
 		$main 			= new $mainClass($request, $cache, $mainConfig);
 
 		self::$instances[$_name] = $main;
-
 	}
 
 	/**

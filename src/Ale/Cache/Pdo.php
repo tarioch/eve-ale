@@ -19,10 +19,12 @@
  */
 namespace Ale\Cache;
 
-use \PDO;
+use \DateTimeZone;
+use \DateTime;
+use \stdClass;
 
 class Pdo implements Cache {
-	/** var PDO */
+	/** var \PDO */
 	protected $db;
 	protected $dsn;
 	protected $table;
@@ -36,14 +38,14 @@ class Pdo implements Cache {
 	public function __construct(array $config = array()) {
 		$this->table = $this->getWithDefault($config, 'table', 'alecache');
 		$this->maxDataSize = $this->getWithDefault($config, 'maxDataSize', null);
-		if (isset($config['db']) &&  ($config['db'] instanceof PDO)) {
+		if (isset($config['db']) &&  ($config['db'] instanceof \PDO)) {
 			$this->db = $config['db'];
 		} else {
 			$config['dsn'] = $this->getWithDefault($config, 'dsn', null);
 			$config['user'] = $this->getWithDefault($config, 'user', null);
 			$config['password'] = $this->getWithDefault($config, 'password', null);
 			$options = array();
-			$this->db = new PDO($config['dsn'], $config['user'], $config['password'], $options);
+			$this->db = new \PDO($config['dsn'], $config['user'], $config['password'], $options);
 		}
 	}
 
@@ -186,6 +188,10 @@ class Pdo implements Cache {
 			$query->bindValue(":cachedUntil", $now->format('Y-m-d H:i:s'));
 		}
 		$query->execute();
+	}
+
+	protected function getWithDefault(&$array, $name, $default = null) {
+		return isset($array[$name]) ? $array[$name] : $default;
 	}
 
 }

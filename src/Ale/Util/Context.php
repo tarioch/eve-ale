@@ -33,7 +33,7 @@ class Context {
 	 * @param Base $object
 	 * @param string $context
 	 */
-	public function __construct(Base $object, $context) {
+	public function __construct($object, $context) {
 		$this->object = $object;
 		$this->context[] = $context;
 	}

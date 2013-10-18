@@ -22,6 +22,11 @@ namespace Ale;
 use Ale\Cache\Cache;
 use Ale\Request\Request;
 use \SimpleXMLElement;
+use \XMLReader;
+use Ale\Exception\EveUserInputException;
+use Ale\Exception\EveAuthenticationException;
+use Ale\Exception\EveServerErrorException;
+use Ale\Exception\EveMiscellaneousException;
 
 define('ALE_AUTH_DEFAULT', 0);
 define('ALE_AUTH_NONE', 1);
