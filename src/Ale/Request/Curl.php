@@ -112,7 +112,7 @@ class Curl implements Request  {
 		if ($this->config['proxy']) {
 			curl_setopt($ch, CURLOPT_PROXY, $this->config['proxy']);
 			if ($this->config['proxyUser']) {
-				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->config['proxyUser'].':'.$proxy['proxyUser']);
+				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->config['proxyUser'].':'.$this->config['proxyUser']);
 			} 			
 		}
 		
