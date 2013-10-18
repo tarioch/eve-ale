@@ -20,6 +20,9 @@
 
 namespace Ale\Cache;
 
+use \DateTime;
+use \DateTimeZone;
+
 abstract class AbstractDb implements Cache {
 	protected $quote = "'";
 	protected $nameQuote = '"';
