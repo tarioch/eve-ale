@@ -52,6 +52,7 @@ class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 	private $name = null;
 	private $data = null;
 	private $children = null;
+	private $attributes = null;
 	private $rows = null;
 
 	/**
@@ -93,12 +94,11 @@ class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 				$this->children[$name] = $this->transformNode($node);
 			}
 		}
-
-		if ($this->name == 'row') {
-			$attribs = $this->data->attributes();
-			foreach ($attribs as $key => $value) {
-				$this->children[(string) $key] = (string) $value;
-			}
+		
+		$this->attributes = array();
+		$attribs = $this->data->attributes();
+		foreach ($attribs as $key => $value) {
+			$this->attributes[(string) $key] = (string) $value;
 		}
 	}
 
@@ -115,17 +115,30 @@ class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 		if ($this->name == 'rowset') {
 			$attribs = $this->data->attributes();
 			$key = isset($attribs['key']) ? (string) $attribs['key'] : null;
-			$rows = $this->data->children();
-			foreach ($rows as $row) {
-				if ($row->getName() != 'row') {
+			$keys = $key ? explode(',', $key) : array();
+			$children = $this->data->children();
+			foreach ($children as $child) {
+				if ($child->getName() != 'row') {
 					continue;
 				}
-				$row = $this->transformNode($row);
+				//echo (string)$child;
+				$child = $this->transformNode($child);
 				if ($key) {
-					$attribs = $row->attributes();
-					$this->rows[(string) $attribs[$key]] = $row;
+					$attribs = $child->attributes();
+					$rows = &$this->rows;
+					for ($i = 0; $i < count($keys); $i++) {
+						$keyVal = (string) $attribs[trim($keys[$i])];
+						if ($i == count($keys) - 1) {
+							$rows[$keyVal] = $child;
+						} else {
+							if (!isset($rows[$keyVal])){
+								$rows[$keyVal] = array();
+							}
+							$rows = &$rows[$keyVal];
+						}
+					}
 				} else {
-					 $this->rows[] = $row;
+					$this->rows[] = $child;
 				}
 			}
 		}
@@ -182,6 +195,23 @@ class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 				$_key = (string) $attributes['key'];
 			}
 			if ($name == 'row') {
+				//echo $key.'--';
+				$keys = $key ? explode(',', $key) : array();
+				//print_r($keys);
+				$tmp = &$result;
+				for ($ii = 0; $ii < count($keys); $ii++) {
+					$keyVal = (string) $attributes[trim($keys[$ii])];
+					if ($ii == count($keys) - 1) {
+						$this->nodeToArray($tmp[$keyVal], $child, $_key);
+						continue 2;
+					} else {
+						if (!isset($tmp[$keyVal])){
+							$tmp[$keyVal] = array();
+						}
+						$tmp =& $tmp[$keyVal];
+					}
+					
+				}
 				$name = (string) $attributes[$key];
 				if (!$name) {
 					$name = $i;
@@ -239,7 +269,8 @@ class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 	 * @return unknown
 	 */
 	public function attributes() {
-		return $this->data->attributes();
+		$this->prepareChildren();
+		return $this->attributes;
 	}
 
 	/**
@@ -268,6 +299,9 @@ class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 		if (isset($this->children[$name])) {
 			return $this->children[$name];
 		}
+		if (isset($this->attributes[$name])) {
+			return $this->attributes[$name];
+		}
 		return null;
 	}
 
@@ -279,7 +313,7 @@ class XmlElement implements Countable, ArrayAccess, IteratorAggregate  {
 	 */
 	public function __isset($name) {
 		$this->prepareChildren();
-		return isset($this->children[$name]);
+		return isset($this->children[$name]) || isset($this->attributes[$name]);
 	}
 
 	/**

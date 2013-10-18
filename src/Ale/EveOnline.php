@@ -29,15 +29,16 @@ define('ALE_AUTH_NONE', 1);
 define('ALE_AUTH_USER', 2);
 define('ALE_AUTH_CHARACTER', 3);
 define('ALE_AUTH_AVAILABLE', 4);
+define('ALE_AUTH_API', 5);
 
 
 class EveOnline extends Base {
 
-	private $userID;
-	private $apiKey;
+	private $keyID;
+	private $vCode;
 	private $characterID;
 
-	private $xml;
+	private $cachedUntil;
 
 	protected $default = array(
 		'host' => 'https://api.eveonline.com/',
