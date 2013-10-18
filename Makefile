@@ -1,5 +1,7 @@
 verify: checkstyle detectmess test
 
+fullbuild: composer_get composer_install verify
+
 test:
 	@./vendor/bin/phpunit || exit 4
 
@@ -19,4 +21,4 @@ composer_update:
 composer_install:
 	@./composer.phar install || exit 1
 
-.PHONY: verify test checkstyle detectmess composer_update
+.PHONY: verify test checkstyle detectmess composer_get composer_update composer_install
