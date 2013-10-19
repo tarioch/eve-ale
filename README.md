@@ -1,3 +1,6 @@
+DEPRECATED, I recommend to use PhealNG for Eve Access https://github.com/3rdpartyeve/phealng and PHPEveCentral for accessing Eve-Central https://github.com/Manhim/PHPEveCentral
+
+
 Ale - API Library for EvE-Online
 ================================
 [![Build Status](https://travis-ci.org/tarioch/eve-ale.png)](https://travis-ci.org/tarioch/eve-ale)
